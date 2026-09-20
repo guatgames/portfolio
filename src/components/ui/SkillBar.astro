@@ -1,0 +1,24 @@
+---
+interface Props {
+  name: string;
+  color: string;
+}
+
+const { name, color } = Astro.props;
+
+const dotColors: Record<string, string> = {
+  brand: 'bg-brand-500',
+  'accent-cyan': 'bg-accent-cyan',
+  'accent-magenta': 'bg-accent-magenta',
+  'accent-lime': 'bg-accent-lime',
+  'accent-orange': 'bg-accent-orange',
+  'accent-pink': 'bg-accent-pink',
+};
+
+const dotColorClass = dotColors[color] || 'bg-brand-500';
+---
+
+<code class="skill-chip" data-animate="fade-in" data-delay="100">
+  <span class={`skill-chip-dot ${dotColorClass}`} aria-hidden="true"></span>
+  <span>{name}</span>
+</code>

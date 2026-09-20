@@ -1,0 +1,239 @@
+{
+  "common": {
+    "loading": "Cargando...",
+    "error": "Ocurrió un error",
+    "retry": "Reintentar",
+    "close": "Cerrar",
+    "open": "Abrir",
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "readMore": "Leer más",
+    "viewProject": "Ver proyecto",
+    "viewCode": "Ver código",
+    "liveDemo": "Demo en vivo",
+    "sourceCode": "Código fuente",
+    "technologies": "Tecnologías",
+    "category": "Categoría",
+    "role": "Rol",
+    "duration": "Duración",
+    "team": "Tamaño del equipo",
+    "featured": "Destacado",
+    "draft": "Borrador",
+    "published": "Publicado",
+    "updated": "Actualizado",
+    "readingTime": "min de lectura",
+    "share": "Compartir",
+    "copy": "Copiar",
+    "copied": "¡Copiado!",
+    "download": "Descargar",
+    "print": "Imprimir",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "sort": "Ordenar",
+    "clear": "Limpiar",
+    "all": "Todos",
+    "none": "Ninguno",
+    "yes": "Sí",
+    "no": "No",
+    "maybe": "Quizás",
+    "unknown": "Desconocido"
+  },
+  "navigation": {
+    "home": "Inicio",
+    "about": "Sobre mí",
+    "projects": "Proyectos",
+    "technologies": "Tecnologías",
+    "blog": "Blog",
+    "contact": "Contacto",
+    "resume": "Currículum",
+    "toggleMenu": "Alternar menú",
+    "toggleTheme": "Alternar tema",
+    "toggleLanguage": "Alternar idioma"
+  },
+  "hero": {
+    "greeting": "Hola, soy",
+    "name": "Angel Alfaro",
+    "tagline": "Desarrollador Creativo & Diseñador",
+    "description": "Creando experiencias digitales deleitables con código y creatividad. Especializado en desarrollo web, diseño interactivo y arquitecturas frontend modernas.",
+    "ctaPrimary": "Ver Proyectos",
+    "ctaSecondary": "Contactar",
+    "scrollHint": "Desplázate para explorar",
+    "availability": "Disponible para proyectos freelance",
+    "openTo": "Abierto a oportunidades",
+    "stats": {
+      "years": "Años de Aprendizaje",
+      "projects": "Proyectos Completados",
+      "technologies": "Tecnologías"
+    }
+  },
+  "about": {
+    "title": "Sobre Mí",
+    "subtitle": "Conoce a la persona detrás del código",
+    "tagline": "Soy un desarrollador apasionado que ama crear experiencias digitales hermosas, funcionales y accesibles.",
+    "description": "Soy un desarrollador apasionado que ama crear experiencias digitales hermosas, funcionales y accesibles. Con experiencia en tecnologías web modernas, doy vida a ideas a través de código limpio y diseño reflexivo.",
+    "bio1": "Soy un amante de la tecnología y la programación, con un fuerte enfoque en el desarrollo web. Disfruto creando aplicaciones interactivas y fáciles de usar que resuelven problemas del mundo real. Mi recorrido en la tecnología ha estado impulsado por la curiosidad, el aprendizaje continuo y el deseo de generar un impacto positivo a través del código.",
+    "bio2": "Descubrí la programación cuando tenía 11 años; desde entonces empecé a aprender programación y desarrollo web. He trabajado en diferentes proyectos, desde pequeños proyectos personales hasta aplicaciones más grandes. Siempre estoy buscando nuevos retos y oportunidades para crecer como desarrollador.",
+    "highlightYears": "5+ Años de Aprendizaje",
+    "highlightYearsDesc": "Aprendizaje continuo y desarrollo de habilidades",
+    "highlightOpenSource": "Presentación de proyectos",
+    "highlightOpenSourceDesc": "Presentando distintos proyectos en eventos escolares y universitarios",
+    "highlightMentor": "Líder y Ponente",
+    "highlightMentorDesc": "Ayudando a compañeros a alcanzar sus metas en el mundo de la programación",
+    "highlightLearner": "Aprendiz de por Vida",
+    "highlightLearnerDesc": "Explorando constantemente nuevas tecnologías y patrones",
+    "skills": "Habilidades Principales",
+    "interests": "Cuando no estoy programando, me encontrarás",
+    "interestsList": [
+      "Jugando videojuegos",
+      "Tocando la guitarra y producción musical",
+      "Jugando baloncesto",
+      "Teclados mecánicos"
+    ],
+    "skillCategories": {
+      "frontend": "Frontend",
+      "backend": "Backend",
+      "devops": "Herramientas y DevOps"
+    },
+    "downloadResume": "Descargar Currículum",
+    "viewLinkedIn": "Conectar en LinkedIn"
+  },
+  "projects": {
+    "title": "Proyectos",
+    "subtitle": "Una selección de mi trabajo reciente",
+    "description": "Desde proyectos personales hasta aplicaciones en producción, aquí tienes algunos destacados de mi portafolio.",
+    "filters": {
+      "all": "Todos los Proyectos",
+      "featured": "Destacados",
+      "web": "Aplicaciones Web",
+      "mobile": "Móvil",
+      "library": "Librerías",
+      "tool": "Herramientas"
+    },
+    "emptyState": "No se encontraron proyectos que coincidan con tus filtros.",
+    "loadMore": "Cargar más proyectos",
+    "featuredSection": "Proyectos Destacados",
+    "allSection": "Todos los Proyectos",
+    "noProjects": "Aún no hay proyectos",
+    "noProjectsHint": "¡Añade algunos proyectos a tu portafolio para empezar!",
+    "projectCard": {
+      "viewDetails": "Ver detalles",
+      "technologies": "Construido con"
+    }
+  },
+  "technologies": {
+    "title": "Tecnologías",
+    "subtitle": "Herramientas y tecnologías con las que trabajo",
+    "description": "Una visión general completa de las tecnologías, frameworks y herramientas que uso para construir aplicaciones modernas.",
+    "categories": {
+      "framework": "Frameworks",
+      "library": "Librerías",
+      "language": "Lenguajes",
+      "tool": "Herramientas",
+      "platform": "Plataformas",
+      "database": "Bases de Datos",
+      "other": "Otros"
+    }
+  },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "Pensamientos, tutoriales e ideas",
+    "description": "Compartiendo conocimiento sobre desarrollo web, diseño y tecnología.",
+    "latestPosts": "Últimos Artículos",
+    "allPosts": "Todos los Artículos",
+    "relatedPosts": "Artículos Relacionados",
+    "noPosts": "No se encontraron artículos.",
+    "taggedWith": "Etiquetado con",
+    "backToBlog": "Volver al blog",
+    "sharePost": "Compartir este artículo",
+    "tableOfContents": "Tabla de Contenidos"
+  },
+  "contact": {
+    "title": "Ponte en Contacto",
+    "badge": "Contacto",
+    "subtitle": "Construyamos algo increíble juntos",
+    "description": "¿Tienes un proyecto en mente? ¿Preguntas sobre mi trabajo? ¿Solo quieres saludar? Me encantaría saber de ti.",
+    "form": {
+      "title": "Envíame un mensaje",
+      "name": "Tu Nombre",
+      "namePlaceholder": "Juan Pérez",
+      "email": "Correo Electrónico",
+      "emailPlaceholder": "juan@ejemplo.com",
+      "subject": "Asunto",
+      "subjectPlaceholder": "Consulta de proyecto",
+      "message": "Mensaje",
+      "messagePlaceholder": "Cuéntame sobre tu proyecto...",
+      "submit": "Enviar Mensaje",
+      "submitting": "Enviando...",
+      "success": "¡Mensaje enviado con éxito! Te responderé pronto.",
+      "error": "Error al enviar el mensaje. Por favor, inténtalo de nuevo o envíame un email directamente.",
+      "validation": {
+        "nameRequired": "El nombre es obligatorio",
+        "emailRequired": "El correo es obligatorio",
+        "emailInvalid": "Por favor, ingresa un correo válido",
+        "subjectRequired": "El asunto es obligatorio",
+        "messageRequired": "El mensaje es obligatorio",
+        "messageMinLength": "El mensaje debe tener al menos 10 caracteres"
+      }
+    },
+    "alternative": "O contáctame directamente:",
+    "email": "Correo",
+    "social": "Redes Sociales",
+    "responseTime": "Suelo responder en 24-48 horas.",
+    "availability": "Disponible Actualmente",
+    "availabilityDesc": "Abierto a proyectos freelance y nuevas oportunidades",
+    "responseTimePrefix": "Normalmente respondo dentro de",
+    "responseTimeSuffix": ". Para solicitudes urgentes, contáctame directamente por correo.",
+    "channels": {
+      "email": { "title": "Correo", "description": "Para consultas de proyectos y colaboraciones" },
+      "github": { "title": "GitHub", "description": "Trabajo de código abierto y ejemplos de código" },
+      "linkedin": { "title": "LinkedIn", "description": "Red profesional y experiencia" }
+    }
+  },
+  "footer": {
+    "copyright": "© {year} {name}. Todos los derechos reservados.",
+    "builtWith": "Construido con {tech}",
+    "deployedOn": "Desplegado en {platform}",
+    "sourceCode": "Código fuente disponible en GitHub",
+    "privacy": "Política de Privacidad",
+    "terms": "Términos de Servicio",
+    "rss": "Feed RSS",
+    "sitemap": "Mapa del Sitio",
+    "tagline": "Desarrollador Creativo & Diseñador creando experiencias digitales deleitables con código y creatividad.",
+    "quickLinks": "Enlaces Rápidos",
+    "resources": "Recursos",
+    "contact": "Contacto",
+    "resume": "Currículum",
+    "availableFor": "Disponible para oportunidades freelance y a tiempo completo",
+    "responseTime": "Normalmente respondo dentro de 24-48 horas"
+  },
+  "seo": {
+    "defaultTitle": "Guatgames | Desarrollador Creativo & Diseñador",
+    "defaultDescription": "Portafolio de Guatgames - Desarrollador Creativo & Diseñador. Creando experiencias digitales deleitables con tecnologías web modernas.",
+    "ogTitle": "Guatgames | Portafolio",
+    "ogDescription": "Portafolio de Desarrollador Creativo & Diseñador mostrando proyectos, habilidades e ideas.",
+    "twitterCard": "summary_large_image"
+  },
+  "language": {
+    "english": "English",
+    "spanish": "Español",
+    "current": "Español",
+    "switchTo": "Cambiar a Inglés"
+  },
+  "theme": {
+    "light": "Claro",
+    "dark": "Oscuro",
+    "system": "Sistema",
+    "toggle": "Alternar tema"
+  },
+  "accessibility": {
+    "skipToContent": "Saltar al contenido principal",
+    "skipToNavigation": "Saltar a la navegación",
+    "openMenu": "Abrir menú de navegación",
+    "closeMenu": "Cerrar menú de navegación",
+    "expandSection": "Expandir sección",
+    "collapseSection": "Colapsar sección",
+    "playAnimation": "Reproducir animación",
+    "pauseAnimation": "Pausar animación",
+    "imageDescription": "Imagen que muestra {description}"
+  }
+}

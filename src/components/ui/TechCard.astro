@@ -1,0 +1,126 @@
+---
+import { techLogos } from '../../data/tech-icons';
+
+interface Props {
+  tech: any;
+  color: string;
+  index: number;
+}
+
+const { tech, color, index } = Astro.props;
+const { name } = tech;
+
+// Case-insensitive lookup: the technologies JSON uses ids like "MySQL"/"GameMaker"
+const logo = techLogos[tech.id] ?? techLogos[String(tech.id).toLowerCase()];
+// Multi-color logos (e.g. Flet) carry their own per-path fills
+const hasOwnColors = Boolean(logo?.fills?.length);
+
+// Relative luminance of #RRGGBB; returns true when the logo is dark
+// enough to be invisible on dark backgrounds and needs a white variant
+// in dark mode (e.g. GitHub, Vercel, Next.js, Deno, Prisma).
+function isDarkColor(hex: string): boolean {
+  const h = hex.replace('#', '');
+  const r = parseInt(h.slice(0, 2), 16) / 255;
+  const g = parseInt(h.slice(2, 4), 16) / 255;
+  const b = parseInt(h.slice(4, 6), 16) / 255;
+  const lin = (c: number) => (c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4));
+  return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b) < 0.12;
+}
+
+const logoIsDark = logo ? isDarkColor(logo.hex) : false;
+// Dark/brand-color treatment only applies to single-color logos;
+// multi-color logos (fills) render with their own colors.
+const logoClass = !hasOwnColors && logoIsDark
+  ? 'w-9 h-9 text-neutral-900 dark:text-white'
+  : 'w-9 h-9';
+const logoStyle = !hasOwnColors && logo && !logoIsDark ? `color: #${logo.hex}` : undefined;
+
+const colorMaps: Record<string, { iconBg: string; hoverText: string; bar: string; nameText: string }> = {
+  brand: {
+    iconBg: 'bg-brand-500/10 group-hover:bg-brand-500/20',
+    hoverText: 'group-hover:text-brand-500 dark:group-hover:text-brand-400',
+    bar: 'from-brand-500 to-brand-600',
+    nameText: 'text-brand-500',
+  },
+  'accent-cyan': {
+    iconBg: 'bg-accent-cyan/10 group-hover:bg-accent-cyan/20',
+    hoverText: 'group-hover:text-accent-cyan dark:group-hover:text-accent-cyan',
+    bar: 'from-accent-cyan to-accent-magenta',
+    nameText: 'text-accent-cyan',
+  },
+  'accent-magenta': {
+    iconBg: 'bg-accent-magenta/10 group-hover:bg-accent-magenta/20',
+    hoverText: 'group-hover:text-accent-magenta dark:group-hover:text-accent-magenta',
+    bar: 'from-accent-magenta to-accent-pink',
+    nameText: 'text-accent-magenta',
+  },
+  'accent-lime': {
+    iconBg: 'bg-accent-lime/10 group-hover:bg-accent-lime/20',
+    hoverText: 'group-hover:text-accent-lime dark:group-hover:text-accent-lime',
+    bar: 'from-accent-lime to-accent-cyan',
+    nameText: 'text-accent-lime',
+  },
+  'accent-orange': {
+    iconBg: 'bg-accent-orange/10 group-hover:bg-accent-orange/20',
+    hoverText: 'group-hover:text-accent-orange dark:group-hover:text-accent-orange',
+    bar: 'from-accent-orange to-accent-pink',
+    nameText: 'text-accent-orange',
+  },
+  'accent-pink': {
+    iconBg: 'bg-accent-pink/10 group-hover:bg-accent-pink/20',
+    hoverText: 'group-hover:text-accent-pink dark:group-hover:text-accent-pink',
+    bar: 'from-accent-pink to-accent-magenta',
+    nameText: 'text-accent-pink',
+  },
+  neutral: {
+    iconBg: 'bg-neutral-500/10 group-hover:bg-neutral-500/20',
+    hoverText: 'group-hover:text-neutral-500 dark:group-hover:text-neutral-400',
+    bar: 'from-neutral-500 to-neutral-600',
+    nameText: 'text-neutral-500',
+  },
+};
+
+const classes = colorMaps[color] || colorMaps.brand;
+---
+
+<div 
+  class="card card-hover p-6 group relative overflow-hidden flex flex-col items-center text-center"
+  data-animate="slide-up"
+  data-delay={String((index + 1) * 50)}
+  data-reveal-child
+>
+  <!-- Color accent bar -->
+  <div class={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${classes.bar} transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left`} aria-hidden="true"></div>
+  
+  <div class="relative z-10 flex flex-col items-center">
+    <!-- Icon -->
+    <div class={`w-16 h-16 rounded-2xl ${classes.iconBg} flex items-center justify-center mb-4 transition-colors duration-300 group-hover:scale-110 group-hover:-rotate-3`}>
+      {logo ? (
+        <svg
+          viewBox={logo.viewBox}
+          class={logoClass}
+          style={logoStyle}
+          fill={hasOwnColors ? undefined : 'currentColor'}
+          aria-hidden="true"
+        >
+          {logo.paths.map((path, i) => (
+            <path
+              d={path}
+              fill={logo.fills?.[i] ?? undefined}
+              opacity={logo.opacities?.[i] ?? undefined}
+            />
+          ))}
+        </svg>
+      ) : (
+        <svg class="w-9 h-9 text-neutral-500 dark:text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+        </svg>
+      )}
+    </div>
+    
+    <!-- Name -->
+    <h4 class={`font-display text-heading-sm font-bold text-neutral-900 dark:text-neutral-100 transition-colors ${classes.hoverText}`}>
+      {name}
+    </h4>
+  </div>
+</div>

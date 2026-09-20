@@ -1,0 +1,141 @@
+---
+import { getCollection } from 'astro:content';
+import ProjectCard from '../ui/ProjectCard.astro';
+
+const projects = await getCollection('projects', ({ data }) => !data.draft);
+const featuredProjects = projects.filter(p => p.data.featured).sort((a, b) => a.data.order - b.data.order);
+const otherProjects = projects.filter(p => !p.data.featured).sort((a, b) => a.data.order - b.data.order);
+---
+
+<section id="projects" class="section" aria-labelledby="projects-title">
+  <div class="container-custom">
+    <div class="section-header" data-animate="slide-up" data-delay="100">
+      <span class="badge-primary mb-4" data-animate="fade-in" data-delay="200" data-i18n="projects.title">Projects</span>
+      <h2 id="projects-title" class="section-title" data-animate="text-reveal" data-delay="300" data-i18n="projects.subtitle">A selection of my recent work</h2>
+      <p class="section-subtitle" data-animate="fade-in" data-delay="400" data-i18n="projects.description">
+        From side projects to production applications, here are some highlights from my portfolio.
+      </p>
+    </div>
+    
+    <!-- Filters -->
+    <div class="flex flex-wrap gap-3 justify-center mb-16" data-animate="fade-in" data-delay="200" role="group" aria-label="Project filters">
+      <button class="filter-btn active" data-filter="all" aria-pressed="true" data-i18n="projects.filters.all">All Projects</button>
+      <button class="filter-btn" data-filter="featured" aria-pressed="false" data-i18n="projects.filters.featured">Featured</button>
+      <button class="filter-btn" data-filter="web" aria-pressed="false" data-i18n="projects.filters.web">Web Apps</button>
+      <button class="filter-btn" data-filter="library" aria-pressed="false" data-i18n="projects.filters.library">Libraries</button>
+      <button class="filter-btn" data-filter="tool" aria-pressed="false" data-i18n="projects.filters.tool">Tools</button>
+    </div>
+    
+    <!-- Featured Projects -->
+    {featuredProjects.length > 0 && (
+      <div class="mb-space-2xl" data-animate="slide-up" data-delay="300">
+        <h3 class="font-display text-heading-lg font-bold text-neutral-900 dark:text-neutral-100 mb-8 flex items-center gap-3">
+          <span class="w-8 h-8 rounded-lg bg-brand-500/10 flex items-center justify-center">
+            <svg class="w-5 h-5 text-brand-500" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+            </svg>
+          </span>
+          <span data-i18n="projects.featuredSection">Featured Projects</span>
+        </h3>
+        
+        <div class="grid lg:grid-cols-2 gap-8" role="list" aria-label="Featured projects">
+          {featuredProjects.map((project, index) => (
+            <ProjectCard project={project} featured={true} index={index} />
+          ))}
+        </div>
+      </div>
+    )}
+    
+    <!-- All Projects -->
+    <div data-animate="slide-up" data-delay="400" data-reveal data-reveal-stagger="100">
+      <h3 class="font-display text-heading-lg font-bold text-neutral-900 dark:text-neutral-100 mb-8 flex items-center gap-3">
+        <span class="w-8 h-8 rounded-lg bg-accent-cyan/10 flex items-center justify-center">
+          <svg class="w-5 h-5 text-accent-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+          </svg>
+        </span>
+        <span data-i18n="projects.allSection">All Projects</span>
+      </h3>
+      
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6" role="list" aria-label="All projects">
+        {otherProjects.map((project, index) => (
+          <ProjectCard project={project} featured={false} index={index} />
+        ))}
+        {projects.length === 0 && (
+          <div class="col-span-full text-center py-12">
+            <div class="w-16 h-16 rounded-2xl bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center mx-auto mb-4">
+              <svg class="w-8 h-8 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+              </svg>
+            </div>
+            <h3 class="font-display text-heading-md font-bold text-neutral-900 dark:text-neutral-100 mb-2" data-i18n="projects.noProjects">No projects yet</h3>
+            <p class="text-body-md text-neutral-600 dark:text-neutral-400" data-i18n="projects.noProjectsHint">Add some projects to your portfolio to get started!</p>
+          </div>
+        )}
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Filter functionality
+  const filterButtons = document.querySelectorAll('.filter-btn');
+  const projectCards = document.querySelectorAll('[data-project-card]');
+  
+  filterButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const filter = button.dataset.filter;
+      
+      // Update active state
+      filterButtons.forEach(btn => {
+        btn.classList.remove('active');
+        btn.setAttribute('aria-pressed', 'false');
+      });
+      button.classList.add('active');
+      button.setAttribute('aria-pressed', 'true');
+      
+      // Filter projects
+      projectCards.forEach(card => {
+        const categories = card.dataset.categories?.split(',') || [];
+        const shouldShow = filter === 'all' || categories.includes(filter);
+        
+        if (shouldShow) {
+          card.style.display = '';
+          card.classList.remove('hidden');
+          requestAnimationFrame(() => {
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+          });
+        } else {
+          card.style.opacity = '0';
+          card.style.transform = 'translateY(20px)';
+          setTimeout(() => {
+            card.style.display = 'none';
+            card.classList.add('hidden');
+          }, 300);
+        }
+      });
+    });
+  });
+</script>
+
+<style>
+  .filter-btn {
+    @apply px-4 py-2 rounded-full text-body-sm font-medium bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-neutral-700 transition-all duration-300 hover:border-brand-500/50 dark:hover:border-brand-500/50 hover:bg-brand-500/5 dark:hover:bg-brand-500/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500;
+  }
+  
+  .filter-btn.active {
+    @apply bg-brand-500 text-white border-brand-500 shadow-lg shadow-brand-500/30;
+  }
+  
+  [data-project-card] {
+    @apply transition-all duration-300;
+    transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
+  }
+  
+  @media (prefers-reduced-motion: reduce) {
+    [data-project-card] {
+      transition: none !important;
+    }
+  }
+</style>

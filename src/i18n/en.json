@@ -1,0 +1,239 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "retry": "Try again",
+    "close": "Close",
+    "open": "Open",
+    "next": "Next",
+    "previous": "Previous",
+    "readMore": "Read more",
+    "viewProject": "View project",
+    "viewCode": "View code",
+    "liveDemo": "Live demo",
+    "sourceCode": "Source code",
+    "technologies": "Technologies",
+    "category": "Category",
+    "role": "Role",
+    "duration": "Duration",
+    "team": "Team size",
+    "featured": "Featured",
+    "draft": "Draft",
+    "published": "Published",
+    "updated": "Updated",
+    "readingTime": "min read",
+    "share": "Share",
+    "copy": "Copy",
+    "copied": "Copied!",
+    "download": "Download",
+    "print": "Print",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "clear": "Clear",
+    "all": "All",
+    "none": "None",
+    "yes": "Yes",
+    "no": "No",
+    "maybe": "Maybe",
+    "unknown": "Unknown"
+  },
+  "navigation": {
+    "home": "Home",
+    "about": "About",
+    "projects": "Projects",
+    "technologies": "Technologies",
+    "blog": "Blog",
+    "contact": "Contact",
+    "resume": "Resume",
+    "toggleMenu": "Toggle menu",
+    "toggleTheme": "Toggle theme",
+    "toggleLanguage": "Toggle language"
+  },
+  "hero": {
+    "greeting": "Hi, I'm",
+    "name": "Angel Alfaro",
+    "tagline": "Creative Developer & Designer",
+    "description": "Building delightful digital experiences with code and creativity. Specializing in web development, interactive design, and modern frontend architectures.",
+    "ctaPrimary": "View Projects",
+    "ctaSecondary": "Get in Touch",
+    "scrollHint": "Scroll to explore",
+    "availability": "Now open for freelance projects",
+    "openTo": "Open to opportunities",
+    "stats": {
+      "years": "Years Learning",
+      "projects": "Projects Completed",
+      "technologies": "Technologies"
+    }
+  },
+  "about": {
+    "title": "About Me",
+    "subtitle": "Get to know the person behind the code",
+    "tagline": "I'm a passionate developer with a love for creating beautiful, functional, and accessible digital experiences.",
+    "description": "I'm a passionate developer with a love for creating beautiful, functional, and accessible digital experiences. With expertise in modern web technologies, I bring ideas to life through clean code and thoughtful design.",
+    "bio1": "I am a lover of technology and programming, with a strong focus on web development. I enjoy building interactive and user-friendly applications that solve real-world problems. My journey in tech has been driven by curiosity, continuous learning, and a desire to make a positive impact through code.",
+    "bio2": "I knew about programming when I was 11 years old, after that, I started learning programming and web development. I have been working on different projects, from small personal projects to larger applications. I am always looking for new challenges and opportunities to grow as a developer.",
+    "highlightYears": "5+ Years Learning",
+    "highlightYearsDesc": "Continuous learning and skill development",
+    "highlightOpenSource": "Present projects",
+    "highlightOpenSourceDesc": "Present different projects in events of school and university's",
+    "highlightMentor": "Leader & Speaker",
+    "highlightMentorDesc": "Helping partners achieve their goals in the programming world",
+    "highlightLearner": "Lifelong Learner",
+    "highlightLearnerDesc": "Constantly exploring new technologies & patterns",
+    "skills": "Core Skills",
+    "interests": "When not coding, you'll find me",
+    "interestsList": [
+      "Playing video games",
+      "Playing guitar and music production",
+      "Playing basketball",
+      "Mechanical keyboards"
+    ],
+    "skillCategories": {
+      "frontend": "Frontend",
+      "backend": "Backend",
+      "devops": "Tools & DevOps"
+    },
+    "downloadResume": "Download Resume",
+    "viewLinkedIn": "Connect on LinkedIn"
+  },
+  "projects": {
+    "title": "Projects",
+    "subtitle": "A selection of my recent work",
+    "description": "From side projects to production applications, here are some highlights from my portfolio.",
+    "filters": {
+      "all": "All Projects",
+      "featured": "Featured",
+      "web": "Web Apps",
+      "mobile": "Mobile",
+      "library": "Libraries",
+      "tool": "Tools"
+    },
+    "emptyState": "No projects found matching your filters.",
+    "loadMore": "Load more projects",
+    "featuredSection": "Featured Projects",
+    "allSection": "All Projects",
+    "noProjects": "No projects yet",
+    "noProjectsHint": "Add some projects to your portfolio to get started!",
+    "projectCard": {
+      "viewDetails": "View details",
+      "technologies": "Built with"
+    }
+  },
+  "technologies": {
+    "title": "Technologies",
+    "subtitle": "Tools & technologies I work with",
+    "description": "A comprehensive overview of the technologies, frameworks, and tools I use to build modern applications.",
+    "categories": {
+      "framework": "Frameworks",
+      "library": "Libraries",
+      "language": "Languages",
+      "tool": "Tools",
+      "platform": "Platforms",
+      "database": "Databases",
+      "other": "Other"
+    }
+  },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "Thoughts, tutorials, and insights",
+    "description": "Sharing knowledge about web development, design, and technology.",
+    "latestPosts": "Latest Posts",
+    "allPosts": "All Posts",
+    "relatedPosts": "Related Posts",
+    "noPosts": "No posts found.",
+    "taggedWith": "Tagged with",
+    "backToBlog": "Back to blog",
+    "sharePost": "Share this post",
+    "tableOfContents": "Table of Contents"
+  },
+  "contact": {
+    "title": "Get in Touch",
+    "badge": "Contact",
+    "subtitle": "Let's build something amazing together",
+    "description": "Have a project in mind? Questions about my work? Just want to say hi? I'd love to hear from you.",
+    "form": {
+      "title": "Send me a message",
+      "name": "Your Name",
+      "namePlaceholder": "John Doe",
+      "email": "Email Address",
+      "emailPlaceholder": "john@example.com",
+      "subject": "Subject",
+      "subjectPlaceholder": "Project inquiry",
+      "message": "Message",
+      "messagePlaceholder": "Tell me about your project...",
+      "submit": "Send Message",
+      "submitting": "Sending...",
+      "success": "Message sent successfully! I'll get back to you soon.",
+      "error": "Failed to send message. Please try again or email me directly.",
+      "validation": {
+        "nameRequired": "Name is required",
+        "emailRequired": "Email is required",
+        "emailInvalid": "Please enter a valid email address",
+        "subjectRequired": "Subject is required",
+        "messageRequired": "Message is required",
+        "messageMinLength": "Message must be at least 10 characters"
+      }
+    },
+    "alternative": "Or reach out directly:",
+    "email": "Email",
+    "social": "Social",
+    "responseTime": "I typically respond within 24-48 hours.",
+    "availability": "Currently Available",
+    "availabilityDesc": "Open for freelance projects & new opportunities",
+    "responseTimePrefix": "I typically respond within",
+    "responseTimeSuffix": ". For urgent requests, please reach out via email directly.",
+    "channels": {
+      "email": { "title": "Email", "description": "For project inquiries and collaborations" },
+      "github": { "title": "GitHub", "description": "Open source work and code samples" },
+      "linkedin": { "title": "LinkedIn", "description": "Professional network and experience" }
+    }
+  },
+  "footer": {
+    "copyright": "© {year} {name}. All rights reserved.",
+    "builtWith": "Built with {tech}",
+    "deployedOn": "Deployed on {platform}",
+    "sourceCode": "Source code available on GitHub",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "rss": "RSS Feed",
+    "sitemap": "Sitemap",
+    "tagline": "Creative Developer & Designer building delightful digital experiences with code and creativity.",
+    "quickLinks": "Quick Links",
+    "resources": "Resources",
+    "contact": "Contact",
+    "resume": "Resume",
+    "availableFor": "Available for freelance & full-time opportunities",
+    "responseTime": "Typically responds within 24-48 hours"
+  },
+  "seo": {
+    "defaultTitle": "Guatgames | Creative Developer & Designer",
+    "defaultDescription": "Portfolio of Guatgames - Creative Developer & Designer. Building delightful digital experiences with modern web technologies.",
+    "ogTitle": "Guatgames | Portfolio",
+    "ogDescription": "Creative Developer & Designer portfolio showcasing projects, skills, and insights.",
+    "twitterCard": "summary_large_image"
+  },
+  "language": {
+    "english": "English",
+    "spanish": "Español",
+    "current": "English",
+    "switchTo": "Switch to Spanish"
+  },
+  "theme": {
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System",
+    "toggle": "Toggle theme"
+  },
+  "accessibility": {
+    "skipToContent": "Skip to main content",
+    "skipToNavigation": "Skip to navigation",
+    "openMenu": "Open navigation menu",
+    "closeMenu": "Close navigation menu",
+    "expandSection": "Expand section",
+    "collapseSection": "Collapse section",
+    "playAnimation": "Play animation",
+    "pauseAnimation": "Pause animation",
+    "imageDescription": "Image showing {description}"
+  }
+}

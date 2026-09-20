@@ -1,0 +1,132 @@
+---
+---
+<div class="relative" data-lang-toggle>
+  <button 
+    type="button"
+    class="btn-icon relative overflow-hidden"
+    aria-label="Switch language"
+    aria-haspopup="true"
+    aria-expanded="false"
+    data-lang-toggle-btn
+  >
+    <span class="relative z-10 flex items-center gap-1.5">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+      </svg>
+      <span class="hidden sm:inline font-mono text-caption uppercase tracking-wider" data-lang-label>EN</span>
+    </span>
+    <div class="absolute inset-0 bg-brand-500 scale-x-0 origin-right transition-transform duration-300 ease-out-expo" aria-hidden="true"></div>
+  </button>
+
+  <div 
+    class="absolute right-0 top-full mt-2 w-36 opacity-0 invisible scale-y-95 origin-top-right transition-all duration-200 ease-out-expo bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-xl shadow-2xl overflow-hidden z-50"
+    role="menu"
+    data-lang-toggle-dropdown
+  >
+    <button 
+      type="button"
+      class="lang-option w-full px-4 py-3 text-left flex items-center gap-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+      role="menuitem"
+      data-lang="en"
+    >
+      <span class="w-6 h-6 flex items-center justify-center rounded-lg bg-brand-100 dark:bg-brand-900/30">
+        <svg class="w-4 h-4 text-brand-600 dark:text-brand-400" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+        </svg>
+      </span>
+      <span class="font-medium text-neutral-900 dark:text-neutral-100">English</span>
+    </button>
+    <button 
+      type="button"
+      class="lang-option w-full px-4 py-3 text-left flex items-center gap-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+      role="menuitem"
+      data-lang="es"
+    >
+      <span class="w-6 h-6 flex items-center justify-center rounded-lg bg-brand-100 dark:bg-brand-900/30">
+        <svg class="w-4 h-4 text-brand-600 dark:text-brand-400" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+        </svg>
+      </span>
+      <span class="font-medium text-neutral-900 dark:text-neutral-100">Español</span>
+    </button>
+  </div>
+</div>
+
+<script>
+  // Multi-instance safe: header + mobile menu both render this component.
+  // Each group is wired independently via its own [data-lang-toggle] wrapper.
+  function wireLanguageToggle(group: HTMLElement) {
+    const toggle = group.querySelector<HTMLButtonElement>('[data-lang-toggle-btn]');
+    const dropdown = group.querySelector<HTMLElement>('[data-lang-toggle-dropdown]');
+    const options = dropdown?.querySelectorAll<HTMLButtonElement>('.lang-option');
+    const langLabel = toggle?.querySelector<HTMLElement>('[data-lang-label]');
+
+    let isOpen = false;
+
+    const openDropdown = () => {
+      dropdown?.classList.remove('opacity-0', 'invisible', 'scale-y-95');
+      dropdown?.classList.add('opacity-100', 'visible', 'scale-y-100');
+      toggle?.setAttribute('aria-expanded', 'true');
+      isOpen = true;
+    };
+
+    const closeDropdown = () => {
+      dropdown?.classList.add('opacity-0', 'invisible', 'scale-y-95');
+      dropdown?.classList.remove('opacity-100', 'visible', 'scale-y-100');
+      toggle?.setAttribute('aria-expanded', 'false');
+      isOpen = false;
+    };
+
+    toggle?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      isOpen ? closeDropdown() : openDropdown();
+    });
+
+    options?.forEach((option) => {
+      option.addEventListener('click', () => {
+        const lang = option.dataset.lang;
+        if (lang) {
+          if (window.I18N) {
+            window.I18N.setLocale(lang as 'en' | 'es');
+          } else {
+            window.dispatchEvent(new CustomEvent('language-change', { detail: { locale: lang } }));
+          }
+          if (langLabel) langLabel.textContent = lang.toUpperCase();
+        }
+        closeDropdown();
+      });
+    });
+
+    group.addEventListener('click', (e) => {
+      if (isOpen && toggle && dropdown && !toggle.contains(e.target as Node) && !dropdown.contains(e.target as Node)) {
+        closeDropdown();
+      }
+    });
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-lang-toggle]').forEach((group) => wireLanguageToggle(group));
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      document.querySelectorAll<HTMLElement>('[data-lang-toggle]').forEach((group) => {
+        const dropdown = group.querySelector<HTMLElement>('[data-lang-toggle-dropdown]');
+        if (dropdown) {
+          dropdown.classList.add('opacity-0', 'invisible', 'scale-y-95');
+          const toggle = group.querySelector<HTMLButtonElement>('[data-lang-toggle-btn]');
+          toggle?.setAttribute('aria-expanded', 'false');
+        }
+      });
+    }
+  });
+
+  // Keep the visible language label in sync with the active locale
+  const updateLabels = () => {
+    const locale = window.I18N?.locale || 'en';
+    document.querySelectorAll<HTMLElement>('[data-lang-label]').forEach((label) => {
+      label.textContent = locale.toUpperCase();
+    });
+  };
+
+  window.addEventListener('language-changed', updateLabels);
+  updateLabels();
+</script>

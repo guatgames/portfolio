@@ -1,0 +1,121 @@
+---
+import LanguageToggle from '../ui/LanguageToggle.astro';
+import ThemeToggle from '../ui/ThemeToggle.astro';
+---
+<div 
+  id="mobile-menu"
+  class="mobile-menu fixed inset-0 z-40 bg-white dark:bg-neutral-950 transform translate-x-full lg:hidden transition-transform duration-500 ease-out-expo"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Navigation menu"
+>
+  <div class="flex flex-col h-full p-8 overflow-y-auto">
+    <div class="flex items-center justify-between mb-12">
+      <a href="/" class="font-display text-heading-lg font-bold gradient-text" aria-label="Guatgames - Home">
+        G
+      </a>
+      <button
+        id="mobile-menu-close"
+        class="btn-icon"
+        aria-label="Close menu"
+      >
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+    
+    <nav aria-label="Mobile navigation">
+      <ul class="flex flex-col gap-2 mb-12" role="menubar">
+        <li role="none">
+          <a href="#about" class="mobile-nav-link" role="menuitem" data-i18n="navigation.about">About</a>
+        </li>
+        <li role="none">
+          <a href="#projects" class="mobile-nav-link" role="menuitem" data-i18n="navigation.projects">Projects</a>
+        </li>
+        <li role="none">
+          <a href="#technologies" class="mobile-nav-link" role="menuitem" data-i18n="navigation.technologies">Technologies</a>
+        </li>
+        <li role="none">
+          <a href="#blog" class="mobile-nav-link" role="menuitem" data-i18n="navigation.blog">Blog</a>
+        </li>
+        <li role="none">
+          <a href="#contact" class="mobile-nav-link" role="menuitem" data-i18n="navigation.contact">Contact</a>
+        </li>
+      </ul>
+    </nav>
+    
+    <div class="flex flex-col gap-4 mt-auto pt-8 border-t border-neutral-200 dark:border-neutral-800">
+      <LanguageToggle />
+      <ThemeToggle />
+      <div class="flex items-center gap-4">
+        <a href="mailto:hello@guatgames.dev" class="btn-primary w-full justify-center" data-i18n="hero.ctaSecondary">
+          Get in Touch
+        </a>
+      </div>
+    </div>
+  </div>
+  
+  <div 
+    class="mobile-menu-backdrop absolute inset-0 bg-black/50 opacity-0 invisible transition-all duration-300"
+    aria-hidden="true"
+  ></div>
+</div>
+
+<script>
+  const menu = document.getElementById('mobile-menu');
+  const backdrop = menu?.querySelector('.mobile-menu-backdrop');
+  const closeBtn = document.getElementById('mobile-menu-close');
+  const links = menu?.querySelectorAll('.mobile-nav-link');
+  const openBtn = document.getElementById('mobile-menu-button');
+  
+  function openMenu() {
+    menu?.classList.remove('translate-x-full');
+    menu?.classList.add('translate-x-0');
+    backdrop?.classList.remove('opacity-0', 'invisible');
+    backdrop?.classList.add('opacity-100', 'visible');
+    document.body.style.overflow = 'hidden';
+    openBtn?.setAttribute('aria-expanded', 'true');
+    closeBtn?.focus();
+  }
+  
+  function closeMenu() {
+    menu?.classList.add('translate-x-full');
+    menu?.classList.remove('translate-x-0');
+    backdrop?.classList.add('opacity-0', 'invisible');
+    backdrop?.classList.remove('opacity-100', 'visible');
+    document.body.style.overflow = '';
+    window.dispatchEvent(new CustomEvent('mobile-menu-closed'));
+    openBtn?.focus();
+  }
+  
+  closeBtn?.addEventListener('click', closeMenu);
+  backdrop?.addEventListener('click', closeMenu);
+  
+  links?.forEach(link => {
+    link.addEventListener('click', closeMenu);
+  });
+  
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !menu?.classList.contains('translate-x-full')) {
+      closeMenu();
+    }
+  });
+  
+  // Listen for menu open event from MobileMenuButton
+  window.addEventListener('open-mobile-menu', openMenu);
+</script>
+
+<style>
+  .mobile-nav-link {
+    @apply block px-4 py-4 text-heading-sm font-medium text-neutral-900 dark:text-neutral-100 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors;
+  }
+  
+  .mobile-menu.open {
+    @apply translate-x-0;
+  }
+  
+  .mobile-menu-backdrop {
+    @apply bg-black/50;
+  }
+</style>

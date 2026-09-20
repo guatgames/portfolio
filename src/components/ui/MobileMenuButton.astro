@@ -1,0 +1,55 @@
+---
+---
+<button
+  id="mobile-menu-button"
+  class="btn-icon lg:hidden"
+  aria-label="Open menu"
+  aria-expanded="false"
+  aria-controls="mobile-menu"
+  type="button"
+>
+  <span class="relative w-6 h-5 flex flex-col justify-between" aria-hidden="true">
+    <span class="hamburger-line block w-full h-0.5 bg-current rounded transition-all duration-300 ease-out-expo origin-left"></span>
+    <span class="hamburger-line block w-full h-0.5 bg-current rounded transition-all duration-300 ease-out-expo origin-left"></span>
+    <span class="hamburger-line block w-full h-0.5 bg-current rounded transition-all duration-300 ease-out-expo origin-left"></span>
+  </span>
+</button>
+
+<script>
+  const button = document.getElementById('mobile-menu-button');
+  const lines = button?.querySelectorAll('.hamburger-line');
+  
+  button?.addEventListener('click', () => {
+    const isExpanded = button.getAttribute('aria-expanded') === 'true';
+    button.setAttribute('aria-expanded', (!isExpanded).toString());
+    button.setAttribute('aria-label', isExpanded ? 'Open menu' : 'Close menu');
+    
+    if (!isExpanded) {
+      // Open the full-screen menu
+      window.dispatchEvent(new CustomEvent('open-mobile-menu'));
+      lines[0]?.classList.add('rotate-45', 'translate-y-2');
+      lines[1]?.classList.add('opacity-0');
+      lines[2]?.classList.add('-rotate-45', '-translate-y-2');
+    } else {
+      // Close handled by the menu itself; reset icon
+      lines[0]?.classList.remove('rotate-45', 'translate-y-2');
+      lines[1]?.classList.remove('opacity-0');
+      lines[2]?.classList.remove('-rotate-45', '-translate-y-2');
+    }
+  });
+
+  // Reset icon when menu closes via close button
+  window.addEventListener('mobile-menu-closed', () => {
+    button?.setAttribute('aria-expanded', 'false');
+    button?.setAttribute('aria-label', 'Open menu');
+    lines[0]?.classList.remove('rotate-45', 'translate-y-2');
+    lines[1]?.classList.remove('opacity-0');
+    lines[2]?.classList.remove('-rotate-45', '-translate-y-2');
+  });
+</script>
+
+<style>
+  .hamburger-line {
+    @apply bg-neutral-700 dark:bg-neutral-300;
+  }
+</style>

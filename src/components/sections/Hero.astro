@@ -1,0 +1,187 @@
+---
+---
+
+<section id="hero" class="relative min-h-screen flex items-center justify-center overflow-hidden section" aria-labelledby="hero-title">
+  <!-- Animated background -->
+  <div class="absolute inset-0 -z-10 overflow-hidden pointer-events-none" aria-hidden="true">
+    <div class="absolute inset-0 bg-gradient-to-br from-brand-500/10 via-transparent to-accent-cyan/10" aria-hidden="true"></div>
+    <div class="mesh-gradient" style="animation-delay: 0s;"></div>
+    <div class="mesh-gradient" style="animation-delay: -4s; opacity: 0.3;"></div>
+    <div class="mesh-gradient" style="animation-delay: -8s; opacity: 0.2;"></div>
+    
+    <!-- Floating geometric shapes -->
+    <div class="absolute top-1/4 left-1/4 w-72 h-72 rounded-full bg-brand-500/10 blur-3xl animate-float" style="animation-delay: 0s;"></div>
+    <div class="absolute top-1/3 right-1/5 w-96 h-96 rounded-full bg-accent-cyan/10 blur-3xl animate-float" style="animation-delay: -2s;"></div>
+    <div class="absolute bottom-1/4 left-1/3 w-64 h-64 rounded-full bg-accent-magenta/10 blur-3xl animate-float" style="animation-delay: -4s;"></div>
+    <div class="absolute bottom-1/5 right-1/4 w-80 h-80 rounded-full bg-accent-lime/10 blur-3xl animate-float" style="animation-delay: -6s;"></div>
+    
+    <!-- Grid pattern -->
+    <div class="absolute inset-0 opacity-5" aria-hidden="true">
+      <svg class="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+        <defs>
+          <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
+            <path d="M 10 0 L 0 0 0 10" fill="none" stroke="currentColor" stroke-width="0.5"/>
+          </pattern>
+        </defs>
+        <rect width="100" height="100" fill="url(#grid)"></rect>
+      </svg>
+    </div>
+  </div>
+  
+  <div class="container-custom relative z-10">
+    <div class="grid lg:grid-cols-2 gap-space-2xl lg:gap-space-4xl items-center">
+      <!-- Left side - Content -->
+      <div class="text-center lg:text-left" data-animate="slide-up" data-delay="100">
+        <div class="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl border border-neutral-200/50 dark:border-neutral-800/50 mb-8" data-animate="fade-in" data-delay="200">
+          <span class="w-2 h-2 rounded-full bg-brand-500 animate-pulse-soft"></span>
+          <span class="text-body-sm font-medium text-neutral-700 dark:text-neutral-300" data-i18n="hero.availability">Now open for freelance projects</span>
+        </div>
+        
+        <h1 id="hero-title" class="font-display text-display-xl lg:text-display-xl font-extrabold tracking-tight leading-[0.9] mb-8" data-animate="text-reveal" data-delay="300">
+          <span class="block text-neutral-900 dark:text-neutral-100"><span data-i18n="hero.greeting">Hi, I'm</span></span>
+          <span class="block gradient-text" data-i18n="hero.name">Angel Alfaro</span>
+        </h1>
+        
+        <p class="text-body-lg lg:text-body-lg text-neutral-600 dark:text-neutral-400 max-w-xl mx-auto lg:mx-0 mb-10 leading-relaxed" data-animate="slide-up" data-delay="400" data-i18n="hero.tagline">
+          Creative Developer &amp; Designer
+        </p>
+        
+        <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 mb-16" data-animate="slide-up" data-delay="500">
+          <a href="#projects" class="btn-primary group">
+            <span data-i18n="hero.ctaPrimary">View Projects</span>
+            <svg class="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </a>
+          <a href="#contact" class="btn-accent group">
+            <span data-i18n="hero.ctaSecondary">Get in Touch</span>
+            <svg class="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+          </a>
+        </div>
+        
+        <!-- Stats -->
+        <div class="grid grid-cols-3 gap-6 md:gap-10 max-w-xl mx-auto lg:mx-0" data-animate="fade-in" data-delay="600" data-stagger="150">
+          <div class="text-center" data-stagger-child="slide-up">
+            <div class="font-display text-display-sm font-bold text-neutral-900 dark:text-neutral-100 mb-1" data-counter="5" data-counter-suffix="+">0</div>
+            <div class="text-body-sm text-neutral-600 dark:text-neutral-400" data-i18n="hero.stats.years">Years Learning</div>
+          </div>
+          <div class="text-center" data-stagger-child="slide-up">
+            <div class="font-display text-display-sm font-bold text-neutral-900 dark:text-neutral-100 mb-1" data-counter="5" data-counter-suffix="+">0</div>
+            <div class="text-body-sm text-neutral-600 dark:text-neutral-400" data-i18n="hero.stats.projects">Projects Completed</div>
+          </div>
+          <div class="text-center" data-stagger-child="slide-up">
+            <div class="font-display text-display-sm font-bold text-neutral-900 dark:text-neutral-100 mb-1" data-counter="27" data-counter-suffix="+">0</div>
+            <div class="text-body-sm text-neutral-600 dark:text-neutral-400" data-i18n="hero.stats.technologies">Technologies</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Right side - Visual -->
+      <div class="relative" data-animate="slide-up" data-delay="400">
+        <div class="relative aspect-square max-w-lg mx-auto">
+          <!-- Main card -->
+          <div class="absolute inset-0 card glass p-8 flex flex-col justify-between" data-parallax="0.1">
+            <div>
+              <div class="flex items-center gap-3 mb-6">
+                <div class="flex gap-1.5">
+                  <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                  <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                  <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                </div>
+                <span class="text-caption text-neutral-500 dark:text-neutral-500 font-mono">portfolio.astro</span>
+              </div>
+              
+              <div class="space-y-3 font-mono text-body-sm text-neutral-600 dark:text-neutral-400">
+                <div class="flex gap-2"><span class="text-brand-500">const</span> <span class="text-accent-cyan">developer</span> <span class="text-neutral-400">=</span> <span class="text-amber-500">{</span></div>
+                <div class="pl-4 flex gap-2"><span class="text-purple-500">name</span><span class="text-neutral-400">:</span> <span class="text-green-500">"Guatgames"</span><span class="text-neutral-400">,</span></div>
+                <div class="pl-4 flex gap-2"><span class="text-purple-500">role</span><span class="text-neutral-400">:</span> <span class="text-green-500">"Creative Developer"</span><span class="text-neutral-400">,</span></div>
+                <div class="pl-4 flex gap-2"><span class="text-purple-500">stack</span><span class="text-neutral-400">:</span> <span class="text-amber-500">[</span><span class="text-green-500">"Astro"</span><span class="text-neutral-400">,</span> <span class="text-green-500">"React"</span><span class="text-neutral-400">,</span> <span class="text-green-500">"Tailwind"</span><span class="text-amber-500">]</span><span class="text-neutral-400">,</span></div>
+                <div class="pl-4 flex gap-2"><span class="text-purple-500">passion</span><span class="text-neutral-400">:</span> <span class="text-green-500">"Building delightful UX"</span><span class="text-neutral-400">,</span></div>
+                <div class="pl-4"><span class="text-amber-500">}</span></div>
+              </div>
+            </div>
+            
+            <div class="flex items-center gap-4 pt-6 border-t border-white/20 dark:border-neutral-800/20">
+              <div class="flex -space-x-2" aria-hidden="true">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-brand-500 to-brand-600 border-2 border-white dark:border-neutral-950 flex items-center justify-center font-medium text-white text-sm"></div>
+                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-accent-cyan to-accent-magenta border-2 border-white dark:border-neutral-950 flex items-center justify-center font-medium text-white text-sm"></div>
+                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-accent-lime to-accent-orange border-2 border-white dark:border-neutral-950 flex items-center justify-center font-medium text-white text-sm"></div>
+              </div>
+              <span class="text-body-sm text-neutral-600 dark:text-neutral-400" data-i18n="hero.openTo">Open to opportunities</span>
+            </div>
+          </div>
+          
+          <!-- Floating cards -->
+          <div class="absolute -top-4 -right-4 w-48 h-48 card card-hover glass p-4" data-parallax="0.15" style="animation-delay: 0s;">
+            <div class="w-12 h-12 rounded-xl bg-brand-500/20 flex items-center justify-center mb-3">
+              <svg class="w-6 h-6 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+              </svg>
+            </div>
+            <h4 class="font-display text-heading-sm font-bold text-neutral-900 dark:text-neutral-100 mb-1">Performance</h4>
+            <p class="text-body-sm text-neutral-600 dark:text-neutral-400">100/100 Lighthouse</p>
+          </div>
+          
+          <div class="absolute bottom-4 -left-4 w-48 h-48 card card-hover glass p-4" data-parallax="0.15" style="animation-delay: -1s;">
+            <div class="w-12 h-12 rounded-xl bg-accent-cyan/20 flex items-center justify-center mb-3">
+              <svg class="w-6 h-6 text-accent-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+            </div>
+            <h4 class="font-display text-heading-sm font-bold text-neutral-900 dark:text-neutral-100 mb-1">Accessibility</h4>
+            <p class="text-body-sm text-neutral-600 dark:text-neutral-400">WCAG 2.1 AA</p>
+          </div>
+          
+          <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 card card-hover glass p-4" data-parallax="0.1" style="animation-delay: -2s;">
+            <div class="w-12 h-12 rounded-xl bg-accent-magenta/20 flex items-center justify-center mb-3">
+              <svg class="w-6 h-6 text-accent-magenta" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+              </svg>
+            </div>
+            <h4 class="font-display text-heading-sm font-bold text-neutral-900 dark:text-neutral-100 mb-1">Design</h4>
+            <p class="text-body-sm text-neutral-600 dark:text-neutral-400">Pixel Perfect</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Scroll indicator -->
+    <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-neutral-500 dark:text-neutral-500" data-animate="fade-in" data-delay="1000" aria-hidden="true">
+      <span class="text-caption uppercase tracking-wider" data-i18n="hero.scrollHint">Scroll to explore</span>
+      <div class="w-6 h-10 border-2 border-current rounded-full flex justify-center pt-2">
+        <div class="w-1.5 h-1.5 rounded-full bg-current animate-bounce-soft"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Parallax on mouse move for hero visual
+  const heroVisual = document.querySelector('#hero [data-parallax]');
+  const floatingCards = document.querySelectorAll('#hero [data-parallax]');
+  
+  if (heroVisual && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.addEventListener('mousemove', (e) => {
+      const x = (e.clientX / window.innerWidth - 0.5) * 2;
+      const y = (e.clientY / window.innerHeight - 0.5) * 2;
+      
+      floatingCards.forEach((card, index) => {
+        const factor = (index + 1) * 5;
+        card.style.transform = `translate(${x * factor}px, ${y * factor}px)`;
+      });
+    });
+  }
+</script>
+
+<style>
+  @media (prefers-reduced-motion: reduce) {
+    .animate-float,
+    .animate-pulse-soft,
+    .animate-bounce-soft,
+    .mesh-gradient {
+      animation: none !important;
+    }
+  }
+</style>

@@ -1,0 +1,77 @@
+---
+interface Props {
+  post: any;
+  featured: boolean;
+  index: number;
+}
+
+const { post, featured, index } = Astro.props;
+const { title, description, date, tags, coverImage, readingTime } = post.data;
+const formattedDate = new Date(date).toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+
+<article 
+  class="card card-hover overflow-hidden group flex flex-col"
+  data-animate="slide-up"
+  data-delay={String((index + 1) * 100)}
+  data-reveal-child
+>
+  {coverImage && (
+    <div class="relative aspect-video overflow-hidden">
+      <img 
+        src={coverImage} 
+        alt=""
+        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+        loading="lazy"
+      />
+      <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" aria-hidden="true"></div>
+      
+      {featured && (
+        <div class="absolute top-4 left-4">
+          <span class="badge badge-primary">Featured</span>
+        </div>
+      )}
+    </div>
+  )}
+  
+  <div class="p-6 flex flex-col flex-1">
+    <div class="flex items-center gap-3 mb-3">
+      <time class="text-caption text-neutral-500 dark:text-neutral-500 font-mono" dateTime={date.toISOString()}>
+        {formattedDate}
+      </time>
+      {readingTime && (
+        <span class="text-caption text-neutral-500 dark:text-neutral-500" aria-label={`${readingTime} minute read`}>
+          {readingTime} min read
+        </span>
+      )}
+    </div>
+    
+    <h3 class="font-display text-heading-md font-bold text-neutral-900 dark:text-neutral-100 mb-3 group-hover:text-brand-500 dark:group-hover:text-brand-400 transition-colors line-clamp-2">
+      {title}
+    </h3>
+    
+    <p class="text-body-md text-neutral-600 dark:text-neutral-400 mb-4 line-clamp-3 flex-1">
+      {description}
+    </p>
+    
+    <div class="flex flex-wrap gap-2 mb-4" aria-label="Tags">
+      {tags.slice(0, 3).map((tag: string) => (
+        <span class="tag">{tag}</span>
+      ))}
+      {tags.length > 3 && (
+        <span class="tag text-neutral-500 dark:text-neutral-500">+{tags.length - 3} more</span>
+      )}
+    </div>
+    
+    <a href={`/blog/${post.slug}`} class="link mt-auto group">
+      <span>Read more</span>
+      <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+      </svg>
+    </a>
+  </div>
+</article>

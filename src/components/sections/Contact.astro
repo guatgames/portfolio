@@ -1,0 +1,110 @@
+---
+import ContactForm from '../ui/ContactForm.astro';
+import ContactCard from '../ui/ContactCard.astro';
+---
+
+<section id="contact" class="section" aria-labelledby="contact-title">
+  <div class="container-custom">
+    <div class="section-header" data-animate="slide-up" data-delay="100">
+      <span class="badge-primary mb-4" data-animate="fade-in" data-delay="200" data-i18n="contact.badge">Contact</span>
+      <h2 id="contact-title" class="section-title" data-animate="text-reveal" data-delay="300" data-i18n="contact.subtitle">Let's build something amazing together</h2>
+      <p class="section-subtitle" data-animate="fade-in" data-delay="400" data-i18n="contact.description">
+        Have a project in mind? Questions about my work? Just want to say hi? I'd love to hear from you.
+      </p>
+    </div>
+    
+    <div class="grid lg:grid-cols-2 gap-space-2xl lg:gap-space-4xl" data-animate="slide-up" data-delay="300">
+      <!-- Left: Contact Info -->
+      <div class="space-y-8">
+        <!-- Direct contact options -->
+        <div class="grid gap-4" data-reveal data-reveal-stagger="100">
+          <ContactCard 
+            icon="email"
+            title="Email"
+            value="a...@gmail.com"
+            other="adalfaroochoa@gmail.com"
+            href="mailto:adalfaroochoa@gmail.com"
+            description="For project inquiries and collaborations"
+            i18nKey="contact.channels.email"
+          />
+          <ContactCard 
+            icon="github"
+            title="GitHub"
+            value="@guatgames"
+            href="https://github.com/guatgames"
+            description="Open source work and code samples"
+            i18nKey="contact.channels.github"
+          />
+          <ContactCard 
+            icon="linkedin"
+            title="LinkedIn"
+            value="in/guatgames"
+            href="https://linkedin.com/in/guatgames"
+            description="Professional network and experience"
+            i18nKey="contact.channels.linkedin"
+          />
+          
+        </div>
+        
+        <!-- Availability status -->
+        <div class="card glass p-6 flex items-center gap-4" data-animate="slide-up" data-delay="200">
+          <div class="relative flex items-center justify-center w-12 h-12 rounded-xl bg-brand-500/10">
+            <span class="w-3 h-3 rounded-full bg-brand-500 animate-pulse-soft" aria-hidden="true"></span>
+            <span class="absolute w-6 h-6 rounded-full bg-brand-500/20 animate-ping" aria-hidden="true"></span>
+          </div>
+          <div>
+            <h4 class="font-display text-heading-sm font-bold text-neutral-900 dark:text-neutral-100 mb-1" data-i18n="contact.availability">Currently Available</h4>
+            <p class="text-body-sm text-neutral-600 dark:text-neutral-400" data-i18n="contact.availabilityDesc">Open for freelance projects &amp; new opportunities</p>
+          </div>
+        </div>
+        
+        <!-- Response time -->
+        <div class="flex items-start gap-4 text-body-sm text-neutral-600 dark:text-neutral-400" data-animate="slide-up" data-delay="300">
+          <svg class="w-5 h-5 text-accent-cyan shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <p><span data-i18n="contact.responseTimePrefix">I typically respond within</span> <strong class="font-medium text-neutral-900 dark:text-neutral-100">24-48 hours</strong><span data-i18n="contact.responseTimeSuffix">. For urgent requests, please reach out via email directly.</span></p>
+        </div>
+      </div>
+      
+      <!-- Right: Contact Form -->
+      <ContactForm />
+    </div>
+  </div>
+</section>
+
+<script>
+  // Contact card interactions
+  const contactCards = document.querySelectorAll('[data-contact-card]');
+  
+  contactCards.forEach(card => {
+    const copyBtn = card.querySelector('[data-copy-value]');
+    
+    if (!copyBtn) return;
+    
+    copyBtn.addEventListener('click', async () => {
+      const value = copyBtn.dataset.copyValue;
+      
+      try {
+        await navigator.clipboard.writeText(value || '');
+        
+        const originalText = copyBtn.querySelector('span');
+        const originalIcon = copyBtn.querySelector('svg');
+        
+        if (originalText && originalIcon) {
+          originalText.textContent = 'Copied!';
+          originalIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />';
+          copyBtn.classList.add('text-emerald-500', 'border-emerald-500/30');
+          
+          setTimeout(() => {
+            originalText.textContent = 'Copy';
+            originalIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />';
+            copyBtn.classList.remove('text-emerald-500', 'border-emerald-500/30');
+          }, 2000);
+        }
+      } catch (error) {
+        console.error('Failed to copy:', error);
+      }
+    });
+  });
+</script>

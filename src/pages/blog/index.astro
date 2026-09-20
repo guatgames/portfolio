@@ -1,0 +1,83 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import BlogCard from '../../components/ui/BlogCard.astro';
+
+const posts = await getCollection('blog', ({ data }) => !data.draft);
+const query: string | null = Astro.url.searchParams.get('tag');
+const filteredPosts = query
+  ? posts.filter(p => p.data.tags.includes(query))
+  : posts;
+const sortedPosts = filteredPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const tags = [...new Set(sortedPosts.flatMap(p => p.data.tags))].sort();
+
+const allTagsUrl = '/blog';
+---
+
+<Layout title="Blog | Guatgames" description="Thoughts, tutorials, and insights about web development, design, and technology.">
+  <section id="blog-index" class="section pt-40" aria-labelledby="blog-index-title">
+    <div class="container-custom">
+      <div class="section-header" data-animate="slide-up" data-delay="100">
+        <span class="badge-primary mb-4" data-animate="fade-in" data-delay="200">Blog</span>
+        <h1 id="blog-index-title" class="section-title" data-animate="text-reveal" data-delay="300">All Posts</h1>
+        <p class="section-subtitle" data-animate="fade-in" data-delay="400">
+          Sharing knowledge about web development, design, and technology.
+        </p>
+      </div>
+
+      <!-- Tag filter -->
+      <div class="flex flex-wrap gap-2 justify-center mb-16" data-animate="fade-in" data-delay="200" role="group" aria-label="Filter posts by tag">
+        <a href={allTagsUrl} class={`tag-link ${!query ? 'active' : ''}`}>All</a>
+        {tags.map((tag) => (
+          <a
+            href={`/blog?tag=${encodeURIComponent(tag)}`}
+            class={`tag-link ${query === tag ? 'active' : ''}`}
+          >
+            #{tag}
+          </a>
+        ))}
+      </div>
+
+      {sortedPosts.length > 0 ? (
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8" data-reveal data-reveal-stagger="120">
+          {sortedPosts.map((post, index) => (
+            <BlogCard post={post} featured={index === 0} index={index} />
+          ))}
+        </div>
+      ) : (
+        <div class="text-center py-24" data-animate="fade-in" data-delay="200">
+          <div class="text-neutral-400 dark:text-neutral-600 mb-6">
+            <svg class="w-20 h-20 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+            </svg>
+          </div>
+          <h2 class="font-display text-heading-lg font-bold text-neutral-900 dark:text-neutral-100 mb-2">No posts found</h2>
+          {query && (
+            <p class="text-body-md text-neutral-600 dark:text-neutral-400">
+              No posts tagged <strong>#{query}</strong> yet. <a href="/blog" class="link">View all posts</a>
+            </p>
+          )}
+        </div>
+      )}
+    </div>
+  </section>
+</Layout>
+
+<script>
+  const tagLinks = document.querySelectorAll('.tag-link');
+  tagLinks.forEach((link) => {
+    link.addEventListener('click', () => {
+      // Let the default navigation happen (server-side filtering via query param)
+    });
+  });
+</script>
+
+<style>
+  .tag-link {
+    @apply px-4 py-2 rounded-full text-body-sm font-medium bg-white/80 dark:bg-neutral-900/80 border border-neutral-200 dark:border-neutral-800 text-neutral-700 dark:text-neutral-300 backdrop-blur-xl transition-all duration-300 hover:border-brand-500/50 hover:text-brand-500 dark:hover:text-brand-400;
+  }
+  .tag-link.active {
+    @apply bg-brand-500 text-white border-brand-500 shadow-lg shadow-brand-500/30;
+  }
+</style>

@@ -1,23 +1,81 @@
-<!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
-	</head>
-	<body>
-		<slot />
-	</body>
-</html>
+---
+import '../styles/global.css';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import Scripts from '../components/animations/Scripts.astro';
+import enJson from '../i18n/en.json';
+import esJson from '../i18n/es.json';
 
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
-</style>
+const i18nData = JSON.stringify({ en: enJson, es: esJson });
+
+interface Props {
+  title?: string;
+  description?: string;
+  children: import('astro').SlottedContent;
+}
+
+const { title = 'Guatgames | Creative Developer & Designer', description = 'Portfolio of Guatgames - Creative Developer & Designer. Building delightful digital experiences with modern web technologies.', children } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+
+    <!-- Bilingual translation dictionaries for client-side i18n -->
+    <script id="i18n-data" type="application/json" set:html={i18nData}></script>
+
+    <!-- Early theme application to prevent flash of wrong theme -->
+    <script is:inline>
+      (function () {
+        try {
+          var stored = localStorage.getItem('theme');
+          var theme = stored || 'system';
+          var dark = theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          document.documentElement.classList.toggle('dark', dark);
+          document.documentElement.setAttribute('data-theme', theme);
+        } catch (e) {}
+      })();
+    </script>
+
+    <!-- Early locale application for language toggling -->
+    <script is:inline>
+      (function () {
+        try {
+          var storedLocale = localStorage.getItem('locale');
+          var defaultLocale = (navigator.language || 'en').toLowerCase().startsWith('es') ? 'es' : 'en';
+          var locale = (storedLocale === 'en' || storedLocale === 'es') ? storedLocale : defaultLocale;
+          document.documentElement.setAttribute('data-locale', locale);
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body class="h-full flex flex-col bg-white dark:bg-neutral-950">
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-100 btn-primary">
+      Skip to main content
+    </a>
+    <Header />
+    <main id="main-content" class="flex-1" role="main">
+      <slot />
+    </main>
+    <Footer />
+    <Scripts />
+    <script>
+      import '../scripts/i18n.ts';
+      import '../scripts/theme.ts';
+    </script>
+  </body>
+</html>
