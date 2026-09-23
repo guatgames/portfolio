@@ -164,6 +164,28 @@
     @apply card hover:shadow-2xl hover:shadow-brand-500/10 dark:hover:shadow-brand-500/20 hover:-translate-y-2;
   }
 
+  .variant-icon {
+    animation:
+      v3-float 6s cubic-bezier(0.19, 1, 0.22, 1) infinite,
+      v3-glow 6s cubic-bezier(0.19, 1, 0.22, 1) infinite;
+  }
+
+  @keyframes v3-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+  }
+
+  @keyframes v3-glow {
+    0%, 100% { filter: drop-shadow(0 0 3px color-mix(in srgb, currentColor 35%, transparent)); }
+    50% { filter: drop-shadow(0 0 10px color-mix(in srgb, currentColor 75%, transparent)); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .variant-icon {
+      animation: none;
+    }
+  }
+
   .input {
     @apply w-full px-4 py-3 rounded-lg bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 text-neutral-900 dark:text-neutral-100 placeholder-neutral-400 dark:placeholder-neutral-500 transition-all duration-300 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 focus:outline-none;
   }

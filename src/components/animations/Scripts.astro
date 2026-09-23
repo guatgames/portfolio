@@ -58,7 +58,10 @@
 
 <!-- Parallax effect for background elements -->
 <script>
-  const parallaxElements = document.querySelectorAll('[data-parallax]');
+  const parallaxElements = Array.from(document.querySelectorAll('[data-parallax]'))
+    // The hero section owns its own mousemove parallax for these cards;
+    // running both handlers on the same element would fight over transform.
+    .filter((el) => !el.closest('#hero'));
   
   let ticking = false;
   
@@ -306,6 +309,58 @@
   }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
   
   revealElements.forEach(el => revealObserver.observe(el));
+</script>
+
+<!-- Autoplay muted looping media while its card is in view -->
+<script>
+  // Any video marked data-autoplay-inview (project/blog card reels) plays
+  // muted + looped when scrolled into the viewport and pauses when it leaves.
+  const inViewVideos = Array.from(document.querySelectorAll<HTMLVideoElement>('video[data-autoplay-inview]'));
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  if (inViewVideos.length > 0 && !prefersReducedMotion.matches) {
+    const playInView = (video: HTMLVideoElement) => {
+      if (!video.paused) return;
+      const playAttempt = video.play();
+      if (playAttempt !== undefined) {
+        playAttempt.catch(() => {
+          // Autoplay may be blocked (data-saver, sandbox) or the media may not
+          // have buffered yet. Retry once the first frame can actually render,
+          // otherwise the poster simply stays put.
+          video.addEventListener(
+            'canplay',
+            () => {
+              video.play().catch(() => {});
+            },
+            { once: true }
+          );
+        });
+      }
+    };
+
+    const videoObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const video = entry.target as HTMLVideoElement;
+          if (entry.isIntersecting) {
+            playInView(video);
+          } else {
+            video.pause();
+          }
+        });
+      },
+      { rootMargin: '0px 0px -8% 0px', threshold: 0.2 }
+    );
+
+    inViewVideos.forEach((video) => videoObserver.observe(video));
+
+    // Stop reel playback entirely when the tab is hidden.
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        inViewVideos.forEach((video) => video.pause());
+      }
+    });
+  }
 </script>
 
 <style>

@@ -1,0 +1,313 @@
+---
+---
+<!--
+  In-page article reader. Opening a post never navigates: the article body is
+  cloned from the pre-rendered hidden templates rendered by the Blog section,
+  so the reader works with zero requests and works offline.
+
+  Coordinates with the Blog section:
+    - Blog section dispatches  `open-blog-reader`  with the clicked card element.
+    - The reader owns open/close, focus management, scroll lock and locale-aware meta.
+-->
+<div
+  id="blog-reader"
+  class="fixed inset-0 z-90 hidden"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="blog-reader-title"
+  data-blog-reader
+>
+  <!-- Backdrop -->
+  <div
+    class="absolute inset-0 bg-neutral-950/50 backdrop-blur-md opacity-0 transition-opacity duration-300 ease-out-expo"
+    data-blog-reader-backdrop
+    aria-hidden="true"
+  ></div>
+
+  <!-- Scrollable viewport -->
+  <div class="relative z-10 h-full overflow-y-auto px-4 py-6 sm:px-6 sm:py-12 lg:py-16" data-blog-reader-scroll>
+    <div class="flex min-h-full items-center justify-center">
+      <div
+        class="relative w-full max-w-3xl my-auto opacity-0 scale-95 transition-all duration-300 ease-out-expo"
+        data-blog-reader-panel-wrap
+      >
+        <!-- Accent glow pooling behind the glass panel -->
+        <div
+          class="absolute -inset-3 -z-10 rounded-[2rem] bg-gradient-to-br from-brand-500/25 via-accent-cyan/20 to-accent-magenta/25 blur-2xl opacity-0 transition-opacity duration-500"
+          data-blog-reader-aura
+          aria-hidden="true"
+        ></div>
+
+        <article
+          class="relative overflow-hidden rounded-2xl bg-white/85 dark:bg-neutral-900/85 backdrop-blur-2xl border border-neutral-200/60 dark:border-neutral-800/60"
+        >
+          <button
+            type="button"
+            class="btn-icon absolute top-4 right-4 z-10"
+            aria-label="Close"
+            data-blog-reader-close
+            data-i18n-attr="aria-label:common.close"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+
+          <header class="relative px-6 pt-14 pb-7 sm:px-10 sm:pt-16 sm:pb-8">
+            <span class="badge-primary mb-5" data-i18n="blog.title">Blog</span>
+            <h2
+              id="blog-reader-title"
+              class="font-display text-heading-lg lg:text-heading-xl font-bold tracking-tight text-neutral-900 dark:text-neutral-100 mb-4 text-balance"
+              data-blog-reader-title
+            ></h2>
+            <p class="text-body-lg text-neutral-600 dark:text-neutral-400 max-w-2xl" data-blog-reader-description></p>
+            <div class="flex flex-wrap items-center gap-x-5 gap-y-2 mt-6">
+              <time class="text-body-sm text-neutral-500 dark:text-neutral-500 font-mono" data-blog-reader-date></time>
+              <span class="text-body-sm text-neutral-500 dark:text-neutral-500 hidden" data-blog-reader-reading></span>
+              <div class="flex flex-wrap gap-2" data-blog-reader-tags></div>
+            </div>
+          </header>
+
+          <div class="px-6 sm:px-10 pb-8">
+            <div
+              class="prose prose-lg dark:prose-invert max-w-none pt-8 border-t border-neutral-200/50 dark:border-neutral-800/50"
+              data-blog-reader-body
+            ></div>
+          </div>
+
+          <footer class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 px-6 sm:px-10 py-6 border-t border-neutral-200/50 dark:border-neutral-800/50">
+            <button type="button" class="btn-ghost text-body-sm group" data-blog-reader-back>
+              <svg class="w-4 h-4 transition-transform duration-300 group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              </svg>
+              <span data-i18n="blog.backToBlog">Back to blog</span>
+            </button>
+
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="text-caption uppercase tracking-wider text-neutral-500 dark:text-neutral-500 mr-1" data-i18n="common.share">Share</span>
+              <a
+                href="#"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="btn-secondary text-body-sm px-4 py-2"
+                aria-label="Share on Twitter"
+                data-blog-reader-twitter
+                data-i18n-attr="aria-label:common.shareOnTwitter"
+              >
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                </svg>
+              </a>
+              <a
+                href="#"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="btn-secondary text-body-sm px-4 py-2"
+                aria-label="Share on LinkedIn"
+                data-blog-reader-linkedin
+                data-i18n-attr="aria-label:common.shareOnLinkedIn"
+              >
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                </svg>
+              </a>
+              <button
+                type="button"
+                class="btn-secondary text-body-sm px-4 py-2"
+                data-blog-reader-copy
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                </svg>
+                <span data-copy-label data-i18n="common.copy">Copy</span>
+              </button>
+            </div>
+          </footer>
+        </article>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const reader = document.querySelector<HTMLElement>('[data-blog-reader]');
+    if (reader) {
+      const backdrop = reader.querySelector<HTMLElement>('[data-blog-reader-backdrop]');
+      const wrap = reader.querySelector<HTMLElement>('[data-blog-reader-panel-wrap]');
+      const aura = reader.querySelector<HTMLElement>('[data-blog-reader-aura]');
+      const scroll = reader.querySelector<HTMLElement>('[data-blog-reader-scroll]');
+      const closeBtn = reader.querySelector<HTMLButtonElement>('[data-blog-reader-close]');
+      const backBtn = reader.querySelector<HTMLButtonElement>('[data-blog-reader-back]');
+      const titleEl = reader.querySelector<HTMLElement>('[data-blog-reader-title]');
+      const descEl = reader.querySelector<HTMLElement>('[data-blog-reader-description]');
+      const dateEl = reader.querySelector<HTMLElement>('[data-blog-reader-date]');
+      const readingEl = reader.querySelector<HTMLElement>('[data-blog-reader-reading]');
+      const tagsEl = reader.querySelector<HTMLElement>('[data-blog-reader-tags]');
+      const bodyEl = reader.querySelector<HTMLElement>('[data-blog-reader-body]');
+      const twitterLink = reader.querySelector<HTMLAnchorElement>('[data-blog-reader-twitter]');
+      const linkedinLink = reader.querySelector<HTMLAnchorElement>('[data-blog-reader-linkedin]');
+      const copyBtn = reader.querySelector<HTMLButtonElement>('[data-blog-reader-copy]');
+      const copyLabel = reader.querySelector<HTMLElement>('[data-copy-label]');
+
+      let isOpen = false;
+      let lastFocused: HTMLElement | null = null;
+      let currentSlug: string | null = null;
+
+      function getLocale(): 'en' | 'es' {
+        const attr = document.documentElement.getAttribute('data-locale');
+        return (window.I18N?.locale || (attr === 'es' ? 'es' : 'en')) as 'en' | 'es';
+      }
+
+      function parseDate(value: string): Date {
+        const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+        if (match) {
+          return new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
+        }
+        return new Date(value);
+      }
+
+      function localeDate(iso: string): string {
+        const date = parseDate(iso);
+        if (Number.isNaN(date.getTime())) return '';
+        return date.toLocaleDateString(getLocale(), { year: 'numeric', month: 'long', day: 'numeric' });
+      }
+
+      function fillMeta(card: HTMLElement, { keepScroll = false } = {}) {
+        const slug = card.dataset.blogSlug || '';
+        const title = card.dataset.blogTitle || '';
+        const description = card.dataset.blogDescription || '';
+        const date = card.dataset.blogDate || '';
+        const reading = Number(card.dataset.blogReading) || 0;
+        const tags: string[] = card.dataset.blogTags ? (JSON.parse(card.dataset.blogTags) as string[]) : [];
+        const readingText = window.I18N?.t('common.readingTime') || 'min read';
+
+        currentSlug = slug;
+        titleEl.textContent = title;
+        descEl.textContent = description;
+        dateEl.textContent = localeDate(date);
+        dateEl.setAttribute('datetime', date);
+        readingEl.textContent = reading > 0 ? `${reading} ${readingText}` : '';
+        readingEl.classList.toggle('hidden', reading === 0);
+
+        tagsEl.innerHTML = '';
+        tags.forEach((tag) => {
+          const chip = document.createElement('span');
+          chip.className = 'tag';
+          chip.textContent = `#${tag}`;
+          tagsEl.appendChild(chip);
+        });
+        tagsEl.setAttribute('aria-label', window.I18N?.t('blog.taggedWith') || 'Tagged with');
+
+        const source = document.querySelector<HTMLElement>(`[data-blog-body="${CSS.escape(slug)}"]`);
+        if (source) {
+          bodyEl.innerHTML = source.innerHTML;
+        } else {
+          bodyEl.innerHTML = '<p>Post content unavailable.</p>';
+        }
+
+        const canonical = `${window.location.origin}/blog/${slug}/`;
+        twitterLink.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(canonical)}`;
+        linkedinLink.href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(canonical)}`;
+        copyBtn.dataset.canonical = canonical;
+
+        if (!keepScroll) scroll.scrollTop = 0;
+      }
+
+      function open(card: HTMLElement) {
+        if (isOpen) {
+          fillMeta(card);
+          return;
+        }
+        lastFocused = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+        fillMeta(card);
+
+        reader.classList.remove('hidden');
+        requestAnimationFrame(() => {
+          backdrop.classList.remove('opacity-0');
+          backdrop.classList.add('opacity-100');
+          wrap.classList.remove('opacity-0', 'scale-95');
+          wrap.classList.add('opacity-100', 'scale-100');
+          aura.classList.add('opacity-100');
+        });
+
+        document.body.style.overflow = 'hidden';
+        isOpen = true;
+        closeBtn.focus();
+      }
+
+      function close() {
+        if (!isOpen) return;
+        isOpen = false;
+        backdrop.classList.add('opacity-0');
+        backdrop.classList.remove('opacity-100');
+        wrap.classList.add('opacity-0', 'scale-95');
+        wrap.classList.remove('opacity-100', 'scale-100');
+        aura.classList.remove('opacity-100');
+        document.body.style.overflow = '';
+
+        window.setTimeout(() => {
+          reader.classList.add('hidden');
+          if (lastFocused && document.documentElement.contains(lastFocused)) {
+            lastFocused.focus();
+          }
+        }, 300);
+      }
+
+      reader.addEventListener('keydown', (e) => {
+        if (!isOpen) return;
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          close();
+        } else if (e.key === 'Tab') {
+          const focusables = Array.from(
+            reader.querySelectorAll<HTMLElement>('a[href], button:not([disabled])')
+          ).filter(el => el.offsetParent !== null);
+          if (focusables.length === 0) return;
+          const first = focusables[0];
+          const last = focusables[focusables.length - 1];
+          if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
+      });
+
+      backdrop.addEventListener('click', close);
+      closeBtn.addEventListener('click', close);
+      backBtn.addEventListener('click', close);
+
+      copyBtn.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(copyBtn.dataset.canonical || '');
+          if (copyLabel) {
+            const original = copyLabel.textContent;
+            copyLabel.textContent = window.I18N?.t('common.copied') || 'Copied!';
+            copyLabel.classList.remove('text-emerald-500');
+            copyBtn.classList.add('text-emerald-500', 'border-emerald-500/30');
+            window.setTimeout(() => {
+              copyLabel.textContent = original;
+              copyBtn.classList.remove('text-emerald-500', 'border-emerald-500/30');
+            }, 2000);
+          }
+        } catch {
+          /* clipboard unavailable */
+        }
+      });
+
+      window.addEventListener('open-blog-reader', (e: Event) => {
+        const card = (e as CustomEvent<HTMLElement>).detail;
+        if (card) open(card);
+      });
+
+      // Keep meta (dates) in sync with the active language while reading
+      window.addEventListener('language-changed', () => {
+        if (isOpen && currentSlug) {
+          const card = document.querySelector<HTMLElement>(`[data-blog-card][data-blog-slug="${CSS.escape(currentSlug)}"]`);
+          if (card) fillMeta(card, { keepScroll: true });
+        }
+      });
+    }
+  </script>
+</div>

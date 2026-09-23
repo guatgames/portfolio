@@ -95,10 +95,10 @@
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
           </svg>
-          <span data-submit-text>Send Message</span>
+          <span data-submit-text data-i18n="contact.form.submit">Send Message</span>
         </span>
       </button>
-      <span class="text-body-sm text-neutral-500 dark:text-neutral-500" data-form-hint>
+      <span class="text-body-sm text-neutral-500 dark:text-neutral-500" data-form-hint data-i18n="contact.form.hint">
         Usually replies within 24-48 hours
       </span>
     </div>
@@ -125,44 +125,12 @@
   const statusIconSuccess = form?.querySelector('.status-icon-success');
   const statusIconError = form?.querySelector('.status-icon-error');
   
-  // Get current language from localStorage
-  function getCurrentLanguage(): string {
-    return localStorage.getItem('locale') || 'en';
-  }
-  
-  const messages = {
-    en: {
-      submitting: 'Sending...',
-      submit: 'Send Message',
-      success: 'Message sent successfully! I\'ll get back to you soon.',
-      error: 'Failed to send message. Please try again or email me directly.',
-      validation: {
-        nameRequired: 'Name is required',
-        emailRequired: 'Email is required',
-        emailInvalid: 'Please enter a valid email address',
-        subjectRequired: 'Subject is required',
-        messageRequired: 'Message is required',
-        messageMinLength: 'Message must be at least 10 characters'
-      }
-    },
-    es: {
-      submitting: 'Enviando...',
-      submit: 'Enviar Mensaje',
-      success: '¡Mensaje enviado con éxito! Te responderé pronto.',
-      error: 'Error al enviar el mensaje. Por favor, inténtalo de nuevo o envíame un email directamente.',
-      validation: {
-        nameRequired: 'El nombre es obligatorio',
-        emailRequired: 'El correo es obligatorio',
-        emailInvalid: 'Por favor, ingresa un correo válido',
-        subjectRequired: 'El asunto es obligatorio',
-        messageRequired: 'El mensaje es obligatorio',
-        messageMinLength: 'El mensaje debe tener al menos 10 caracteres'
-      }
-    }
-  };
-  
-  function getMessages(): typeof messages.en {
-    return messages[getCurrentLanguage() as keyof typeof messages] || messages.en;
+  // Resolve a translation from the shared runtime with an English fallback
+  // (used when the runtime is not ready or on no-JS). Resolved at call time
+  // so messages always reflect the active locale.
+  function t(key: string, fallback: string): string {
+    const value = window.I18N?.t(key);
+    return value !== undefined && value !== key ? value : fallback;
   }
   
   function showStatus(type: 'success' | 'error', text: string) {
@@ -213,13 +181,12 @@
   }
   
   function validateForm(formData: FormData): boolean {
-    const lang = getMessages();
     let isValid = true;
     
     // Validate name
     const name = String(formData.get('name') || '');
     if (!name) {
-      setFieldError('name', lang.validation.nameRequired);
+      setFieldError('name', t('contact.form.validation.nameRequired', 'Name is required'));
       isValid = false;
     } else {
       clearFieldError('name');
@@ -229,10 +196,10 @@
     const email = String(formData.get('email') || '');
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email) {
-      setFieldError('email', lang.validation.emailRequired);
+      setFieldError('email', t('contact.form.validation.emailRequired', 'Email is required'));
       isValid = false;
     } else if (!emailRegex.test(email)) {
-      setFieldError('email', lang.validation.emailInvalid);
+      setFieldError('email', t('contact.form.validation.emailInvalid', 'Please enter a valid email address'));
       isValid = false;
     } else {
       clearFieldError('email');
@@ -241,7 +208,7 @@
     // Validate subject
     const subject = String(formData.get('subject') || '');
     if (!subject) {
-      setFieldError('subject', lang.validation.subjectRequired);
+      setFieldError('subject', t('contact.form.validation.subjectRequired', 'Subject is required'));
       isValid = false;
     } else {
       clearFieldError('subject');
@@ -250,10 +217,10 @@
     // Validate message
     const message = String(formData.get('message') || '');
     if (!message) {
-      setFieldError('message', lang.validation.messageRequired);
+      setFieldError('message', t('contact.form.validation.messageRequired', 'Message is required'));
       isValid = false;
     } else if (message.length < 10) {
-      setFieldError('message', lang.validation.messageMinLength);
+      setFieldError('message', t('contact.form.validation.messageMinLength', 'Message must be at least 10 characters'));
       isValid = false;
     } else {
       clearFieldError('message');
@@ -273,16 +240,15 @@
     e.preventDefault();
     
     const formData = new FormData(form);
-    const lang = getMessages();
     
     // Validate
     if (!validateForm(formData)) {
-      showStatus('error', lang.error);
+      showStatus('error', t('contact.form.error', 'Failed to send message. Please try again or email me directly.'));
       return;
     }
     
     // Update button state
-    if (submitText) submitText.textContent = lang.submitting;
+    if (submitText) submitText.textContent = t('contact.form.submitting', 'Sending...');
     submitButton?.setAttribute('disabled', 'true');
     submitButton?.classList.add('opacity-50', 'cursor-not-allowed');
     
@@ -296,15 +262,15 @@
       
       if (response.ok) {
         form.reset();
-        showStatus('success', lang.success);
-        if (submitText) submitText.textContent = lang.submit;
+        showStatus('success', t('contact.form.success', 'Message sent successfully! I\'ll get back to you soon.'));
+        if (submitText) submitText.textContent = t('contact.form.submit', 'Send Message');
       } else {
         throw new Error('Failed to submit');
       }
     } catch (error) {
       console.error('Form submission error:', error);
-      showStatus('error', lang.error);
-      if (submitText) submitText.textContent = lang.submit;
+      showStatus('error', t('contact.form.error', 'Failed to send message. Please try again or email me directly.'));
+      if (submitText) submitText.textContent = t('contact.form.submit', 'Send Message');
     } finally {
       submitButton?.removeAttribute('disabled');
       submitButton?.classList.remove('opacity-50', 'cursor-not-allowed');
@@ -313,9 +279,8 @@
   
   // Listen for language changes to update messages
   window.addEventListener('language-changed', () => {
-    const lang = getMessages();
     if (!form?.querySelector('.status-message:not(.hidden)')) {
-      if (submitText) submitText.textContent = lang.submit;
+      if (submitText) submitText.textContent = t('contact.form.submit', 'Send Message');
     }
   });
 </script>

@@ -7,6 +7,7 @@
   aria-expanded="false"
   aria-controls="mobile-menu"
   type="button"
+  data-i18n-attr="aria-label:accessibility.openMenu"
 >
   <span class="relative w-6 h-5 flex flex-col justify-between" aria-hidden="true">
     <span class="hamburger-line block w-full h-0.5 bg-current rounded transition-all duration-300 ease-out-expo origin-left"></span>
@@ -22,7 +23,10 @@
   button?.addEventListener('click', () => {
     const isExpanded = button.getAttribute('aria-expanded') === 'true';
     button.setAttribute('aria-expanded', (!isExpanded).toString());
-    button.setAttribute('aria-label', isExpanded ? 'Open menu' : 'Close menu');
+    const label = isExpanded
+      ? (window.I18N?.t('accessibility.openMenu') || 'Open menu')
+      : (window.I18N?.t('accessibility.closeMenu') || 'Close menu');
+    button.setAttribute('aria-label', label);
     
     if (!isExpanded) {
       // Open the full-screen menu
@@ -41,7 +45,7 @@
   // Reset icon when menu closes via close button
   window.addEventListener('mobile-menu-closed', () => {
     button?.setAttribute('aria-expanded', 'false');
-    button?.setAttribute('aria-label', 'Open menu');
+    button?.setAttribute('aria-label', window.I18N?.t('accessibility.openMenu') || 'Open menu');
     lines[0]?.classList.remove('rotate-45', 'translate-y-2');
     lines[1]?.classList.remove('opacity-0');
     lines[2]?.classList.remove('-rotate-45', '-translate-y-2');

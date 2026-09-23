@@ -25,6 +25,9 @@
     "share": "Share",
     "copy": "Copy",
     "copied": "Copied!",
+    "copyValue": "Copy {title} value",
+    "shareOnTwitter": "Share on Twitter",
+    "shareOnLinkedIn": "Share on LinkedIn",
     "download": "Download",
     "print": "Print",
     "search": "Search",
@@ -48,7 +51,9 @@
     "resume": "Resume",
     "toggleMenu": "Toggle menu",
     "toggleTheme": "Toggle theme",
-    "toggleLanguage": "Toggle language"
+    "toggleLanguage": "Toggle language",
+    "mainNav": "Main navigation",
+    "mobileNav": "Mobile navigation"
   },
   "hero": {
     "greeting": "Hi, I'm",
@@ -75,20 +80,20 @@
     "bio2": "I knew about programming when I was 11 years old, after that, I started learning programming and web development. I have been working on different projects, from small personal projects to larger applications. I am always looking for new challenges and opportunities to grow as a developer.",
     "highlightYears": "5+ Years Learning",
     "highlightYearsDesc": "Continuous learning and skill development",
-    "highlightOpenSource": "Present projects",
-    "highlightOpenSourceDesc": "Present different projects in events of school and university's",
+    "highlightOpenSource": "Presenting projects",
+    "highlightOpenSourceDesc": "Showcasing projects at school and university events",
     "highlightMentor": "Leader & Speaker",
     "highlightMentorDesc": "Helping partners achieve their goals in the programming world",
     "highlightLearner": "Lifelong Learner",
     "highlightLearnerDesc": "Constantly exploring new technologies & patterns",
     "skills": "Core Skills",
     "interests": "When not coding, you'll find me",
-    "interestsList": [
-      "Playing video games",
-      "Playing guitar and music production",
-      "Playing basketball",
-      "Mechanical keyboards"
-    ],
+    "interestTags": {
+      "videoGames": "Video games",
+      "basketball": "Basketball",
+      "keyboards": "Mechanical keyboards",
+      "guitar": "Playing guitar"
+    },
     "skillCategories": {
       "frontend": "Frontend",
       "backend": "Backend",
@@ -117,6 +122,9 @@
     "noProjectsHint": "Add some projects to your portfolio to get started!",
     "projectCard": {
       "viewDetails": "View details",
+      "viewLiveDemo": "View live demo of {title}",
+      "viewSource": "View source code of {title}",
+      "moreCount": "+{count} more",
       "technologies": "Built with"
     }
   },
@@ -142,6 +150,8 @@
     "allPosts": "All Posts",
     "relatedPosts": "Related Posts",
     "noPosts": "No posts found.",
+    "noPostsTitle": "No posts yet",
+    "tagFilter": "Filter posts by tag",
     "taggedWith": "Tagged with",
     "backToBlog": "Back to blog",
     "sharePost": "Share this post",
@@ -164,6 +174,7 @@
       "messagePlaceholder": "Tell me about your project...",
       "submit": "Send Message",
       "submitting": "Sending...",
+      "hint": "Usually replies within 24-48 hours",
       "success": "Message sent successfully! I'll get back to you soon.",
       "error": "Failed to send message. Please try again or email me directly.",
       "validation": {
@@ -217,7 +228,8 @@
     "english": "English",
     "spanish": "Español",
     "current": "English",
-    "switchTo": "Switch to Spanish"
+    "switchTo": "Switch to Spanish",
+    "select": "Select language"
   },
   "theme": {
     "light": "Light",

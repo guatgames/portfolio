@@ -24,6 +24,11 @@ function systemPrefersDark(): boolean {
   return window.matchMedia('(prefers-color-scheme: dark)').matches;
 }
 
+function setFavicon(dark: boolean): void {
+  const favicon = document.querySelector<HTMLLinkElement>('link[rel="icon"][type="image/jpeg"]');
+  if (favicon) favicon.setAttribute('href', dark ? '/images/favico-dark.jpeg' : '/images/favico.jpeg');
+}
+
 function resolve(theme: Theme): Resolved {
   if (theme === 'system') return systemPrefersDark() ? 'dark' : 'light';
   return theme;
@@ -40,6 +45,7 @@ function createTheme(): ThemeGlobal {
     root.classList.toggle('dark', resolved === 'dark');
     root.setAttribute('data-theme', current);
     root.style.colorScheme = resolved;
+    setFavicon(resolved === 'dark');
     localStorage.setItem('theme', current);
     window.dispatchEvent(new CustomEvent('theme-changed', { detail: { theme: current, resolved } }));
   }

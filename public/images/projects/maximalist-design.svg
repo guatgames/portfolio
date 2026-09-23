@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <defs>
+    <filter id="soft" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="70"/>
+    </filter>
+    <pattern id="grid" width="48" height="48" patternUnits="userSpaceOnUse">
+      <path d="M 48 0 L 0 0 0 48" fill="none" stroke="#ffffff" stroke-opacity="0.045" stroke-width="1"/>
+    </pattern>
+    <radialGradient id="blob-42" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#000" stop-opacity="0"/>
+      <stop offset="60%" stop-color="#000" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#000" stop-opacity="0.55"/>
+    </radialGradient>
+  </defs>
+  <rect width="1280" height="720" fill="#0a0a0a"/>
+  <rect width="1280" height="720" fill="url(#grid)"/>
+  <g opacity="0.62"><radialGradient id="b0" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="rgb(236,125,26)" stop-opacity="0.9"/><stop offset="55%" stop-color="rgb(236,125,26)" stop-opacity="0.35"/><stop offset="100%" stop-color="rgb(236,125,26)" stop-opacity="0"/></radialGradient><circle cx="874" cy="197" r="400" fill="url(#b0)" filter="url(#soft)"/></g><g opacity="0.62"><radialGradient id="b1" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="rgb(204,255,0)" stop-opacity="0.9"/><stop offset="55%" stop-color="rgb(204,255,0)" stop-opacity="0.35"/><stop offset="100%" stop-color="rgb(204,255,0)" stop-opacity="0"/></radialGradient><circle cx="245" cy="519" r="320" fill="url(#b1)" filter="url(#soft)"/></g><g opacity="0.62"><radialGradient id="b2" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="rgb(0,245,212)" stop-opacity="0.9"/><stop offset="55%" stop-color="rgb(0,245,212)" stop-opacity="0.35"/><stop offset="100%" stop-color="rgb(0,245,212)" stop-opacity="0"/></radialGradient><circle cx="501" cy="265" r="260" fill="url(#b2)" filter="url(#soft)"/></g>
+  <rect width="1280" height="720" fill="url(#blob-42)"/>
+  
+    <g stroke="#ffffff" stroke-opacity="0.35" stroke-width="2" fill="none">
+      <path d="M 40 0 V 24"/>
+      <path d="M 0 40 H 24"/>
+      <path d="M 1240 0 V 24"/>
+      <path d="M 1280 40 H 1256"/>
+      <path d="M 40 720 V 696"/>
+      <path d="M 0 680 H 24"/>
+      <path d="M 1240 720 V 696"/>
+      <path d="M 1280 680 H 1256"/>
+    </g>
+  <g font-family="Space Grotesk, DM Sans, system-ui, sans-serif">
+    <text font-family="JetBrains Mono, DM Sans, monospace" font-size="20" letter-spacing="6" fill="#ffffff" fill-opacity="0.55" x="84" y="92">GUATGAMES // JOURNAL — DESIGN NOTES</text>
+    <text font-size="126" font-weight="800" letter-spacing="-1">
+      <tspan x="84" y="470" fill="rgb(236,125,26)">M</tspan><tspan x="168" y="470" fill="rgb(204,255,0)">A</tspan><tspan x="252" y="470" fill="rgb(0,245,212)">X</tspan><tspan x="336" y="470" fill="rgb(236,125,26)">I</tspan><tspan x="420" y="470" fill="rgb(204,255,0)">M</tspan><tspan x="504" y="470" fill="rgb(0,245,212)">A</tspan><tspan x="588" y="470" fill="rgb(236,125,26)">L</tspan><tspan x="672" y="470" fill="rgb(204,255,0)">I</tspan><tspan x="756" y="470" fill="rgb(0,245,212)">S</tspan><tspan x="840" y="470" fill="rgb(236,125,26)">T</tspan><tspan x="84" y="528" fill="rgb(236,125,26)">D</tspan><tspan x="168" y="528" fill="rgb(204,255,0)">E</tspan><tspan x="252" y="528" fill="rgb(0,245,212)">S</tspan><tspan x="336" y="528" fill="rgb(236,125,26)">I</tspan><tspan x="420" y="528" fill="rgb(204,255,0)">G</tspan><tspan x="504" y="528" fill="rgb(0,245,212)">N</tspan>
+    </text>
+    <text font-family="JetBrains Mono, DM Sans, monospace" font-size="17" letter-spacing="3" fill="#ffffff" fill-opacity="0.4" x="84" y="612">// DOES MORE ≠ MESSY</text>
+  </g>
+</svg>

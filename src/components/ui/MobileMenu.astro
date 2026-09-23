@@ -11,13 +11,15 @@ import ThemeToggle from '../ui/ThemeToggle.astro';
 >
   <div class="flex flex-col h-full p-8 overflow-y-auto">
     <div class="flex items-center justify-between mb-12">
-      <a href="/" class="font-display text-heading-lg font-bold gradient-text" aria-label="Guatgames - Home">
-        G
+      <a href="/" class="block shrink-0" aria-label="Guatgames - Home">
+        <img src="/images/favico.jpeg" alt="Guatgames" class="w-10 h-10 rounded-xl object-cover dark:hidden" width="40" height="40" loading="eager" />
+        <img src="/images/favico-dark.jpeg" alt="Guatgames" class="w-10 h-10 rounded-xl object-cover hidden dark:block" width="40" height="40" loading="eager" />
       </a>
       <button
         id="mobile-menu-close"
         class="btn-icon"
         aria-label="Close menu"
+        data-i18n-attr="aria-label:accessibility.closeMenu"
       >
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -25,22 +27,22 @@ import ThemeToggle from '../ui/ThemeToggle.astro';
       </button>
     </div>
     
-    <nav aria-label="Mobile navigation">
-      <ul class="flex flex-col gap-2 mb-12" role="menubar">
-        <li role="none">
-          <a href="#about" class="mobile-nav-link" role="menuitem" data-i18n="navigation.about">About</a>
+    <nav aria-label="Mobile navigation" data-i18n-attr="aria-label:navigation.mobileNav">
+      <ul class="flex flex-col gap-2 mb-12">
+        <li>
+          <a href="#about" class="mobile-nav-link" data-i18n="navigation.about">About</a>
         </li>
-        <li role="none">
-          <a href="#projects" class="mobile-nav-link" role="menuitem" data-i18n="navigation.projects">Projects</a>
+        <li>
+          <a href="#projects" class="mobile-nav-link" data-i18n="navigation.projects">Projects</a>
         </li>
-        <li role="none">
-          <a href="#technologies" class="mobile-nav-link" role="menuitem" data-i18n="navigation.technologies">Technologies</a>
+        <li>
+          <a href="#technologies" class="mobile-nav-link" data-i18n="navigation.technologies">Technologies</a>
         </li>
-        <li role="none">
-          <a href="#blog" class="mobile-nav-link" role="menuitem" data-i18n="navigation.blog">Blog</a>
+        <li>
+          <a href="#blog" class="mobile-nav-link" data-i18n="navigation.blog">Blog</a>
         </li>
-        <li role="none">
-          <a href="#contact" class="mobile-nav-link" role="menuitem" data-i18n="navigation.contact">Contact</a>
+        <li>
+          <a href="#contact" class="mobile-nav-link" data-i18n="navigation.contact">Contact</a>
         </li>
       </ul>
     </nav>
@@ -49,22 +51,16 @@ import ThemeToggle from '../ui/ThemeToggle.astro';
       <LanguageToggle />
       <ThemeToggle />
       <div class="flex items-center gap-4">
-        <a href="mailto:hello@guatgames.dev" class="btn-primary w-full justify-center" data-i18n="hero.ctaSecondary">
+        <a href="mailto:adalfaroochoa@gmail.com" class="btn-primary w-full justify-center" data-i18n="hero.ctaSecondary">
           Get in Touch
         </a>
       </div>
     </div>
   </div>
-  
-  <div 
-    class="mobile-menu-backdrop absolute inset-0 bg-black/50 opacity-0 invisible transition-all duration-300"
-    aria-hidden="true"
-  ></div>
 </div>
 
 <script>
   const menu = document.getElementById('mobile-menu');
-  const backdrop = menu?.querySelector('.mobile-menu-backdrop');
   const closeBtn = document.getElementById('mobile-menu-close');
   const links = menu?.querySelectorAll('.mobile-nav-link');
   const openBtn = document.getElementById('mobile-menu-button');
@@ -72,8 +68,6 @@ import ThemeToggle from '../ui/ThemeToggle.astro';
   function openMenu() {
     menu?.classList.remove('translate-x-full');
     menu?.classList.add('translate-x-0');
-    backdrop?.classList.remove('opacity-0', 'invisible');
-    backdrop?.classList.add('opacity-100', 'visible');
     document.body.style.overflow = 'hidden';
     openBtn?.setAttribute('aria-expanded', 'true');
     closeBtn?.focus();
@@ -82,20 +76,33 @@ import ThemeToggle from '../ui/ThemeToggle.astro';
   function closeMenu() {
     menu?.classList.add('translate-x-full');
     menu?.classList.remove('translate-x-0');
-    backdrop?.classList.add('opacity-0', 'invisible');
-    backdrop?.classList.remove('opacity-100', 'visible');
     document.body.style.overflow = '';
     window.dispatchEvent(new CustomEvent('mobile-menu-closed'));
     openBtn?.focus();
   }
   
   closeBtn?.addEventListener('click', closeMenu);
-  backdrop?.addEventListener('click', closeMenu);
   
   links?.forEach(link => {
     link.addEventListener('click', closeMenu);
   });
   
+  // Keep focus inside the open panel so aria-modal is honoured
+  menu?.addEventListener('keydown', (e) => {
+    if (e.key !== 'Tab') return;
+    const focusables = menu?.querySelectorAll<HTMLElement>('a[href], button:not([disabled])');
+    if (!focusables || focusables.length === 0) return;
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  });
+
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && !menu?.classList.contains('translate-x-full')) {
       closeMenu();
@@ -109,13 +116,5 @@ import ThemeToggle from '../ui/ThemeToggle.astro';
 <style>
   .mobile-nav-link {
     @apply block px-4 py-4 text-heading-sm font-medium text-neutral-900 dark:text-neutral-100 rounded-xl hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors;
-  }
-  
-  .mobile-menu.open {
-    @apply translate-x-0;
-  }
-  
-  .mobile-menu-backdrop {
-    @apply bg-black/50;
   }
 </style>

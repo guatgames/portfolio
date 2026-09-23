@@ -65,9 +65,7 @@ const iconDef = icons[icon];
   data-reveal-child
 >
   <span class={`w-12 h-12 shrink-0 rounded-xl ${classes.iconBg} flex items-center justify-center`}>
-    <svg class={`w-6 h-6 ${classes.text}`} fill={iconDef.fill ? 'currentColor' : 'none'} stroke={iconDef.fill ? 'none' : 'currentColor'} viewBox="0 0 24 24" aria-hidden="true">
-      <set:html>{iconDef.path}</set:html>
-    </svg>
+    <svg class={`variant-icon w-6 h-6 ${classes.text}`} fill={iconDef.fill ? 'currentColor' : 'none'} stroke={iconDef.fill ? 'none' : 'currentColor'} viewBox="0 0 24 24" aria-hidden="true" set:html={iconDef.path}></svg>
   </span>
   
   <div class="flex-1 min-w-0">
@@ -86,6 +84,7 @@ const iconDef = icons[icon];
   <button 
     class="copy-btn shrink-0 p-2 rounded-lg text-neutral-500 dark:text-neutral-500 hover:text-brand-500 dark:hover:text-brand-400 hover:bg-brand-500/10 transition-all duration-300"
     data-copy-value={other}
+    data-copy-title-key={i18nKey ? `${i18nKey}.title` : undefined}
     aria-label={`Copy ${title} value`}
   >
     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">

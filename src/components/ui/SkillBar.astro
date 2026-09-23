@@ -18,7 +18,44 @@ const dotColors: Record<string, string> = {
 const dotColorClass = dotColors[color] || 'bg-brand-500';
 ---
 
-<code class="skill-chip" data-animate="fade-in" data-delay="100">
+<!--
+  Skill chip. Styled here (not by the parent) because Astro scope-attributes
+  only reach elements this component renders itself. When placed inside a
+  skill-panel, the panel's --skill-accent drives the hover tint via inheritance.
+-->
+<code class="skill-chip" data-stagger-child="fade-in">
   <span class={`skill-chip-dot ${dotColorClass}`} aria-hidden="true"></span>
   <span>{name}</span>
 </code>
+
+<style>
+  .skill-chip {
+    @apply inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-caption font-medium;
+    background: rgb(245 245 245 / 0.9);
+    border: 1px solid rgb(229 229 229);
+    color: rgb(64 64 64);
+    transition:
+      border-color 0.3s ease,
+      background-color 0.3s ease,
+      color 0.3s ease,
+      transform 0.3s ease;
+    white-space: nowrap;
+  }
+
+  :global(.dark) .skill-chip {
+    background: rgb(38 38 38 / 0.9);
+    border-color: rgb(64 64 64);
+    color: rgb(212 212 212);
+  }
+
+  /* Tinted hover follows the owning skill-panel accent (falls back to brand). */
+  .skill-chip:hover {
+    border-color: color-mix(in srgb, var(--skill-accent, #ec7d1a) 60%, transparent);
+    background: color-mix(in srgb, var(--skill-accent, #ec7d1a) 8%, transparent);
+    transform: translateY(-1px);
+  }
+
+  .skill-chip-dot {
+    @apply w-2 h-2 rounded-full shrink-0;
+  }
+</style>

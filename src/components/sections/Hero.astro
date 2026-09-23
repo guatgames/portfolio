@@ -158,18 +158,26 @@
 </section>
 
 <script>
-  // Parallax on mouse move for hero visual
-  const heroVisual = document.querySelector('#hero [data-parallax]');
-  const floatingCards = document.querySelectorAll('#hero [data-parallax]');
-  
-  if (heroVisual && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  // Parallax on mouse move for hero visual.
+  // The centered card is positioned with Tailwind translate classes
+  // (-translate-x/y-1/2), so the base transform is captured once and
+  // recombined with DOMMatrix on every move instead of being overwritten.
+  const floatingCards = document.querySelectorAll<HTMLElement>('#hero [data-parallax]');
+
+  floatingCards.forEach((card) => {
+    card.dataset.baseTransform = (getComputedStyle(card).transform || 'none');
+  });
+
+  if (floatingCards.length > 0 && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     document.addEventListener('mousemove', (e) => {
       const x = (e.clientX / window.innerWidth - 0.5) * 2;
       const y = (e.clientY / window.innerHeight - 0.5) * 2;
-      
+
       floatingCards.forEach((card, index) => {
         const factor = (index + 1) * 5;
-        card.style.transform = `translate(${x * factor}px, ${y * factor}px)`;
+        const base = new DOMMatrix(card.dataset.baseTransform || 'none');
+        // Keep the layout transform, then apply the tiny mouse offset on top.
+        card.style.transform = base.translate(x * factor, y * factor).toString();
       });
     });
   }

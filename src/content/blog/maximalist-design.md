@@ -5,6 +5,7 @@ date: 2026-07-12
 tags: ["design", "css", "animation"]
 draft: false
 readingTime: 6
+coverImage: "/images/projects/maximalist-design.svg"
 ---
 
 # Maximalist Design in Web Development

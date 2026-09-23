@@ -25,6 +25,9 @@
     "share": "Compartir",
     "copy": "Copiar",
     "copied": "¡Copiado!",
+    "copyValue": "Copiar valor de {title}",
+    "shareOnTwitter": "Compartir en Twitter",
+    "shareOnLinkedIn": "Compartir en LinkedIn",
     "download": "Descargar",
     "print": "Imprimir",
     "search": "Buscar",
@@ -48,7 +51,9 @@
     "resume": "Currículum",
     "toggleMenu": "Alternar menú",
     "toggleTheme": "Alternar tema",
-    "toggleLanguage": "Alternar idioma"
+    "toggleLanguage": "Alternar idioma",
+    "mainNav": "Navegación principal",
+    "mobileNav": "Navegación móvil"
   },
   "hero": {
     "greeting": "Hola, soy",
@@ -83,12 +88,12 @@
     "highlightLearnerDesc": "Explorando constantemente nuevas tecnologías y patrones",
     "skills": "Habilidades Principales",
     "interests": "Cuando no estoy programando, me encontrarás",
-    "interestsList": [
-      "Jugando videojuegos",
-      "Tocando la guitarra y producción musical",
-      "Jugando baloncesto",
-      "Teclados mecánicos"
-    ],
+    "interestTags": {
+      "videoGames": "Videojuegos",
+      "basketball": "Baloncesto",
+      "keyboards": "Teclados mecánicos",
+      "guitar": "Tocar la guitarra"
+    },
     "skillCategories": {
       "frontend": "Frontend",
       "backend": "Backend",
@@ -117,6 +122,9 @@
     "noProjectsHint": "¡Añade algunos proyectos a tu portafolio para empezar!",
     "projectCard": {
       "viewDetails": "Ver detalles",
+      "viewLiveDemo": "Ver demo en vivo de {title}",
+      "viewSource": "Ver código fuente de {title}",
+      "moreCount": "+{count} más",
       "technologies": "Construido con"
     }
   },
@@ -142,6 +150,8 @@
     "allPosts": "Todos los Artículos",
     "relatedPosts": "Artículos Relacionados",
     "noPosts": "No se encontraron artículos.",
+    "noPostsTitle": "Aún no hay artículos",
+    "tagFilter": "Filtrar artículos por etiqueta",
     "taggedWith": "Etiquetado con",
     "backToBlog": "Volver al blog",
     "sharePost": "Compartir este artículo",
@@ -164,6 +174,7 @@
       "messagePlaceholder": "Cuéntame sobre tu proyecto...",
       "submit": "Enviar Mensaje",
       "submitting": "Enviando...",
+      "hint": "Normalmente respondo en 24-48 horas",
       "success": "¡Mensaje enviado con éxito! Te responderé pronto.",
       "error": "Error al enviar el mensaje. Por favor, inténtalo de nuevo o envíame un email directamente.",
       "validation": {
@@ -217,7 +228,8 @@
     "english": "English",
     "spanish": "Español",
     "current": "Español",
-    "switchTo": "Cambiar a Inglés"
+    "switchTo": "Cambiar a Inglés",
+    "select": "Seleccionar idioma"
   },
   "theme": {
     "light": "Claro",

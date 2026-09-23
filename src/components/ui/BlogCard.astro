@@ -1,26 +1,67 @@
 ---
+import type { CollectionEntry } from 'astro:content';
+
 interface Props {
-  post: any;
+  post: CollectionEntry<'blog'>;
   featured: boolean;
   index: number;
 }
 
 const { post, featured, index } = Astro.props;
-const { title, description, date, tags, coverImage, readingTime } = post.data;
-const formattedDate = new Date(date).toLocaleDateString('en-US', {
+const { title, description, date, tags, coverImage, video, readingTime } = post.data;
+// Build a timezone-safe date key (YYYY-MM-DD) from the local calendar date so
+// display never shifts a day via ISO/UTC conversion.
+const y = date.getFullYear();
+const m = String(date.getMonth() + 1).padStart(2, '0');
+const d = String(date.getDate()).padStart(2, '0');
+const dateKey = `${y}-${m}-${d}`;
+const formattedDate = new Date(y, date.getMonth(), date.getDate()).toLocaleDateString('en-US', {
   year: 'numeric',
   month: 'long',
   day: 'numeric',
 });
+const tagsJson = JSON.stringify(tags);
+const extraTags = Math.max(tags.length - 3, 0);
 ---
 
-<article 
-  class="card card-hover overflow-hidden group flex flex-col"
+<article
+  class="card card-hover overflow-hidden group flex flex-col cursor-pointer"
   data-animate="slide-up"
   data-delay={String((index + 1) * 100)}
   data-reveal-child
+  data-blog-card
+  data-blog-slug={post.slug}
+  data-blog-title={title}
+  data-blog-description={description}
+  data-blog-date={dateKey}
+  data-blog-reading={readingTime}
+  data-blog-tags={tagsJson}
 >
-  {coverImage && (
+  {video ? (
+    /* Optional muted looped reel; plays while the card is in view. */
+    <div class="relative aspect-video overflow-hidden">
+      <video 
+        src={video} 
+        poster={coverImage || undefined}
+        muted
+        playsinline
+        loop
+        preload="metadata"
+        disablepictureinpicture
+        data-autoplay-inview
+        aria-hidden="true"
+        tabindex="-1"
+        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+      ></video>
+      <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" aria-hidden="true"></div>
+      
+      {featured && (
+        <div class="absolute top-4 left-4">
+          <span class="badge badge-primary" data-i18n="common.featured">Featured</span>
+        </div>
+      )}
+    </div>
+  ) : coverImage && (
     <div class="relative aspect-video overflow-hidden">
       <img 
         src={coverImage} 
@@ -32,7 +73,7 @@ const formattedDate = new Date(date).toLocaleDateString('en-US', {
       
       {featured && (
         <div class="absolute top-4 left-4">
-          <span class="badge badge-primary">Featured</span>
+          <span class="badge badge-primary" data-i18n="common.featured">Featured</span>
         </div>
       )}
     </div>
@@ -40,12 +81,12 @@ const formattedDate = new Date(date).toLocaleDateString('en-US', {
   
   <div class="p-6 flex flex-col flex-1">
     <div class="flex items-center gap-3 mb-3">
-      <time class="text-caption text-neutral-500 dark:text-neutral-500 font-mono" dateTime={date.toISOString()}>
+      <time class="text-caption text-neutral-500 dark:text-neutral-500 font-mono" dateTime={dateKey} data-blog-card-date>
         {formattedDate}
       </time>
       {readingTime && (
-        <span class="text-caption text-neutral-500 dark:text-neutral-500" aria-label={`${readingTime} minute read`}>
-          {readingTime} min read
+        <span class="text-caption text-neutral-500 dark:text-neutral-500">
+          {readingTime} <span data-i18n="common.readingTime">min read</span>
         </span>
       )}
     </div>
@@ -62,13 +103,13 @@ const formattedDate = new Date(date).toLocaleDateString('en-US', {
       {tags.slice(0, 3).map((tag: string) => (
         <span class="tag">{tag}</span>
       ))}
-      {tags.length > 3 && (
-        <span class="tag text-neutral-500 dark:text-neutral-500">+{tags.length - 3} more</span>
+      {extraTags > 0 && (
+        <span class="tag text-neutral-500 dark:text-neutral-500">+{extraTags}</span>
       )}
     </div>
     
-    <a href={`/blog/${post.slug}`} class="link mt-auto group">
-      <span>Read more</span>
+    <a href={`/blog/${post.slug}/`} class="link mt-auto group" data-blog-open>
+      <span data-i18n="common.readMore">Read more</span>
       <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
       </svg>

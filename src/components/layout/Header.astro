@@ -6,28 +6,30 @@ import MobileMenu from '../ui/MobileMenu.astro';
 ---
 
 <header class="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-neutral-950/80 backdrop-blur-2xl border-b border-neutral-200/50 dark:border-neutral-800/50 transition-all duration-500">
-  <nav class="container-custom" aria-label="Main navigation">
+  <nav class="container-custom" aria-label="Main navigation" data-i18n-attr="aria-label:navigation.mainNav">
     <div class="flex items-center justify-between h-16 lg:h-20">
       <div class="flex items-center gap-8">
-        <a href="/" class="font-display text-heading-lg font-bold gradient-text" aria-label="Guatgames - Home">
-          G
+
+        <a href="/" class="block shrink-0" aria-label="Guatgames - Home">
+          <img src="/images/favico.jpeg" alt="Guatgames" class="w-9 h-9 lg:w-10 lg:h-10 rounded-xl object-cover dark:hidden" width="40" height="40" loading="eager" />
+          <img src="/images/favico-dark.jpeg" alt="Guatgames" class="w-9 h-9 lg:w-10 lg:h-10 rounded-xl object-cover hidden dark:block" width="40" height="40" loading="eager" />
         </a>
-        
-        <ul class="hidden lg:flex items-center gap-1" role="menubar">
-          <li role="none">
-            <a href="#about" class="nav-link" role="menuitem" data-i18n="navigation.about">About</a>
+
+        <ul class="hidden lg:flex items-center gap-1">
+          <li>
+            <a href="#about" class="nav-link" data-i18n="navigation.about">About</a>
           </li>
-          <li role="none">
-            <a href="#projects" class="nav-link" role="menuitem" data-i18n="navigation.projects">Projects</a>
+          <li>
+            <a href="#projects" class="nav-link" data-i18n="navigation.projects">Projects</a>
           </li>
-          <li role="none">
-            <a href="#technologies" class="nav-link" role="menuitem" data-i18n="navigation.technologies">Technologies</a>
+          <li>
+            <a href="#technologies" class="nav-link" data-i18n="navigation.technologies">Technologies</a>
           </li>
-          <li role="none">
-            <a href="#blog" class="nav-link" role="menuitem" data-i18n="navigation.blog">Blog</a>
+          <li>
+            <a href="#blog" class="nav-link" data-i18n="navigation.blog">Blog</a>
           </li>
-          <li role="none">
-            <a href="#contact" class="nav-link" role="menuitem" data-i18n="navigation.contact">Contact</a>
+          <li>
+            <a href="#contact" class="nav-link" data-i18n="navigation.contact">Contact</a>
           </li>
         </ul>
       </div>
@@ -44,25 +46,21 @@ import MobileMenu from '../ui/MobileMenu.astro';
 </header>
 
 <script>
-  // Smooth scroll for anchor links
+  // Smooth scroll for section links. The global `scroll-behavior: smooth`
+  // already animates the default anchor jump, so this only keeps the URL hash
+  // in sync and moves focus for assistive tech — without cancelling navigation.
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function(e) {
       const targetId = this.getAttribute('href');
-      if (targetId === '#') return;
-      
+      if (!targetId || targetId === '#' || targetId === location.hash) return;
+
       const target = document.querySelector(targetId);
-      if (target) {
-        e.preventDefault();
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        target.focus({ preventScroll: true });
-        
-        // Close mobile menu if open
-        const mobileMenu = document.querySelector('.mobile-menu');
-        if (mobileMenu?.classList.contains('open')) {
-          mobileMenu.classList.remove('open');
-          document.body.style.overflow = '';
-        }
-      }
+      if (!target) return;
+
+      // Reflect the section in the URL (deep-linkable, back button works).
+      history.pushState(null, '', targetId);
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      target.focus({ preventScroll: true });
     });
   });
 

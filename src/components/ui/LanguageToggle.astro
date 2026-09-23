@@ -1,13 +1,15 @@
 ---
 ---
 <div class="relative" data-lang-toggle>
-  <button 
+  <!-- Trigger -->
+  <button
     type="button"
     class="btn-icon relative overflow-hidden"
-    aria-label="Switch language"
-    aria-haspopup="true"
+    aria-haspopup="menu"
     aria-expanded="false"
+    aria-label="Select language"
     data-lang-toggle-btn
+    data-i18n-attr="aria-label:language.select"
   >
     <span class="relative z-10 flex items-center gap-1.5">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -15,53 +17,72 @@
       </svg>
       <span class="hidden sm:inline font-mono text-caption uppercase tracking-wider" data-lang-label>EN</span>
     </span>
-    <div class="absolute inset-0 bg-brand-500 scale-x-0 origin-right transition-transform duration-300 ease-out-expo" aria-hidden="true"></div>
+    <span class="absolute inset-0 bg-brand-500 scale-x-0 origin-right transition-transform duration-300 ease-out-expo" aria-hidden="true"></span>
   </button>
 
-  <div 
-    class="absolute right-0 top-full mt-2 w-36 opacity-0 invisible scale-y-95 origin-top-right transition-all duration-200 ease-out-expo bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 rounded-xl shadow-2xl overflow-hidden z-50"
+  <!-- Dropdown -->
+  <div
+    class="absolute right-0 top-full mt-2 w-48 origin-top-right rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 shadow-2xl shadow-neutral-950/10 overflow-hidden z-50 opacity-0 invisible scale-y-95 transition-all duration-200 ease-out-expo"
     role="menu"
+    aria-label="Select language"
     data-lang-toggle-dropdown
+    data-i18n-attr="aria-label:language.select"
   >
-    <button 
+    <div class="px-4 pt-3 pb-2 text-caption uppercase tracking-wider font-mono text-neutral-400 dark:text-neutral-500" data-i18n="language.select">Select language</div>
+
+    <button
       type="button"
-      class="lang-option w-full px-4 py-3 text-left flex items-center gap-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-      role="menuitem"
+      class="lang-option w-full px-4 py-3 text-left flex items-center gap-3 transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-800"
+      role="menuitemradio"
+      aria-checked="false"
       data-lang="en"
     >
-      <span class="w-6 h-6 flex items-center justify-center rounded-lg bg-brand-100 dark:bg-brand-900/30">
-        <svg class="w-4 h-4 text-brand-600 dark:text-brand-400" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-        </svg>
-      </span>
-      <span class="font-medium text-neutral-900 dark:text-neutral-100">English</span>
+      <span class="lang-option-code">EN</span>
+      <span class="flex-1 font-medium text-neutral-900 dark:text-neutral-100" data-i18n="language.english">English</span>
+      <svg class="lang-option-check w-4 h-4 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+      </svg>
     </button>
-    <button 
+
+    <button
       type="button"
-      class="lang-option w-full px-4 py-3 text-left flex items-center gap-3 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
-      role="menuitem"
+      class="lang-option w-full px-4 py-3 text-left flex items-center gap-3 transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-800"
+      role="menuitemradio"
+      aria-checked="false"
       data-lang="es"
     >
-      <span class="w-6 h-6 flex items-center justify-center rounded-lg bg-brand-100 dark:bg-brand-900/30">
-        <svg class="w-4 h-4 text-brand-600 dark:text-brand-400" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-        </svg>
-      </span>
-      <span class="font-medium text-neutral-900 dark:text-neutral-100">Español</span>
+      <span class="lang-option-code">ES</span>
+      <span class="flex-1 font-medium text-neutral-900 dark:text-neutral-100" data-i18n="language.spanish">Español</span>
+      <svg class="lang-option-check w-4 h-4 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+      </svg>
     </button>
   </div>
 </div>
 
 <script>
-  // Multi-instance safe: header + mobile menu both render this component.
-  // Each group is wired independently via its own [data-lang-toggle] wrapper.
+  // Multi-instance safe: the header and the mobile menu each render this
+  // component. Every [data-lang-toggle] group is wired independently.
+  function getActiveLocale(): 'en' | 'es' {
+    const attr = document.documentElement.getAttribute('data-locale');
+    return (window.I18N?.locale || (attr === 'es' ? 'es' : 'en')) as 'en' | 'es';
+  }
+
   function wireLanguageToggle(group: HTMLElement) {
     const toggle = group.querySelector<HTMLButtonElement>('[data-lang-toggle-btn]');
     const dropdown = group.querySelector<HTMLElement>('[data-lang-toggle-dropdown]');
-    const options = dropdown?.querySelectorAll<HTMLButtonElement>('.lang-option');
+    const options = Array.from(group.querySelectorAll<HTMLButtonElement>('.lang-option'));
     const langLabel = toggle?.querySelector<HTMLElement>('[data-lang-label]');
 
     let isOpen = false;
+
+    const setActiveFor = (locale: string) => {
+      options.forEach((option) => {
+        const active = option.dataset.lang === locale;
+        option.classList.toggle('is-active', active);
+        option.setAttribute('aria-checked', String(active));
+      });
+    };
 
     const openDropdown = () => {
       dropdown?.classList.remove('opacity-0', 'invisible', 'scale-y-95');
@@ -77,56 +98,130 @@
       isOpen = false;
     };
 
+    const focusActiveOption = () => {
+      const locale = getActiveLocale();
+      const active = options.find((option) => option.dataset.lang === locale) || options[0];
+      active?.focus();
+    };
+
+    const moveFocus = (direction: number) => {
+      const current = options.indexOf(document.activeElement as HTMLButtonElement);
+      const next = (current === -1 ? 0 : current + direction + options.length) % options.length;
+      options[next]?.focus();
+    };
+
     toggle?.addEventListener('click', (e) => {
       e.stopPropagation();
-      isOpen ? closeDropdown() : openDropdown();
-    });
-
-    options?.forEach((option) => {
-      option.addEventListener('click', () => {
-        const lang = option.dataset.lang;
-        if (lang) {
-          if (window.I18N) {
-            window.I18N.setLocale(lang as 'en' | 'es');
-          } else {
-            window.dispatchEvent(new CustomEvent('language-change', { detail: { locale: lang } }));
-          }
-          if (langLabel) langLabel.textContent = lang.toUpperCase();
-        }
+      if (isOpen) {
         closeDropdown();
-      });
+      } else {
+        openDropdown();
+        focusActiveOption();
+      }
     });
 
-    group.addEventListener('click', (e) => {
-      if (isOpen && toggle && dropdown && !toggle.contains(e.target as Node) && !dropdown.contains(e.target as Node)) {
+    toggle?.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (!isOpen) {
+          openDropdown();
+          focusActiveOption();
+        } else {
+          moveFocus(e.key === 'ArrowDown' ? 1 : -1);
+        }
+      }
+    });
+
+    dropdown?.addEventListener('keydown', (e) => {
+      if (!isOpen) return;
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        closeDropdown();
+        toggle?.focus();
+      } else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        moveFocus(e.key === 'ArrowDown' ? 1 : -1);
+      } else if (e.key === 'Home') {
+        e.preventDefault();
+        options[0]?.focus();
+      } else if (e.key === 'End') {
+        e.preventDefault();
+        options[options.length - 1]?.focus();
+      } else if (e.key === 'Tab') {
         closeDropdown();
       }
     });
+
+    dropdown?.addEventListener('click', (e) => {
+      const option = (e.target as HTMLElement).closest<HTMLButtonElement>('.lang-option');
+      if (!option) return;
+
+      const lang = option.dataset.lang;
+      if (lang) {
+        if (window.I18N) {
+          window.I18N.setLocale(lang as 'en' | 'es');
+        } else {
+          window.dispatchEvent(new CustomEvent('language-change', { detail: { locale: lang } }));
+        }
+        setActiveFor(lang);
+        if (langLabel) langLabel.textContent = lang.toUpperCase();
+      }
+      closeDropdown();
+      toggle?.focus();
+    });
+
+    // Initial state
+    setActiveFor(getActiveLocale());
+    if (langLabel) langLabel.textContent = getActiveLocale().toUpperCase();
+
+    return { group, isOpen: () => isOpen, closeDropdown, setActiveFor, toggle };
   }
 
-  document.querySelectorAll<HTMLElement>('[data-lang-toggle]').forEach((group) => wireLanguageToggle(group));
+  const groups = Array.from(document.querySelectorAll<HTMLElement>('[data-lang-toggle]')).map(wireLanguageToggle);
 
+  // Close when clicking outside any open dropdown
+  document.addEventListener('click', (e) => {
+    groups.forEach(({ group, isOpen, closeDropdown }) => {
+      if (isOpen() && !group.contains(e.target as Node)) closeDropdown();
+    });
+  });
+
+  // Close all on Escape
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
-      document.querySelectorAll<HTMLElement>('[data-lang-toggle]').forEach((group) => {
-        const dropdown = group.querySelector<HTMLElement>('[data-lang-toggle-dropdown]');
-        if (dropdown) {
-          dropdown.classList.add('opacity-0', 'invisible', 'scale-y-95');
-          const toggle = group.querySelector<HTMLButtonElement>('[data-lang-toggle-btn]');
-          toggle?.setAttribute('aria-expanded', 'false');
-        }
-      });
+      groups.forEach(({ closeDropdown }) => closeDropdown());
     }
   });
 
-  // Keep the visible language label in sync with the active locale
-  const updateLabels = () => {
-    const locale = window.I18N?.locale || 'en';
-    document.querySelectorAll<HTMLElement>('[data-lang-label]').forEach((label) => {
-      label.textContent = locale.toUpperCase();
+  // Keep every instance in sync with the active locale
+  window.addEventListener('language-changed', () => {
+    const locale = getActiveLocale();
+    groups.forEach(({ group, setActiveFor }) => {
+      setActiveFor(locale);
+      const label = group.querySelector<HTMLElement>('[data-lang-label]');
+      if (label) label.textContent = locale.toUpperCase();
     });
-  };
-
-  window.addEventListener('language-changed', updateLabels);
-  updateLabels();
+  });
 </script>
+
+<style>
+  .lang-option-code {
+    @apply w-6 h-6 flex items-center justify-center rounded-lg text-caption font-mono font-medium bg-neutral-100 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 transition-colors duration-200 shrink-0;
+  }
+
+  .lang-option-check {
+    @apply opacity-0 scale-50 transition-all duration-200 shrink-0;
+  }
+
+  .lang-option.is-active {
+    @apply bg-brand-500/10 dark:bg-brand-500/10;
+  }
+
+  .lang-option.is-active .lang-option-code {
+    @apply bg-brand-500 text-white;
+  }
+
+  .lang-option.is-active .lang-option-check {
+    @apply opacity-100 scale-100;
+  }
+</style>

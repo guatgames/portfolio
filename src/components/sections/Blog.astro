@@ -1,10 +1,22 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 import BlogCard from '../ui/BlogCard.astro';
+import BlogReader from '../ui/BlogReader.astro';
 
-const posts = await getCollection('blog', ({ data }) => !data.draft);
-const sortedPosts = posts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
-const latestPosts = sortedPosts.slice(0, 3);
+const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+
+// Pre-render every article body once, at build time, so the in-page reader
+// can display full posts without navigating to another route.
+const postsWithContent = await Promise.all(
+  posts.map(async (post) => {
+    const { Content } = await render(post);
+    return { post, Content };
+  })
+);
+
+const tags = [...new Set(posts.flatMap((post) => post.data.tags))].sort();
 ---
 
 <section id="blog" class="section" aria-labelledby="blog-title">
@@ -17,23 +29,58 @@ const latestPosts = sortedPosts.slice(0, 3);
       </p>
     </div>
     
-    {latestPosts.length > 0 ? (
-      <>
-        <div class="grid lg:grid-cols-3 gap-8 mb-16" data-reveal data-reveal-stagger="150" role="list" aria-label="Latest blog posts">
-          {latestPosts.map((post, index) => (
+    {posts.length > 0 ? (
+      <div data-animate="fade-in" data-delay="200">
+        <!-- In-page tag filter -->
+        {tags.length > 1 && (
+          <div
+            class="flex flex-wrap gap-2 justify-center mb-10"
+            role="group"
+            aria-label="Filter posts by tag"
+            data-i18n-attr="aria-label:blog.tagFilter"
+          >
+            <button
+              type="button"
+              class="blog-filter active"
+              data-filter="all"
+              aria-pressed="true"
+            >
+              <span data-i18n="common.all">All</span>
+            </button>
+            {tags.map((tag) => (
+              <button
+                type="button"
+                class="blog-filter"
+                data-filter={tag}
+                aria-pressed="false"
+              >
+                #{tag}
+              </button>
+            ))}
+          </div>
+        )}
+
+        <div
+          class="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
+          data-reveal
+          data-reveal-stagger="120"
+          role="list"
+          aria-label="Latest blog posts"
+          data-blog-grid
+          data-i18n-attr="aria-label:blog.latestPosts"
+        >
+          {postsWithContent.map(({ post }, index) => (
             <BlogCard post={post} featured={index === 0} index={index} />
           ))}
         </div>
-        
-        <div class="text-center" data-animate="fade-in" data-delay="300">
-          <a href="/blog" class="btn-secondary group inline-flex items-center gap-2">
-            <span data-i18n="blog.allPosts">View All Posts</span>
-            <svg class="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-            </svg>
-          </a>
-        </div>
-      </>
+
+        <!-- Pre-rendered article bodies consumed by the in-page reader -->
+        {postsWithContent.map(({ post, Content }) => (
+          <div hidden aria-hidden="true" data-blog-body={post.slug}>
+            <Content />
+          </div>
+        ))}
+      </div>
     ) : (
       <div class="text-center py-16" data-animate="fade-in" data-delay="200">
         <div class="w-20 h-20 rounded-2xl bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center mx-auto mb-6">
@@ -41,10 +88,91 @@ const latestPosts = sortedPosts.slice(0, 3);
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
           </svg>
         </div>
-        <h3 class="font-display text-heading-md font-bold text-neutral-900 dark:text-neutral-100 mb-2">No posts yet</h3>
-        <p class="text-body-md text-neutral-600 dark:text-neutral-400 mb-6">Start writing to share your thoughts with the world!</p>
-        <a href="/blog/new" class="btn-primary">Write Your First Post</a>
+        <h3 class="font-display text-heading-md font-bold text-neutral-900 dark:text-neutral-100 mb-2" data-i18n="blog.noPostsTitle">No posts yet</h3>
+        <p class="text-body-md text-neutral-600 dark:text-neutral-400" data-i18n="blog.noPosts">No posts found.</p>
       </div>
     )}
   </div>
+
+  <BlogReader />
 </section>
+
+<script>
+  const blogSection = document.getElementById('blog');
+  if (blogSection) {
+    const grid = blogSection.querySelector<HTMLElement>('[data-blog-grid]');
+    const filterButtons = blogSection.querySelectorAll<HTMLButtonElement>('.blog-filter');
+    const cards = blogSection.querySelectorAll<HTMLElement>('[data-blog-card]');
+    const hasReader = !!document.querySelector('[data-blog-reader]');
+
+    // --- Open articles in-page (never leave the single page) ---
+    function articleEmbedded(slug: string): boolean {
+      return !!document.querySelector(`[data-blog-body="${CSS.escape(slug)}"]`);
+    }
+
+    grid?.addEventListener('click', (e) => {
+      if (!hasReader) return;
+      if (e.defaultPrevented) return;
+      if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+
+      const card = (e.target as HTMLElement).closest<HTMLElement>('[data-blog-card]');
+      if (!card) return;
+      const slug = card.dataset.blogSlug;
+      if (!slug || !articleEmbedded(slug)) return;
+
+      e.preventDefault();
+      window.dispatchEvent(new CustomEvent('open-blog-reader', { detail: card }));
+    });
+
+    // --- In-page tag filter ---
+    filterButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const filter = button.dataset.filter as string;
+        filterButtons.forEach((btn) => {
+          const active = btn === button;
+          btn.classList.toggle('active', active);
+          btn.setAttribute('aria-pressed', String(active));
+        });
+
+        cards.forEach((card) => {
+          const tags: string[] = card.dataset.blogTags ? (JSON.parse(card.dataset.blogTags) as string[]) : [];
+          const show = filter === 'all' || tags.includes(filter);
+          card.classList.toggle('hidden', !show);
+          if (show) {
+            // Cards hidden during scroll-reveal observation never received
+            // their entrance classes; backfill so they remain visible.
+            card.classList.add('reveal-visible', 'animate-visible');
+          }
+        });
+      });
+    });
+
+    // --- Locale-aware dates on cards ---
+    function formatCardDates() {
+      const locale = window.I18N?.locale || 'en';
+      blogSection.querySelectorAll<HTMLElement>('[data-blog-card-date]').forEach((el) => {
+        const key = el.getAttribute('datetime');
+        if (!key) return;
+        const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(key);
+        const date = match
+          ? new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]))
+          : new Date(key);
+        if (!Number.isNaN(date.getTime())) {
+          el.textContent = date.toLocaleDateString(locale, { year: 'numeric', month: 'long', day: 'numeric' });
+        }
+      });
+    }
+    formatCardDates();
+    window.addEventListener('language-changed', formatCardDates);
+  }
+</script>
+
+<style>
+  .blog-filter {
+    @apply inline-flex items-center px-4 py-2 rounded-full text-body-sm font-medium bg-white/80 dark:bg-neutral-900/80 border border-neutral-200 dark:border-neutral-800 text-neutral-700 dark:text-neutral-300 backdrop-blur-xl transition-all duration-300 hover:border-brand-500/50 dark:hover:border-brand-500/50 hover:text-brand-500 dark:hover:text-brand-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500;
+  }
+
+  .blog-filter.active {
+    @apply bg-brand-500 text-white border-brand-500 shadow-lg shadow-brand-500/30;
+  }
+</style>

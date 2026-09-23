@@ -69,12 +69,23 @@ function createI18N(): I18NGlobal {
     document.documentElement.lang = currentLocale;
     document.documentElement.setAttribute('lang', currentLocale);
 
+    // Resolve optional interpolation params (syntax: data-i18n-params='{"name":"Jane"}')
+    function paramsFor(el: Element): Record<string, string | number> | undefined {
+      const spec = el.getAttribute('data-i18n-params');
+      if (!spec) return undefined;
+      try {
+        return JSON.parse(spec) as Record<string, string | number>;
+      } catch {
+        return undefined;
+      }
+    }
+
     // Swap element text content
     document.querySelectorAll<HTMLElement>('[data-i18n]').forEach((el) => {
       const key = el.getAttribute('data-i18n');
       if (!key) return;
       const value = flat[key];
-      if (value !== undefined) el.textContent = value;
+      if (value !== undefined) el.textContent = resolveParams(value, paramsFor(el));
     });
 
     // Swap attributes (syntax: "attr:key,attr:key") e.g. data-i18n-attr="aria-label:navigation.toggleMenu"
@@ -85,11 +96,13 @@ function createI18N(): I18NGlobal {
         const [attr, key] = pair.split(':');
         if (!attr || !key) return;
         const value = flat[key];
-        if (value !== undefined) el.setAttribute(attr, value);
+        if (value !== undefined) el.setAttribute(attr, resolveParams(value, paramsFor(el)));
       });
     });
 
-    document.dispatchEvent(new CustomEvent('language-changed', { detail: { locale: currentLocale } }));
+    // Bubbles so both document and window listeners receive it (components
+    // register on window, mirroring theme-changed).
+    document.dispatchEvent(new CustomEvent('language-changed', { bubbles: true, detail: { locale: currentLocale } }));
   }
 
   let currentLocale: Locale = detectLocale();

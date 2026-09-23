@@ -76,11 +76,29 @@ import ContactCard from '../ui/ContactCard.astro';
 <script>
   // Contact card interactions
   const contactCards = document.querySelectorAll('[data-contact-card]');
-  
+  const COPY_ICON_PATH =
+    'M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z';
+  const CHECK_ICON_PATH = 'M5 13l4 4L19 7';
+
+  // Localized resting label, e.g. "Copy Email value" / "Copiar valor de Correo"
+  function copyButtonLabel(btn: HTMLButtonElement, fallback: string): string {
+    const titleKey = btn.dataset.copyTitleKey;
+    const channel = titleKey ? (window.I18N?.t(titleKey) || '') : '';
+    return (titleKey && channel && window.I18N?.t('common.copyValue', { title: channel })) || fallback;
+  }
+
+  function syncCopyLabels(): void {
+    contactCards.forEach(card => {
+      const btn = card.querySelector('[data-copy-value]');
+      if (!(btn instanceof HTMLButtonElement) || btn.classList.contains('text-emerald-500')) return;
+      btn.setAttribute('aria-label', copyButtonLabel(btn, btn.getAttribute('aria-label') || ''));
+    });
+  }
+
   contactCards.forEach(card => {
     const copyBtn = card.querySelector('[data-copy-value]');
     
-    if (!copyBtn) return;
+    if (!copyBtn || !(copyBtn instanceof HTMLButtonElement)) return;
     
     copyBtn.addEventListener('click', async () => {
       const value = copyBtn.dataset.copyValue;
@@ -88,23 +106,32 @@ import ContactCard from '../ui/ContactCard.astro';
       try {
         await navigator.clipboard.writeText(value || '');
         
-        const originalText = copyBtn.querySelector('span');
-        const originalIcon = copyBtn.querySelector('svg');
+        const svg = copyBtn.querySelector('svg');
+        const path = svg?.querySelector('path');
+        const originalD = path?.getAttribute('d') || '';
+        const originalLabel = copyButtonLabel(copyBtn, copyBtn.getAttribute('aria-label') || '');
         
-        if (originalText && originalIcon) {
-          originalText.textContent = 'Copied!';
-          originalIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />';
-          copyBtn.classList.add('text-emerald-500', 'border-emerald-500/30');
-          
-          setTimeout(() => {
-            originalText.textContent = 'Copy';
-            originalIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />';
-            copyBtn.classList.remove('text-emerald-500', 'border-emerald-500/30');
-          }, 2000);
-        }
+        // Success feedback: check icon, emerald tint, i18n'd label
+        if (path) path.setAttribute('d', CHECK_ICON_PATH);
+        copyBtn.classList.add('text-emerald-500', 'dark:text-emerald-400', 'hover:text-emerald-500', 'dark:hover:text-emerald-400', 'bg-emerald-500/10', 'hover:bg-emerald-500/10');
+        copyBtn.setAttribute('aria-label', window.I18N?.t('common.copied') || 'Copied!');
+        
+        window.setTimeout(() => {
+          if (path) path.setAttribute('d', originalD);
+          copyBtn.classList.remove('text-emerald-500', 'dark:text-emerald-400', 'hover:text-emerald-500', 'dark:hover:text-emerald-400', 'bg-emerald-500/10', 'hover:bg-emerald-500/10');
+          copyBtn.setAttribute('aria-label', originalLabel);
+        }, 2000);
       } catch (error) {
         console.error('Failed to copy:', error);
       }
     });
   });
+
+  // Keep resting labels in sync. Each run is idempotent, so applying on
+  // multiple lifecycle points just guarantees the final state is correct no
+  // matter when the i18n runtime module initializes.
+  syncCopyLabels();
+  document.addEventListener('DOMContentLoaded', syncCopyLabels, { once: true });
+  window.addEventListener('load', syncCopyLabels);
+  window.addEventListener('language-changed', syncCopyLabels);
 </script>

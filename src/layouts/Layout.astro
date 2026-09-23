@@ -27,7 +27,7 @@ const { title = 'Guatgames | Creative Developer & Designer', description = 'Port
     <meta name="description" content={description} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/jpeg" href="/images/favico.jpeg" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
@@ -47,6 +47,12 @@ const { title = 'Guatgames | Creative Developer & Designer', description = 'Port
           var dark = theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
           document.documentElement.classList.toggle('dark', dark);
           document.documentElement.setAttribute('data-theme', theme);
+
+          // Use the dark-background logo variant for the browser tab icon
+          var favicon = document.querySelector('link[rel="icon"][type="image/jpeg"]');
+          if (favicon) {
+            favicon.setAttribute('href', dark ? '/images/favico-dark.jpeg' : '/images/favico.jpeg');
+          }
         } catch (e) {}
       })();
     </script>
@@ -64,7 +70,7 @@ const { title = 'Guatgames | Creative Developer & Designer', description = 'Port
     </script>
   </head>
   <body class="h-full flex flex-col bg-white dark:bg-neutral-950">
-    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-100 btn-primary">
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-100 btn-primary" data-i18n="accessibility.skipToContent">
       Skip to main content
     </a>
     <Header />
@@ -77,5 +83,5 @@ const { title = 'Guatgames | Creative Developer & Designer', description = 'Port
       import '../scripts/i18n.ts';
       import '../scripts/theme.ts';
     </script>
-  </body>
+</body>
 </html>
