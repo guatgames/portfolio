@@ -1,0 +1,126 @@
+\documentclass[10.5pt,a4paper]{article}
+
+% ===================== PAQUETES =====================
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1.7cm,top=1.4cm,bottom=1.4cm]{geometry}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{tabularx}
+\usepackage{marvosym}
+
+% --- Carga condicional de FontAwesome5 (si está disponible en el sistema) ---
+\IfFileExists{fontawesome5.sty}{
+  \usepackage{fontawesome5}
+  \newcommand{\iconEmail}{\faEnvelope\ }
+  \newcommand{\iconGithub}{\faGithub\ }
+  \newcommand{\iconLinkedin}{\faLinkedin\ }
+  \newcommand{\iconGlobe}{\faGlobe\ }
+}{
+  \newcommand{\iconEmail}{\Email\ }
+  \newcommand{\iconGithub}{}
+  \newcommand{\iconLinkedin}{}
+  \newcommand{\iconGlobe}{}
+}
+
+% ===================== COLORES =====================
+\definecolor{darknavy}{RGB}{24,42,64}
+\definecolor{accent}{RGB}{41,98,150}
+\definecolor{graytext}{RGB}{85,85,85}
+\definecolor{lightrule}{RGB}{200,208,216}
+
+% ===================== HYPERREF =====================
+\hypersetup{
+  colorlinks=true,
+  linkcolor=accent,
+  urlcolor=accent,
+  pdftitle={Angel Alfaro - CV},
+  pdfauthor={Angel Alfaro}
+}
+
+% ===================== ESTILO DE SECCIONES =====================
+\titleformat{\section}
+  {\large\bfseries\color{darknavy}}
+  {}{0em}{}
+  [\vspace{-2pt}{\color{lightrule}\titlerule[1pt]}\vspace{2pt}]
+\titlespacing*{\section}{0pt}{10pt}{6pt}
+
+\setlength{\parindent}{0pt}
+\pagestyle{empty}
+
+% ===================== COMANDOS AUXILIARES =====================
+\newcommand{\cvtitle}[1]{{\color{graytext}\large #1}}
+
+\newcommand{\skillrow}[2]{%
+  \textbf{\color{darknavy}#1:} \, #2\\[3pt]
+}
+
+\newcommand{\projectitem}[4]{%
+  \textbf{\color{darknavy}#1} \hfill {\small\color{graytext}#2}\\
+  {\small\color{accent}\textit{#3}}\\[2pt]
+  #4\\[6pt]
+}
+
+\begin{document}
+
+% ===================== ENCABEZADO =====================
+\begin{center}
+  {\Huge\bfseries\color{darknavy} Angel Alfaro}\\[3pt]
+  {\large\color{accent} Full Stack Developer \& Creative Developer \textbar\ ``Guatgames''}\\[6pt]
+  {\small
+    \iconEmail\href{mailto:adalfaroochoa@gmail.com}{adalfaroochoa@gmail.com} \quad\textbar\quad
+    \iconGithub\href{https://github.com/guatgames}{github.com/guatgames} \quad\textbar\quad
+    \iconLinkedin\href{https://linkedin.com/in/guatgames}{linkedin.com/in/guatgames} \quad\textbar\quad
+    \iconGlobe\href{https://angel-alfaro.me}{angel-alfaro.me}
+  }
+\end{center}
+
+\vspace{2pt}
+
+% ===================== RESUMEN PROFESIONAL =====================
+\section*{Resumen Profesional}
+Desarrollador Full Stack y estudiante activo de Fundación Kinal, apasionado por crear experiencias digitales hermosas, funcionales y accesibles. Comenzó a programar a los 11 años y acumula más de 5 años de aprendizaje continuo, con más de 5 proyectos completados y dominio de más de 27 tecnologías entre frontend, backend y herramientas DevOps. Reconocido por su liderazgo técnico: se desempeñó como Scrum Master en proyectos universitarios y ha sido ponente ayudando a otros estudiantes a alcanzar sus metas en programación. Abierto a proyectos freelance y nuevas oportunidades profesionales.
+
+% ===================== HABILIDADES TÉCNICAS =====================
+\section*{Habilidades Técnicas}
+\skillrow{Frontend}{Astro, React, TypeScript, Tailwind CSS, Next.js, HTML5, CSS3, JavaScript}
+\skillrow{Backend}{Node.js, Spring Boot, Flask, Python, Java, REST APIs, GraphQL}
+\skillrow{Bases de Datos}{PostgreSQL, MySQL, Prisma}
+\skillrow{Herramientas \& DevOps}{Git/GitHub, Docker, Vercel, Netlify, AWS, Figma, Shell Scripting}
+\skillrow{Otros}{NumPy, GameMaker Studio 2, Flet, Arch Linux}
+
+% ===================== PROYECTOS DESTACADOS =====================
+\section*{Proyectos Destacados}
+
+\projectitem{Kinal Connections}{2026}
+{React \textbar\ TailwindCSS \textbar\ TypeScript \textbar\ PostgreSQL \textbar\ Spring Boot \textbar\ GraphQL}
+{Red social y plataforma de reclutamiento para estudiantes de Fundación Kinal, donde empresas pueden ver perfiles registrados, ofrecer empleos y publicar información, mientras los usuarios muestran habilidades, proyectos, área técnica y certificados. Proyecto seleccionado para Expo Kinal 2026 entre más de 200 proyectos presentados (solo 56 seleccionados). Desarrollado bajo metodología SCRUM, desempeñándose como \textbf{Scrum Master} del equipo.}
+
+\projectitem{Promova}{}
+{React \textbar\ TailwindCSS \textbar\ TypeScript \textbar\ Node.js \textbar\ Express \textbar\ Prisma}
+{SaaS para la generación automática de contenido publicitario, orientado a optimizar el trabajo de equipos de marketing mediante inteligencia y automatización.}
+
+\projectitem{Spotinder}{}
+{React \textbar\ TailwindCSS \textbar\ TypeScript \textbar\ Node.js \textbar\ Express \textbar\ Deezer API}
+{Plataforma de descubrimiento musical con mecánica de interacción estilo ``Tinder'', integrada con la API de Deezer para recomendar nuevas canciones a partir de las preferencias del usuario.}
+
+% ===================== EDUCACIÓN =====================
+\section*{Educación}
+\textbf{\color{darknavy}Fundación Kinal} \hfill {\small\color{graytext}Guatemala}\\
+{\small\color{accent}\textit{Bachillerato en Informática — 5to. grado, jornada vespertina (estudiante activo)}}\\[3pt]
+\begin{itemize}[leftmargin=14pt, itemsep=1pt, topsep=3pt]
+  \item Presentación de proyectos en Expo Kinal 2025, Expo Kinal 2026 y la Semana Nacional de Ciencia, Tecnología e Innovación de Senacyt, Universidad Galileo.
+  \item Rol de liderazgo y ponente: apoya a compañeros a alcanzar sus metas en el mundo de la programación.
+\end{itemize}
+
+% ===================== IDIOMAS =====================
+\section*{Idiomas}
+\textbf{\color{darknavy}Español:} Nativo \quad\textbar\quad \textbf{\color{darknavy}Inglés:} Nivel intermedio-avanzado \textit{(portafolio y blog personal escritos en inglés)}
+
+% ===================== INTERESES =====================
+\section*{Intereses}
+Videojuegos \textbullet\ Baloncesto \textbullet\ Teclados mecánicos \textbullet\ Tocar guitarra
+
+\end{document}

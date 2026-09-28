@@ -197,7 +197,9 @@
         });
         tagsEl.setAttribute('aria-label', window.I18N?.t('blog.taggedWith') || 'Tagged with');
 
-        const source = document.querySelector<HTMLElement>(`[data-blog-body="${CSS.escape(slug)}"]`);
+        const source = document.querySelector<HTMLElement>(
+          `[data-blog-body="${CSS.escape(slug)}"][data-blog-body-locale="${getLocale()}"]`
+        );
         if (source) {
           bodyEl.innerHTML = source.innerHTML;
         } else {
@@ -301,10 +303,12 @@
         if (card) open(card);
       });
 
-      // Keep meta (dates) in sync with the active language while reading
+      // Keep meta (dates, title, body) in sync with the active language while reading
       window.addEventListener('language-changed', () => {
         if (isOpen && currentSlug) {
-          const card = document.querySelector<HTMLElement>(`[data-blog-card][data-blog-slug="${CSS.escape(currentSlug)}"]`);
+          const card = document.querySelector<HTMLElement>(
+            `[data-blog-card][data-blog-slug="${CSS.escape(currentSlug)}"][data-blog-locale="${getLocale()}"]`
+          );
           if (card) fillMeta(card, { keepScroll: true });
         }
       });

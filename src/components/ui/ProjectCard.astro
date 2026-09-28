@@ -7,13 +7,10 @@ interface Props {
 
 const { project, featured, index } = Astro.props;
 const { title, description, technologies, github, demo, image, video, featured: isFeatured } = project.data;
-const categories = [isFeatured ? 'featured' : '', ...technologies.map((t: string) => t.toLowerCase())].filter(Boolean);
 ---
 
 <article 
   class="card card-hover overflow-hidden group"
-  data-project-card
-  data-categories={categories.join(',')}
   data-animate="slide-up"
   data-delay={String((index + 1) * 100)}
 >

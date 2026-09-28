@@ -296,6 +296,12 @@
   }
 }
 
+/* Localized content blocks (project/blog cards): the [hidden] attribute must
+   always win over any author display rule so only the active locale is shown. */
+[data-i18n-content][hidden] {
+  display: none !important;
+}
+
 @keyframes gradientShift {
   0%, 100% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }

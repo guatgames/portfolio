@@ -3,7 +3,9 @@ import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import BlogCard from '../../components/ui/BlogCard.astro';
 
-const posts = await getCollection('blog', ({ data }) => !data.draft);
+// The standalone index lists the default (English) posts; Spanish posts live
+// under `es/` and are shown on their own localized routes.
+const posts = await getCollection('blog', ({ id, data }) => !id.startsWith('es/') && !data.draft);
 const query: string | null = Astro.url.searchParams.get('tag');
 const filteredPosts = query
   ? posts.filter(p => p.data.tags.includes(query))

@@ -9,13 +9,17 @@ interface Props {
 
 const { post, featured, index } = Astro.props;
 const { title, description, date, tags, coverImage, video, readingTime } = post.data;
+// Spanish entries live under `es/` in the collection; everything else is English.
+const locale: 'en' | 'es' = post.slug.startsWith('es/') ? 'es' : 'en';
+// Base slug (no locale prefix) keys the card to its article bodies in the reader.
+const slug = post.slug.startsWith('es/') ? post.slug.slice(3) : post.slug;
 // Build a timezone-safe date key (YYYY-MM-DD) from the local calendar date so
 // display never shifts a day via ISO/UTC conversion.
 const y = date.getFullYear();
 const m = String(date.getMonth() + 1).padStart(2, '0');
 const d = String(date.getDate()).padStart(2, '0');
 const dateKey = `${y}-${m}-${d}`;
-const formattedDate = new Date(y, date.getMonth(), date.getDate()).toLocaleDateString('en-US', {
+const formattedDate = new Date(y, date.getMonth(), date.getDate()).toLocaleDateString(locale === 'es' ? 'es-ES' : 'en-US', {
   year: 'numeric',
   month: 'long',
   day: 'numeric',
@@ -30,7 +34,8 @@ const extraTags = Math.max(tags.length - 3, 0);
   data-delay={String((index + 1) * 100)}
   data-reveal-child
   data-blog-card
-  data-blog-slug={post.slug}
+  data-blog-slug={slug}
+  data-blog-locale={locale}
   data-blog-title={title}
   data-blog-description={description}
   data-blog-date={dateKey}

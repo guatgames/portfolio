@@ -3,63 +3,50 @@ import { getCollection, render } from 'astro:content';
 import BlogCard from '../ui/BlogCard.astro';
 import BlogReader from '../ui/BlogReader.astro';
 
-const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+type Post = Awaited<ReturnType<typeof getCollection<'blog'>>>[number];
+
+const allPosts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
   (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
 );
 
-// Pre-render every article body once, at build time, so the in-page reader
-// can display full posts without navigating to another route.
+// Spanish entries live under `es/` in the collection; everything else is English.
+const localeOf = (slug: string): 'en' | 'es' => (slug.startsWith('es/') ? 'es' : 'en');
+const baseOf = (slug: string): string => (slug.startsWith('es/') ? slug.slice(3) : slug);
+
+const byLocale = (locale: 'en' | 'es') => allPosts.filter((p) => localeOf(p.slug) === locale);
+
+const enPosts = byLocale('en');
+const esPosts = byLocale('es');
+
+// Pre-render every locale's article body once, at build time, so the in-page
+// reader can display full posts without navigating to another route.
 const postsWithContent = await Promise.all(
-  posts.map(async (post) => {
+  allPosts.map(async (post) => {
     const { Content } = await render(post);
     return { post, Content };
   })
 );
 
-const tags = [...new Set(posts.flatMap((post) => post.data.tags))].sort();
+// Pair every English post with its Spanish twin (fall back to the English
+// entry when a translation is missing so a card never disappears).
+const postPairs = enPosts.map((enEntry) => ({
+  en: enEntry,
+  es: esPosts.find((post) => baseOf(post.slug) === baseOf(enEntry.slug)) || enEntry,
+}));
 ---
 
 <section id="blog" class="section" aria-labelledby="blog-title">
   <div class="container-custom">
     <div class="section-header" data-animate="slide-up" data-delay="100">
       <span class="badge-primary mb-4" data-animate="fade-in" data-delay="200" data-i18n="blog.title">Blog</span>
-      <h2 id="blog-title" class="section-title" data-animate="text-reveal" data-delay="300" data-i18n="blog.subtitle">Thoughts, tutorials, and insights</h2>
+      <h2 id="blog-title" class="section-title" data-animate="text-reveal" data-delay="300" data-i18n="blog.subtitle">Experiences, events and knowledge</h2>
       <p class="section-subtitle" data-animate="fade-in" data-delay="400" data-i18n="blog.description">
         Sharing knowledge about web development, design, and technology.
       </p>
     </div>
     
-    {posts.length > 0 ? (
+    {enPosts.length > 0 ? (
       <div data-animate="fade-in" data-delay="200">
-        <!-- In-page tag filter -->
-        {tags.length > 1 && (
-          <div
-            class="flex flex-wrap gap-2 justify-center mb-10"
-            role="group"
-            aria-label="Filter posts by tag"
-            data-i18n-attr="aria-label:blog.tagFilter"
-          >
-            <button
-              type="button"
-              class="blog-filter active"
-              data-filter="all"
-              aria-pressed="true"
-            >
-              <span data-i18n="common.all">All</span>
-            </button>
-            {tags.map((tag) => (
-              <button
-                type="button"
-                class="blog-filter"
-                data-filter={tag}
-                aria-pressed="false"
-              >
-                #{tag}
-              </button>
-            ))}
-          </div>
-        )}
-
         <div
           class="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
           data-reveal
@@ -69,14 +56,21 @@ const tags = [...new Set(posts.flatMap((post) => post.data.tags))].sort();
           data-blog-grid
           data-i18n-attr="aria-label:blog.latestPosts"
         >
-          {postsWithContent.map(({ post }, index) => (
-            <BlogCard post={post} featured={index === 0} index={index} />
+          {postPairs.map(({ en, es }, index) => (
+            <Fragment>
+              <div data-i18n-content="en">
+                <BlogCard post={en} featured={index === 0} index={index} />
+              </div>
+              <div data-i18n-content="es" hidden>
+                <BlogCard post={es} featured={index === 0} index={index} />
+              </div>
+            </Fragment>
           ))}
         </div>
 
-        <!-- Pre-rendered article bodies consumed by the in-page reader -->
+        <!-- Pre-rendered article bodies consumed by the in-page reader, one per locale -->
         {postsWithContent.map(({ post, Content }) => (
-          <div hidden aria-hidden="true" data-blog-body={post.slug}>
+          <div hidden aria-hidden="true" data-blog-body={baseOf(post.slug)} data-blog-body-locale={localeOf(post.slug)}>
             <Content />
           </div>
         ))}
@@ -101,13 +95,17 @@ const tags = [...new Set(posts.flatMap((post) => post.data.tags))].sort();
   const blogSection = document.getElementById('blog');
   if (blogSection) {
     const grid = blogSection.querySelector<HTMLElement>('[data-blog-grid]');
-    const filterButtons = blogSection.querySelectorAll<HTMLButtonElement>('.blog-filter');
-    const cards = blogSection.querySelectorAll<HTMLElement>('[data-blog-card]');
     const hasReader = !!document.querySelector('[data-blog-reader]');
 
     // --- Open articles in-page (never leave the single page) ---
+    function activeLocale(): 'en' | 'es' {
+      return (window.I18N?.locale || 'en') as 'en' | 'es';
+    }
+
     function articleEmbedded(slug: string): boolean {
-      return !!document.querySelector(`[data-blog-body="${CSS.escape(slug)}"]`);
+      return !!document.querySelector(
+        `[data-blog-body="${CSS.escape(slug)}"][data-blog-body-locale="${activeLocale()}"]`
+      );
     }
 
     grid?.addEventListener('click', (e) => {
@@ -122,29 +120,6 @@ const tags = [...new Set(posts.flatMap((post) => post.data.tags))].sort();
 
       e.preventDefault();
       window.dispatchEvent(new CustomEvent('open-blog-reader', { detail: card }));
-    });
-
-    // --- In-page tag filter ---
-    filterButtons.forEach((button) => {
-      button.addEventListener('click', () => {
-        const filter = button.dataset.filter as string;
-        filterButtons.forEach((btn) => {
-          const active = btn === button;
-          btn.classList.toggle('active', active);
-          btn.setAttribute('aria-pressed', String(active));
-        });
-
-        cards.forEach((card) => {
-          const tags: string[] = card.dataset.blogTags ? (JSON.parse(card.dataset.blogTags) as string[]) : [];
-          const show = filter === 'all' || tags.includes(filter);
-          card.classList.toggle('hidden', !show);
-          if (show) {
-            // Cards hidden during scroll-reveal observation never received
-            // their entrance classes; backfill so they remain visible.
-            card.classList.add('reveal-visible', 'animate-visible');
-          }
-        });
-      });
     });
 
     // --- Locale-aware dates on cards ---
@@ -166,13 +141,3 @@ const tags = [...new Set(posts.flatMap((post) => post.data.tags))].sort();
     window.addEventListener('language-changed', formatCardDates);
   }
 </script>
-
-<style>
-  .blog-filter {
-    @apply inline-flex items-center px-4 py-2 rounded-full text-body-sm font-medium bg-white/80 dark:bg-neutral-900/80 border border-neutral-200 dark:border-neutral-800 text-neutral-700 dark:text-neutral-300 backdrop-blur-xl transition-all duration-300 hover:border-brand-500/50 dark:hover:border-brand-500/50 hover:text-brand-500 dark:hover:text-brand-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500;
-  }
-
-  .blog-filter.active {
-    @apply bg-brand-500 text-white border-brand-500 shadow-lg shadow-brand-500/30;
-  }
-</style>

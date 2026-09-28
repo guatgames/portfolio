@@ -100,6 +100,13 @@ function createI18N(): I18NGlobal {
       });
     });
 
+    // Swap localized content blocks. Elements marked data-i18n-content="en|es"
+    // are pre-rendered once per language (project cards, blog cards, article
+    // bodies) and only the active locale's copy is shown.
+    document.querySelectorAll<HTMLElement>('[data-i18n-content]').forEach((el) => {
+      el.hidden = el.getAttribute('data-i18n-content') !== currentLocale;
+    });
+
     // Bubbles so both document and window listeners receive it (components
     // register on window, mirroring theme-changed).
     document.dispatchEvent(new CustomEvent('language-changed', { bubbles: true, detail: { locale: currentLocale } }));

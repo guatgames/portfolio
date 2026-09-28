@@ -2,9 +2,31 @@
 import { getCollection } from 'astro:content';
 import ProjectCard from '../ui/ProjectCard.astro';
 
-const projects = await getCollection('projects', ({ data }) => !data.draft);
-const featuredProjects = projects.filter(p => p.data.featured).sort((a, b) => a.data.order - b.data.order);
-const otherProjects = projects.filter(p => !p.data.featured).sort((a, b) => a.data.order - b.data.order);
+type Project = Awaited<ReturnType<typeof getCollection<'projects'>>>[number];
+
+const allProjects = await getCollection('projects', ({ data }) => !data.draft);
+
+// Spanish entries live under `es/` in the collection; everything else is English.
+const localeOf = (slug: string): 'en' | 'es' => (slug.startsWith('es/') ? 'es' : 'en');
+const baseOf = (slug: string): string => (slug.startsWith('es/') ? slug.slice(3) : slug);
+
+const byLocale = (locale: 'en' | 'es') =>
+  allProjects.filter((p) => localeOf(p.slug) === locale).sort((a, b) => a.data.order - b.data.order);
+
+const enProjects = byLocale('en');
+const esProjects = byLocale('es');
+
+// Pair every English project with its Spanish twin (fall back to the English
+// entry when a translation is missing so a card never disappears).
+function pairs(en: Project[], es: Project[]): { en: Project; es: Project }[] {
+  return en.map((enEntry) => ({
+    en: enEntry,
+    es: es.find((entry) => baseOf(entry.slug) === baseOf(enEntry.slug)) || enEntry,
+  }));
+}
+
+const featuredPairs = pairs(enProjects.filter((p) => p.data.featured), esProjects.filter((p) => p.data.featured));
+const otherPairs = pairs(enProjects.filter((p) => !p.data.featured), esProjects.filter((p) => !p.data.featured));
 ---
 
 <section id="projects" class="section" aria-labelledby="projects-title">
@@ -17,17 +39,8 @@ const otherProjects = projects.filter(p => !p.data.featured).sort((a, b) => a.da
       </p>
     </div>
     
-    <!-- Filters -->
-    <div class="flex flex-wrap gap-3 justify-center mb-16" data-animate="fade-in" data-delay="200" role="group" aria-label="Project filters">
-      <button class="filter-btn active" data-filter="all" aria-pressed="true" data-i18n="projects.filters.all">All Projects</button>
-      <button class="filter-btn" data-filter="featured" aria-pressed="false" data-i18n="projects.filters.featured">Featured</button>
-      <button class="filter-btn" data-filter="web" aria-pressed="false" data-i18n="projects.filters.web">Web Apps</button>
-      <button class="filter-btn" data-filter="library" aria-pressed="false" data-i18n="projects.filters.library">Libraries</button>
-      <button class="filter-btn" data-filter="tool" aria-pressed="false" data-i18n="projects.filters.tool">Tools</button>
-    </div>
-    
     <!-- Featured Projects -->
-    {featuredProjects.length > 0 && (
+    {featuredPairs.length > 0 && (
       <div class="mb-space-2xl" data-animate="slide-up" data-delay="300">
         <h3 class="font-display text-heading-lg font-bold text-neutral-900 dark:text-neutral-100 mb-8 flex items-center gap-3">
           <span class="w-8 h-8 rounded-lg bg-brand-500/10 flex items-center justify-center">
@@ -39,8 +52,15 @@ const otherProjects = projects.filter(p => !p.data.featured).sort((a, b) => a.da
         </h3>
         
         <div class="grid lg:grid-cols-2 gap-8" role="list" aria-label="Featured projects">
-          {featuredProjects.map((project, index) => (
-            <ProjectCard project={project} featured={true} index={index} />
+          {featuredPairs.map(({ en, es }, index) => (
+            <Fragment>
+              <div data-i18n-content="en">
+                <ProjectCard project={en} featured={true} index={index} />
+              </div>
+              <div data-i18n-content="es" hidden>
+                <ProjectCard project={es} featured={true} index={index} />
+              </div>
+            </Fragment>
           ))}
         </div>
       </div>
@@ -58,10 +78,17 @@ const otherProjects = projects.filter(p => !p.data.featured).sort((a, b) => a.da
       </h3>
       
       <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6" role="list" aria-label="All projects">
-        {otherProjects.map((project, index) => (
-          <ProjectCard project={project} featured={false} index={index} />
+        {otherPairs.map(({ en, es }, index) => (
+          <Fragment>
+            <div data-i18n-content="en">
+              <ProjectCard project={en} featured={false} index={index} />
+            </div>
+            <div data-i18n-content="es" hidden>
+              <ProjectCard project={es} featured={false} index={index} />
+            </div>
+          </Fragment>
         ))}
-        {projects.length === 0 && (
+        {enProjects.length === 0 && (
           <div class="col-span-full text-center py-12">
             <div class="w-16 h-16 rounded-2xl bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center mx-auto mb-4">
               <svg class="w-8 h-8 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -76,66 +103,3 @@ const otherProjects = projects.filter(p => !p.data.featured).sort((a, b) => a.da
     </div>
   </div>
 </section>
-
-<script>
-  // Filter functionality
-  const filterButtons = document.querySelectorAll('.filter-btn');
-  const projectCards = document.querySelectorAll('[data-project-card]');
-  
-  filterButtons.forEach(button => {
-    button.addEventListener('click', () => {
-      const filter = button.dataset.filter;
-      
-      // Update active state
-      filterButtons.forEach(btn => {
-        btn.classList.remove('active');
-        btn.setAttribute('aria-pressed', 'false');
-      });
-      button.classList.add('active');
-      button.setAttribute('aria-pressed', 'true');
-      
-      // Filter projects
-      projectCards.forEach(card => {
-        const categories = card.dataset.categories?.split(',') || [];
-        const shouldShow = filter === 'all' || categories.includes(filter);
-        
-        if (shouldShow) {
-          card.style.display = '';
-          card.classList.remove('hidden');
-          requestAnimationFrame(() => {
-            card.style.opacity = '1';
-            card.style.transform = 'translateY(0)';
-          });
-        } else {
-          card.style.opacity = '0';
-          card.style.transform = 'translateY(20px)';
-          setTimeout(() => {
-            card.style.display = 'none';
-            card.classList.add('hidden');
-          }, 300);
-        }
-      });
-    });
-  });
-</script>
-
-<style>
-  .filter-btn {
-    @apply px-4 py-2 rounded-full text-body-sm font-medium bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-neutral-700 transition-all duration-300 hover:border-brand-500/50 dark:hover:border-brand-500/50 hover:bg-brand-500/5 dark:hover:bg-brand-500/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500;
-  }
-  
-  .filter-btn.active {
-    @apply bg-brand-500 text-white border-brand-500 shadow-lg shadow-brand-500/30;
-  }
-  
-  [data-project-card] {
-    @apply transition-all duration-300;
-    transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
-  }
-  
-  @media (prefers-reduced-motion: reduce) {
-    [data-project-card] {
-      transition: none !important;
-    }
-  }
-</style>
