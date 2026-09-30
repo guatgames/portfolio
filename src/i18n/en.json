@@ -112,13 +112,35 @@
     "allSection": "All Projects",
     "noProjects": "No projects yet",
     "noProjectsHint": "Add some projects to your portfolio to get started!",
+    "caseStudy": "Case study",
+    "backToProjects": "Back to projects",
     "projectCard": {
       "viewDetails": "View details",
+      "viewCaseStudy": "View case study",
       "viewLiveDemo": "View live demo of {title}",
       "viewSource": "View source code of {title}",
       "moreCount": "+{count} more",
       "technologies": "Built with"
     }
+  },
+  "media": {
+    "gallery": "Gallery",
+    "viewer": "Media viewer",
+    "items": "{count} more",
+    "mediaCount": "Media",
+    "image": "photos",
+    "video": "videos",
+    "videoLabel": "Video",
+    "openItem": "Open item {index} of {total}",
+    "previousItem": "Previous item",
+    "nextItem": "Next item",
+    "slides": "Slides",
+    "slideOf": "Slide {index} of {total}",
+    "previousSlide": "Previous slide",
+    "nextSlide": "Next slide",
+    "gotoSlide": "Go to slide {index}",
+    "pauseSlideshow": "Pause slideshow",
+    "playSlideshow": "Play slideshow"
   },
   "technologies": {
     "title": "Technologies",
@@ -144,6 +166,7 @@
     "noPosts": "No posts found.",
     "noPostsTitle": "No posts yet",
     "taggedWith": "Tagged with",
+    "contentUnavailable": "Post content unavailable.",
     "backToBlog": "Back to blog",
     "sharePost": "Share this post",
     "tableOfContents": "Table of Contents"

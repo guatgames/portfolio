@@ -112,13 +112,35 @@
     "allSection": "Todos los Proyectos",
     "noProjects": "Aún no hay proyectos",
     "noProjectsHint": "¡Añade algunos proyectos a tu portafolio para empezar!",
+    "caseStudy": "Caso de estudio",
+    "backToProjects": "Volver a proyectos",
     "projectCard": {
       "viewDetails": "Ver detalles",
+      "viewCaseStudy": "Ver caso de estudio",
       "viewLiveDemo": "Ver demo en vivo de {title}",
       "viewSource": "Ver código fuente de {title}",
       "moreCount": "+{count} más",
       "technologies": "Construido con"
     }
+  },
+  "media": {
+    "gallery": "Galería",
+    "viewer": "Visor de medios",
+    "items": "+{count}",
+    "mediaCount": "Medios",
+    "image": "fotos",
+    "video": "videos",
+    "videoLabel": "Video",
+    "openItem": "Abrir elemento {index} de {total}",
+    "previousItem": "Elemento anterior",
+    "nextItem": "Elemento siguiente",
+    "slides": "Diapositivas",
+    "slideOf": "Diapositiva {index} de {total}",
+    "previousSlide": "Diapositiva anterior",
+    "nextSlide": "Diapositiva siguiente",
+    "gotoSlide": "Ir a la diapositiva {index}",
+    "pauseSlideshow": "Pausar la presentación",
+    "playSlideshow": "Reproducir la presentación"
   },
   "technologies": {
     "title": "Tecnologías",
@@ -144,6 +166,7 @@
     "noPosts": "No se encontraron artículos.",
     "noPostsTitle": "Aún no hay artículos",
     "taggedWith": "Etiquetado con",
+    "contentUnavailable": "Contenido del artículo no disponible.",
     "backToBlog": "Volver al blog",
     "sharePost": "Compartir este artículo",
     "tableOfContents": "Tabla de Contenidos"

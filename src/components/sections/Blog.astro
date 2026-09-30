@@ -2,6 +2,8 @@
 import { getCollection, render } from 'astro:content';
 import BlogCard from '../ui/BlogCard.astro';
 import BlogReader from '../ui/BlogReader.astro';
+import MediaGallery from '../ui/MediaGallery.astro';
+import { withCoverMedia } from '../../lib/media';
 
 type Post = Awaited<ReturnType<typeof getCollection<'blog'>>>[number];
 
@@ -68,10 +70,26 @@ const postPairs = enPosts.map((enEntry) => ({
           ))}
         </div>
 
-        <!-- Pre-rendered article bodies consumed by the in-page reader, one per locale -->
+        <!-- Pre-rendered article bodies consumed by the in-page reader, one per locale.
+             Media sits in its own wrapper so the reader can frame the prose
+             without inheriting typography styles meant for article text. -->
         {postsWithContent.map(({ post, Content }) => (
           <div hidden aria-hidden="true" data-blog-body={baseOf(post.slug)} data-blog-body-locale={localeOf(post.slug)}>
-            <Content />
+            {/* Cover folded into the carousel — one media surface, not two. */}
+            <div data-clone-media>
+              <MediaGallery
+                id={post.slug}
+                items={withCoverMedia(post.data.gallery, {
+                  image: post.data.coverImage,
+                  video: post.data.video,
+                  alt: post.data.description,
+                })}
+                context={post.data.title}
+              />
+            </div>
+            <div data-clone-body class="prose prose-lg dark:prose-invert max-w-none">
+              <Content />
+            </div>
           </div>
         ))}
       </div>

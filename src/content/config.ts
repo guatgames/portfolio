@@ -1,5 +1,22 @@
 import { defineCollection, z } from 'astro:content';
 
+/**
+ * A single piece of supporting media inside a project or post gallery.
+ *
+ * Accepts either a bare path (`- "/images/shot.png"`) or an object when the
+ * entry needs `alt`, `caption` or an explicit `type`. `type` is inferred from
+ * the file extension whenever it is omitted.
+ */
+const mediaItem = z.union([
+  z.string().transform((src) => ({ src })),
+  z.object({
+    src: z.string(),
+    type: z.enum(['image', 'video']).optional(),
+    alt: z.string().optional(),
+    caption: z.string().optional(),
+  }),
+]);
+
 const projects = defineCollection({
   type: 'content',
   schema: z
@@ -13,6 +30,8 @@ const projects = defineCollection({
       image: z.string().optional(),
       // Muted looped reel shown in the card while in view (image doubles as poster).
       video: z.string().optional(),
+      // Extra screenshots/reels shown in the project detail view.
+      gallery: z.array(mediaItem).default([]),
       featured: z.boolean().default(false),
       order: z.number().default(0),
       startDate: z.string().optional(),
@@ -45,6 +64,8 @@ const blog = defineCollection({
     coverImage: z.string().optional(),
     // Optional muted looped reel for posts (coverImage doubles as its poster).
     video: z.string().optional(),
+    // Extra photos/reels shown inside the post, below the cover.
+    gallery: z.array(mediaItem).default([]),
     draft: z.boolean().default(false),
     readingTime: z.number().optional(),
   }),

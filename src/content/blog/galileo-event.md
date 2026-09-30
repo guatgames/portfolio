@@ -6,6 +6,13 @@ tags: ['event','presentation','students','university']
 draft: false
 readingTime: 6
 coverImage: "/images/blogs/galileo-event/promova.png"
+# Screenshots of the Promova demo shown at the event. Replace the alt text
+# with a line describing what each screen actually shows.
+gallery:
+  - src: "/images/projects/promova/Captura de pantalla 2026-09-23 131647.png"
+    alt: "Promova interface screen 1 of 2"
+  - src: "/images/projects/promova/Captura de pantalla 2026-09-23 133611.png"
+    alt: "Promova interface screen 2 of 2"
 ---
 
 # What Happens at This Event?

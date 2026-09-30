@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import { countMedia, withCoverMedia } from '../../lib/media';
 
 interface Props {
   post: CollectionEntry<'blog'>;
@@ -8,7 +9,7 @@ interface Props {
 }
 
 const { post, featured, index } = Astro.props;
-const { title, description, date, tags, coverImage, video, readingTime } = post.data;
+const { title, description, date, tags, coverImage, video, readingTime, gallery } = post.data;
 // Spanish entries live under `es/` in the collection; everything else is English.
 const locale: 'en' | 'es' = post.slug.startsWith('es/') ? 'es' : 'en';
 // Base slug (no locale prefix) keys the card to its article bodies in the reader.
@@ -26,6 +27,8 @@ const formattedDate = new Date(y, date.getMonth(), date.getDate()).toLocaleDateS
 });
 const tagsJson = JSON.stringify(tags);
 const extraTags = Math.max(tags.length - 3, 0);
+// Counts the carousel the reader shows, cover included.
+const mediaCounts = countMedia(withCoverMedia(gallery, { image: coverImage, video }));
 ---
 
 <article
@@ -42,43 +45,48 @@ const extraTags = Math.max(tags.length - 3, 0);
   data-blog-reading={readingTime}
   data-blog-tags={tagsJson}
 >
-  {video ? (
-    /* Optional muted looped reel; plays while the card is in view. */
+  {(video || coverImage) && (
     <div class="relative aspect-video overflow-hidden">
-      <video 
-        src={video} 
-        poster={coverImage || undefined}
-        muted
-        playsinline
-        loop
-        preload="metadata"
-        disablepictureinpicture
-        data-autoplay-inview
-        aria-hidden="true"
-        tabindex="-1"
-        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-      ></video>
+      {video ? (
+        /* Optional muted looped reel; plays while the card is in view. */
+        <video
+          src={video}
+          poster={coverImage || undefined}
+          muted
+          playsinline
+          loop
+          preload="metadata"
+          disablepictureinpicture
+          data-autoplay-inview
+          aria-hidden="true"
+          tabindex="-1"
+          class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+        ></video>
+      ) : (
+        <img
+          src={coverImage}
+          alt=""
+          class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+          loading="lazy"
+        />
+      )}
       <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" aria-hidden="true"></div>
-      
+
       {featured && (
         <div class="absolute top-4 left-4">
           <span class="badge badge-primary" data-i18n="common.featured">Featured</span>
         </div>
       )}
-    </div>
-  ) : coverImage && (
-    <div class="relative aspect-video overflow-hidden">
-      <img 
-        src={coverImage} 
-        alt=""
-        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-        loading="lazy"
-      />
-      <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" aria-hidden="true"></div>
-      
-      {featured && (
-        <div class="absolute top-4 left-4">
-          <span class="badge badge-primary" data-i18n="common.featured">Featured</span>
+
+      {/* Tells you the post carries more than the cover before you commit to it. */}
+      {mediaCounts.total > 0 && (
+        <div class="absolute top-4 right-4">
+          <span class="inline-flex items-center gap-1.5 rounded-full bg-black/45 backdrop-blur-md border border-white/20 px-2.5 py-1 text-caption font-mono text-white/90">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 5h16v4H4zM4 15h16v4H4zM4 10h16v4H4z" />
+            </svg>
+            <span data-i18n="media.items" data-i18n-params={JSON.stringify({ count: mediaCounts.total })}>{mediaCounts.total}</span>
+          </span>
         </div>
       )}
     </div>

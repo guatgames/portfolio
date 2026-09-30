@@ -6,6 +6,11 @@ tags: ['event','presentation','students','university']
 draft: false
 readingTime: 6
 coverImage: "/images/blogs/galileo-event/promova.png"
+gallery:
+  - src: "/images/projects/promova/Captura de pantalla 2026-09-23 131647.png"
+    alt: "Pantalla 1 de 2 de la interfaz de Promova"
+  - src: "/images/projects/promova/Captura de pantalla 2026-09-23 133611.png"
+    alt: "Pantalla 2 de 2 de la interfaz de Promova"
 ---
 
 # ¿Qué ocurre en este evento?

@@ -2,6 +2,8 @@
 import '../styles/global.css';
 import Header from '../components/layout/Header.astro';
 import Footer from '../components/layout/Footer.astro';
+import MediaLightbox from '../components/ui/MediaLightbox.astro';
+import MediaCarousel from '../components/ui/MediaCarousel.astro';
 import Scripts from '../components/animations/Scripts.astro';
 import enJson from '../i18n/en.json';
 import esJson from '../i18n/es.json';
@@ -11,10 +13,19 @@ const i18nData = JSON.stringify({ en: enJson, es: esJson });
 interface Props {
   title?: string;
   description?: string;
+  /** Absolute or root-relative share image (og:image / twitter:image). */
+  image?: string;
   children: import('astro').SlottedContent;
 }
 
-const { title = 'Guatgames | Creative Developer & Designer', description = 'Portfolio of Guatgames - Creative Developer & Designer. Building delightful digital experiences with modern web technologies.', children } = Astro.props;
+const {
+  title = 'Guatgames | Creative Developer & Designer',
+  description = 'Portfolio of Guatgames - Creative Developer & Designer. Building delightful digital experiences with modern web technologies.',
+  image,
+  children,
+} = Astro.props;
+
+const socialImage = image ? new URL(image, Astro.site ?? Astro.url).href : undefined;
 ---
 
 <!doctype html>
@@ -31,9 +42,11 @@ const { title = 'Guatgames | Creative Developer & Designer', description = 'Port
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
-    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:card" content={socialImage ? 'summary_large_image' : 'summary'} />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
+    {socialImage && <meta property="og:image" content={socialImage} />}
+    {socialImage && <meta name="twitter:image" content={socialImage} />}
 
     <!-- Bilingual translation dictionaries for client-side i18n -->
     <script id="i18n-data" type="application/json" set:html={i18nData}></script>
@@ -78,6 +91,8 @@ const { title = 'Guatgames | Creative Developer & Designer', description = 'Port
       <slot />
     </main>
     <Footer />
+    <MediaLightbox />
+    <MediaCarousel />
     <Scripts />
     <script>
       import '../scripts/i18n.ts';

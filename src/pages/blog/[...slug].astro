@@ -1,6 +1,8 @@
 ---
 import { getCollection, render } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
+import MediaGallery from '../../components/ui/MediaGallery.astro';
+import { withCoverMedia } from '../../lib/media';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog', ({ data }) => !data.draft);
@@ -12,7 +14,10 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props;
 const { Content } = await render(post);
-const { title, description, date, updatedDate, tags, draft } = post.data;
+const { title, description, date, updatedDate, tags, coverImage, video, draft } = post.data;
+
+// Cover folded into the gallery so the page shows one media surface.
+const postMedia = withCoverMedia(post.data.gallery, { image: coverImage, video, alt: description });
 
 const locale: 'en' | 'es' = post.slug.startsWith('es/') ? 'es' : 'en';
 const formattedDate = new Date(date).toLocaleDateString(locale === 'es' ? 'es-ES' : 'en-US', {
@@ -30,10 +35,11 @@ const jsonLd = JSON.stringify({
   ...(updatedDate ? { dateModified: updatedDate.toISOString() } : {}),
   author: { '@type': 'Person', name: 'Guatgames' },
   keywords: tags,
+  ...(coverImage ? { image: new URL(coverImage, Astro.site ?? Astro.url).href } : {}),
 });
 ---
 
-<Layout title={`${title} | Guatgames`} description={description}>
+<Layout title={`${title} | Guatgames`} description={description} image={coverImage}>
   <article class="pt-40 section">
     <div class="container-custom max-w-4xl">
       <!-- Header -->
@@ -67,61 +73,21 @@ const jsonLd = JSON.stringify({
         </p>
       </header>
 
+      <!-- One media surface: the cover leads the carousel rather than sitting
+           in its own block above a second one. -->
+      {postMedia.length > 0 && (
+        <div class="mb-12" data-animate="fade-in" data-delay="450">
+          <MediaGallery id={post.slug} items={postMedia} context={title} eager={true} />
+        </div>
+      )}
+
       <!-- Body -->
       <div class="prose prose-lg dark:prose-invert prose-brand max-w-none" data-animate="fade-in" data-delay="500">
         <Content />
       </div>
 
-      <!-- Footer -->
-      <footer class="mt-16 pt-8 border-t border-neutral-200 dark:border-neutral-800" data-animate="fade-in" data-delay="200">
-        <h2 class="font-display text-heading-sm font-bold text-neutral-900 dark:text-neutral-100 mb-6">Share this post</h2>
-        <div class="flex flex-wrap gap-3">
-          <a
-            href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(Astro.url.href)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="btn-secondary text-sm px-4 py-2"
-          >
-            Twitter
-          </a>
-          <a
-            href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(Astro.url.href)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="btn-secondary text-sm px-4 py-2"
-          >
-            LinkedIn
-          </a>
-          <button
-            id="copy-link-btn"
-            class="btn-secondary text-sm px-4 py-2"
-            aria-label="Copy link to post"
-          >
-            Copy link
-          </button>
-        </div>
-      </footer>
     </div>
   </article>
 
   <script type="application/ld+json" set:html={jsonLd}></script>
 </Layout>
-
-<script>
-  const copyBtn = document.getElementById('copy-link-btn');
-
-  copyBtn?.addEventListener('click', async () => {
-    try {
-      await navigator.clipboard.writeText(window.location.href);
-      const original = copyBtn.textContent;
-      copyBtn.textContent = 'Copied!';
-      copyBtn.classList.add('text-emerald-500', 'border-emerald-500/30');
-      setTimeout(() => {
-        copyBtn.textContent = original;
-        copyBtn.classList.remove('text-emerald-500', 'border-emerald-500/30');
-      }, 2000);
-    } catch (err) {
-      console.error('Copy failed:', err);
-    }
-  });
-</script>

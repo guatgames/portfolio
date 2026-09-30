@@ -1,6 +1,9 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 import ProjectCard from '../ui/ProjectCard.astro';
+import ProjectReader from '../ui/ProjectReader.astro';
+import MediaGallery from '../ui/MediaGallery.astro';
+import { withCoverMedia } from '../../lib/media';
 
 type Project = Awaited<ReturnType<typeof getCollection<'projects'>>>[number];
 
@@ -27,6 +30,16 @@ function pairs(en: Project[], es: Project[]): { en: Project; es: Project }[] {
 
 const featuredPairs = pairs(enProjects.filter((p) => p.data.featured), esProjects.filter((p) => p.data.featured));
 const otherPairs = pairs(enProjects.filter((p) => !p.data.featured), esProjects.filter((p) => !p.data.featured));
+
+// Pre-render each case study once, per locale, so clicking a project can
+// reveal its gallery and write-up without a request — the same trick the
+// blog reader uses.
+const projectsWithContent = await Promise.all(
+  allProjects.map(async (project) => {
+    const { Content } = await render(project);
+    return { project, Content };
+  })
+);
 ---
 
 <section id="projects" class="section" aria-labelledby="projects-title">
@@ -101,5 +114,65 @@ const otherPairs = pairs(enProjects.filter((p) => !p.data.featured), esProjects.
         )}
       </div>
     </div>
+
+    <!-- Pre-rendered case studies consumed by the in-page reader, one per locale -->
+    {projectsWithContent.map(({ project, Content }) => (
+      <div hidden aria-hidden="true" data-project-body={baseOf(project.slug)} data-project-body-locale={localeOf(project.slug)}>
+        {/* One media surface, not two: the reel and cover still lead the
+            carousel instead of sitting in a block of their own above it. */}
+        <div data-clone-media>
+          <MediaGallery
+            id={project.slug}
+            items={withCoverMedia(project.data.gallery, {
+              image: project.data.image,
+              video: project.data.video,
+              alt: project.data.longDescription || project.data.description,
+            })}
+            context={project.data.title}
+          />
+        </div>
+        <div data-clone-body class="prose prose-lg dark:prose-invert max-w-none">
+          <Content />
+        </div>
+      </div>
+    ))}
   </div>
+
+  <ProjectReader />
 </section>
+
+<script>
+  const projectsSection = document.getElementById('projects');
+  if (projectsSection) {
+    const hasReader = !!document.querySelector('[data-project-reader]');
+
+    // --- Open case studies in-page (never leave the single page) ---
+    function activeLocale(): 'en' | 'es' {
+      return (window.I18N?.locale || 'en') as 'en' | 'es';
+    }
+
+    function caseStudyEmbedded(slug: string): boolean {
+      return !!document.querySelector(
+        `[data-project-body="${CSS.escape(slug)}"][data-project-body-locale="${activeLocale()}"]`
+      );
+    }
+
+    projectsSection.addEventListener('click', (e) => {
+      if (!hasReader) return;
+      if (e.defaultPrevented) return;
+      if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+
+      const card = (e.target as HTMLElement).closest<HTMLElement>('[data-project-card]');
+      if (!card) return;
+
+      // The hover overlay owns its own links; a click on one is that link's.
+      if ((e.target as HTMLElement).closest('a[href]')) return;
+
+      const slug = card.dataset.projectSlug;
+      if (!slug || !caseStudyEmbedded(slug)) return;
+
+      e.preventDefault();
+      window.dispatchEvent(new CustomEvent('open-project-reader', { detail: card }));
+    });
+  }
+</script>

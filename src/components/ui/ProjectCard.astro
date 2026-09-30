@@ -1,18 +1,51 @@
 ---
+import type { CollectionEntry } from 'astro:content';
+import { countMedia, withCoverMedia } from '../../lib/media';
+
 interface Props {
-  project: any;
+  project: CollectionEntry<'projects'>;
   featured: boolean;
   index: number;
 }
 
 const { project, featured, index } = Astro.props;
-const { title, description, technologies, github, demo, image, video, featured: isFeatured } = project.data;
+const { title, description, longDescription, technologies, github, demo, image, video, role, startDate, endDate, teamSize, gallery } = project.data;
+
+// Spanish entries live under `es/` in the collection; everything else is English.
+const locale: 'en' | 'es' = project.slug.startsWith('es/') ? 'es' : 'en';
+// Base slug (no locale prefix) keys the card to its article body in the reader.
+const slug = project.slug.startsWith('es/') ? project.slug.slice(3) : project.slug;
+
+// Count what the reader will actually show: the carousel now leads with the
+// reel and cover, so a "+11" chip has to include them or it undercounts.
+const counts = countMedia(withCoverMedia(gallery, { image, video }));
+
+// Everything the reader needs that is not in the pre-rendered body: the
+// headline facts and the outbound links travel as one JSON payload so the
+// reader stays a single lookup instead of a dozen data attributes.
+const meta = JSON.stringify({
+  title,
+  description,
+  longDescription: longDescription || '',
+  role: role || '',
+  startDate: startDate || '',
+  endDate: endDate || '',
+  teamSize: teamSize ?? 0,
+  technologies,
+  demo: demo || '',
+  github: github || '',
+  galleryCount: counts.total,
+});
 ---
 
-<article 
-  class="card card-hover overflow-hidden group"
+<article
+  class="card card-hover overflow-hidden group flex flex-col cursor-pointer"
   data-animate="slide-up"
   data-delay={String((index + 1) * 100)}
+  data-project-card
+  data-project-slug={slug}
+  data-project-locale={locale}
+  data-project={meta}
 >
   <div class="relative aspect-video overflow-hidden bg-neutral-950">
     {video ? (
@@ -32,8 +65,8 @@ const { title, description, technologies, github, demo, image, video, featured: 
         class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
       ></video>
     ) : image ? (
-      <img 
-        src={image} 
+      <img
+        src={image}
         alt=""
         class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
         loading="lazy"
@@ -45,21 +78,36 @@ const { title, description, technologies, github, demo, image, video, featured: 
         </svg>
       </div>
     )}
-    
+
     <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" aria-hidden="true"></div>
-    
-    {isFeatured && (
+
+    {featured && (
       <div class="absolute top-4 left-4">
         <span class="badge badge-primary" data-i18n="common.featured">Featured</span>
       </div>
     )}
-    
+
+    {/* Proof that the case study holds more than the card does. */}
+    {counts.total > 0 && (
+      <div class="absolute top-4 right-4">
+        <span
+          class="inline-flex items-center gap-1.5 rounded-full bg-black/45 backdrop-blur-md border border-white/20 px-2.5 py-1 text-caption font-mono text-white/90"
+          data-project-media-count
+        >
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 5h16v4H4zM4 15h16v4H4zM4 10h16v4H4z" />
+          </svg>
+          <span data-i18n="media.items" data-i18n-params={JSON.stringify({ count: counts.total })}>{counts.total}</span>
+        </span>
+      </div>
+    )}
+
     <div class="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-300">
       <div class="flex gap-3 justify-center">
         {demo && (
-          <a 
-            href={demo} 
-            target="_blank" 
+          <a
+            href={demo}
+            target="_blank"
             rel="noopener noreferrer"
             class="btn btn-primary text-sm px-4 py-2"
             aria-label={`View live demo of ${title}`}
@@ -73,9 +121,9 @@ const { title, description, technologies, github, demo, image, video, featured: 
           </a>
         )}
         {github && (
-          <a 
-            href={github} 
-            target="_blank" 
+          <a
+            href={github}
+            target="_blank"
             rel="noopener noreferrer"
             class="btn btn-secondary text-sm px-4 py-2"
             aria-label={`View source code of ${title}`}
@@ -91,19 +139,19 @@ const { title, description, technologies, github, demo, image, video, featured: 
       </div>
     </div>
   </div>
-  
-  <div class="p-6">
+
+  <div class="p-6 flex flex-col flex-1">
     <div class="flex items-center gap-2 mb-3">
       <h3 class="font-display text-heading-md font-bold text-neutral-900 dark:text-neutral-100 group-hover:text-brand-500 dark:group-hover:text-brand-400 transition-colors">
         {title}
       </h3>
     </div>
-    
-    <p class="text-body-md text-neutral-600 dark:text-neutral-400 mb-4 line-clamp-3">
+
+    <p class="text-body-md text-neutral-600 dark:text-neutral-400 mb-4 line-clamp-3 flex-1">
       {description}
     </p>
-    
-    <div class="flex flex-wrap gap-2" aria-label="Technologies used" data-i18n-attr="aria-label:common.technologies">
+
+    <div class="flex flex-wrap gap-2 mb-5" aria-label="Technologies used" data-i18n-attr="aria-label:common.technologies">
       {technologies.slice(0, 6).map((tech: string) => (
         <span class="tag">{tech}</span>
       ))}
@@ -117,5 +165,13 @@ const { title, description, technologies, github, demo, image, video, featured: 
         </span>
       )}
     </div>
+
+    <!-- The keyboard/AT path into the case study; the card click is the shortcut. -->
+    <button type="button" class="link mt-auto group/link inline-flex items-center gap-2 self-start" data-project-open>
+      <span data-i18n="projects.projectCard.viewCaseStudy">View case study</span>
+      <svg class="w-4 h-4 transition-transform duration-300 group-hover/link:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+      </svg>
+    </button>
   </div>
 </article>
