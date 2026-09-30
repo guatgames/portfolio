@@ -1,0 +1,327 @@
+---
+/**
+ * A carousel of gallery frames.
+ *
+ * Every frame is a real button that hands its items to the page-level
+ * `MediaLightbox` through two data attributes:
+ *
+ *   - `data-lightbox-items` on the section (the payload the viewer reads)
+ *   - `data-lightbox-index` on each button (which frame was clicked)
+ *
+ * Because the lightbox listens on `document`, this component keeps working
+ * when its markup is cloned into an in-page reader (project/blog detail
+ * views) — no re-binding after a clone. The same is true of the carousel
+ * itself: `MediaCarousel` owns every behaviour through delegation plus a
+ * registry that re-binds cloned roots, so this file ships markup only.
+ *
+ * Media is `object-contain` on a near-black stage rather than `object-cover`:
+ * the set mixes landscape app screenshots with portrait event photos, and
+ * cropping a portrait photo to 16:9 throws away the thing being shown.
+ */
+import { normalizeMedia, isVideo, serializeMedia, countMedia } from '../../lib/media';
+import type { MediaItem } from '../../lib/media';
+
+interface Props {
+  items: MediaItem[];
+  /** Names the set in the viewer, e.g. the project or post title. */
+  context?: string;
+  /** Unique per instance — several carousels share a page. Slug-shaped. */
+  id: string;
+  /** Hides the "Gallery" caption when the surrounding layout already labels it. */
+  showHeading?: boolean;
+  eager?: boolean;
+  /** Milliseconds between auto-advances. 0 opts out of auto-advance. */
+  autoplay?: number;
+}
+
+const { items, context = '', id, showHeading = true, eager = false, autoplay = 5000 } = Astro.props;
+
+const media = normalizeMedia(items);
+const counts = countMedia(media);
+const payload = serializeMedia(media, context);
+const headingId = `${id.replace(/[^a-zA-Z0-9-_]/g, '-')}-media-heading`;
+
+const total = media.length;
+const multi = total > 1;
+/** A rail only earns its space once there are enough frames to scan. */
+const showRail = total >= 4;
+const autoAdvance = multi && autoplay > 0;
+/**
+ * A single frame is not a gallery. Labelling a lone cover "Gallery 01" is
+ * noise, and a carousel role on something with nothing to step through is a
+ * lie to assistive tech — so a cover-only set drops into a plain figure.
+ */
+const labelled = showHeading && multi;
+---
+
+{media.length > 0 && (
+  <section
+    aria-labelledby={labelled ? headingId : undefined}
+    role={multi ? 'group' : undefined}
+    aria-roledescription={multi ? 'carousel' : undefined}
+    data-media-gallery
+    data-carousel
+    data-lightbox-items={payload}
+    data-media-counts={JSON.stringify(counts)}
+    style={`--carousel-dur:${autoplay}ms`}
+  >
+    {labelled && (
+      <div class="flex items-baseline gap-3 mb-5">
+        <h3
+          id={headingId}
+          class="font-display text-heading-sm font-bold text-neutral-900 dark:text-neutral-100"
+          data-i18n="media.gallery"
+        >
+          Gallery
+        </h3>
+        <span class="text-caption font-mono text-neutral-500 dark:text-neutral-400" data-media-gallery-count>
+          {String(counts.total).padStart(2, '0')}
+        </span>
+      </div>
+    )}
+
+    {/* Stage: the artifact, unadorned. The only thing on it is the expand cue. */}
+    <div class="relative overflow-hidden rounded-xl bg-neutral-950 border border-neutral-200/60 dark:border-neutral-800/60">
+      <div
+        class="flex h-full w-full motion-reduce:transition-none"
+        data-carousel-track
+        style="transform:translate3d(0,0,0);transition-property:transform;transition-duration:500ms;transition-timing-function:cubic-bezier(0.16,1,0.3,1)"
+      >
+        {media.map((item, index) => (
+          <div
+            class="w-full shrink-0"
+            data-carousel-slide={index}
+            aria-hidden={index === 0 ? undefined : 'true'}
+          >
+            <button
+              type="button"
+              data-lightbox-index={index}
+              class="group/stage relative block w-full aspect-video"
+            >
+              {isVideo(item) ? (
+                <video
+                  src={item.src}
+                  poster={item.poster}
+                  muted
+                  loop
+                  playsinline
+                  preload="metadata"
+                  disablepictureinpicture
+                  data-autoplay-inview
+                  tabindex="-1"
+                  aria-hidden="true"
+                  class="w-full h-full object-contain p-2 sm:p-3"
+                ></video>
+              ) : (
+                <img
+                  src={item.src}
+                  alt={item.alt ?? ''}
+                  loading={eager ? 'eager' : 'lazy'}
+                  decoding="async"
+                  class="w-full h-full object-contain p-2 sm:p-3"
+                />
+              )}
+
+              {/* Scrim only appears once there is something to read against it. */}
+              {item.caption && (
+                <span
+                  class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/85 via-black/10 to-transparent"
+                  aria-hidden="true"
+                ></span>
+              )}
+
+              {isVideo(item) && (
+                <span
+                  class="pointer-events-none absolute top-3 right-3 w-8 h-8 rounded-full bg-black/45 backdrop-blur-md border border-white/20 flex items-center justify-center text-white"
+                  aria-hidden="true"
+                >
+                  <svg class="w-3.5 h-3.5 translate-x-px" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M6.5 4.8a1 1 0 011.5-.87l8 5.2a1 1 0 010 1.74l-8 5.2a1 1 0 01-1.5-.87V4.8z" />
+                  </svg>
+                </span>
+              )}
+
+              {/* Expand affordance: the frame is a button, so say what it does. */}
+              <span
+                class="pointer-events-none absolute inset-0 flex items-center justify-center opacity-0 group-hover/stage:opacity-100 group-focus-visible/stage:opacity-100 transition-opacity duration-500"
+                aria-hidden="true"
+              >
+                <span class="w-11 h-11 rounded-full bg-black/45 backdrop-blur-md border border-white/20 flex items-center justify-center text-white">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 3h6v6M9 21H3v-6M21 3l-7.5 7.5M3 21l7.5-7.5" />
+                  </svg>
+                </span>
+              </span>
+
+              {item.caption && (
+                <span class="pointer-events-none absolute inset-x-0 bottom-0 p-4 sm:p-5 text-left">
+                  <span class="block text-caption font-mono text-white/90">{item.caption}</span>
+                </span>
+              )}
+
+              {/* Position in the set, read after the image's own alt text. */}
+              <span
+                class="sr-only"
+                data-i18n="media.openItem"
+                data-i18n-params={JSON.stringify({ index: index + 1, total })}
+              ></span>
+            </button>
+          </div>
+        ))}
+      </div>
+
+      {/* How long until it moves. Only ever runs while the set is advancing. */}
+      {autoAdvance && (
+        <span
+          class="pointer-events-none absolute inset-x-0 bottom-0 h-0.5 origin-left scale-x-0 bg-gradient-to-r from-brand-500 via-accent-cyan to-accent-magenta"
+          data-carousel-progress
+          aria-hidden="true"
+        ></span>
+      )}
+    </div>
+
+    {multi && (
+      <>
+        {/* Announced on every change; the visible counter below is decorative. */}
+        <p class="sr-only" role="status" aria-live="polite" data-carousel-status></p>
+
+        <div class="mt-4 flex items-center justify-between gap-4">
+          <div class="flex items-center gap-2">
+            <button
+              type="button"
+              class="btn-icon"
+              data-carousel-tap
+              data-carousel-prev
+              aria-label="Previous slide"
+              data-i18n-attr="aria-label:media.previousSlide"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+
+            <span
+              class="text-caption font-mono tabular-nums text-neutral-500 dark:text-neutral-400 min-w-[4.5rem] text-center"
+              data-carousel-counter
+              aria-hidden="true"
+            >
+              01 / {String(total).padStart(2, '0')}
+            </span>
+
+            <button
+              type="button"
+              class="btn-icon"
+              data-carousel-tap
+              data-carousel-next
+              aria-label="Next slide"
+              data-i18n-attr="aria-label:media.nextSlide"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+
+          {autoAdvance && (
+            <button
+              type="button"
+              class="btn-icon"
+              data-carousel-tap
+              data-carousel-playpause
+              aria-label="Pause slideshow"
+            >
+              {/* The runtime owns this label: which word belongs here depends
+                  on whether the set is running, and only it knows that. It
+                  re-writes the label on every locale swap. No data-i18n-attr —
+                  two writers to one attribute is a race, not a feature. */}
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true" data-carousel-glyph="pause">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10 9v6M14 9v6" />
+              </svg>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true" data-carousel-glyph="play" hidden>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8 5.5v13l11-6.5-11-6.5z" />
+              </svg>
+            </button>
+          )}
+        </div>
+      </>
+    )}
+
+    {/* Rail: direct jumps. Absent for two- and three-item sets, where the
+        arrows already cover it and a rail is just chrome. */}
+    {showRail && (
+      <ul
+        class="mt-4 flex gap-2 sm:gap-2.5 overflow-x-auto overscroll-x-contain pb-1 snap-x snap-mandatory"
+        data-carousel-rail
+        aria-label="Slides"
+        data-i18n-attr="aria-label:media.slides"
+      >
+        {media.map((item, index) => (
+          <li class="shrink-0 snap-start">
+            <button
+              type="button"
+              data-carousel-goto={index}
+              aria-current={index === 0 ? 'true' : 'false'}
+              aria-label={`Go to slide ${index + 1}`}
+              data-i18n-attr="aria-label:media.gotoSlide"
+              data-i18n-params={JSON.stringify({ index: index + 1 })}
+              class="relative block w-12 sm:w-14 aspect-video rounded-lg overflow-hidden bg-neutral-950 border border-neutral-200/60 dark:border-neutral-800/60 transition-[border-color,opacity,box-shadow] duration-500 ease-out-expo opacity-55 hover:opacity-100 focus-visible:opacity-100 aria-[current=true]:opacity-100 aria-[current=true]:border-transparent aria-[current=true]:shadow-glow"
+            >
+              {isVideo(item) ? (
+                <span class="absolute inset-0 flex items-center justify-center text-white/80" aria-hidden="true">
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M6.5 4.8a1 1 0 011.5-.87l8 5.2a1 1 0 010 1.74l-8 5.2a1 1 0 01-1.5-.87V4.8z" />
+                  </svg>
+                </span>
+              ) : (
+                <img
+                  src={item.src}
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                  class="w-full h-full object-cover"
+                />
+              )}
+            </button>
+          </li>
+        ))}
+      </ul>
+    )}
+  </section>
+)}
+
+<style>
+  /* 44px is the touch-target floor the viewer's own arrows hold to, and these
+     sit next to the stage a thumb is already reaching for. `.btn-icon` is
+     p-3; the glyph stays 16px inside a 44px box. */
+  [data-carousel-tap] {
+    padding: 0.875rem;
+  }
+
+  [data-carousel-progress] {
+    animation: carousel-progress var(--carousel-dur, 5000ms) linear forwards;
+    animation-play-state: paused;
+  }
+
+  [data-carousel].is-advancing [data-carousel-progress] {
+    animation-play-state: running;
+  }
+
+  @keyframes carousel-progress {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    /* Nothing advances under reduced motion, so the bar would only ever sit
+       at zero. Hide it rather than draw a line that never fills. */
+    [data-carousel-progress] {
+      animation: none;
+      transform: scaleX(0);
+      display: none;
+    }
+  }
+</style>

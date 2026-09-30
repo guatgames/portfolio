@@ -1,0 +1,40 @@
+---
+title: "Promova"
+description: "Un estudio SaaS con IA que convierte una sola foto de producto en publicidad lista para publicar — análisis de color, prompts conscientes de la marca y visuales generados, medidos con créditos mensuales."
+longDescription: "Promova es un estudio publicitario asistido por IA. Sube una foto de tu producto, obtén un análisis automático de colorimetría (color dominante, fondo y paleta de colores), construye un prompt publicitario con tu identidad de marca y genera creativos publicitarios con modelos de IA — todo gestionado mediante un sistema mensual de créditos."
+technologies: ["React", "TailwindCSS", "TypeScript", "Node JS", "Express", "Prisma", "PostgreSQL", "JWT", "Pollinations"]
+video: "/videos/projects/promova/promova-video.mp4"
+image: "/images/projects/promova/Captura de pantalla 2026-09-23 131647.png"
+# Capturas de pantalla que se muestran en el caso de estudio. Reemplaza el texto
+# alternativo por una línea que describa lo que muestra cada pantalla.
+gallery:
+  - src: "/images/projects/promova/Captura de pantalla 2026-09-23 131647.png"
+    alt: "Pantalla 1 de 2 de la interfaz de Promova"
+  - src: "/images/projects/promova/Captura de pantalla 2026-09-23 133611.png"
+    alt: "Pantalla 2 de 2 de la interfaz de Promova"
+featured: true
+order: 2
+role: "Desarrollador Líder"
+startDate: "2026-08"
+endDate: "2026-09"
+teamSize: 5
+---
+
+# Promova
+
+## Resumen
+
+Envía una imagen y obtén un anuncio para tus redes sociales.
+
+El flujo es deliberadamente corto. Sube una foto de tu producto y Promova deduce la colorimetría de esa imagen — el color dominante, el color de fondo y una paleta completa — y luego traslada esos colores al prompt, de modo que el creativo generado se mantenga fiel a la marca en lugar de inventar su propia estética.
+
+## Cómo funciona
+
+1. **Sube** una foto de tu producto.
+2. **Analiza** — Promova extrae el color dominante, el color de fondo y genera una paleta acorde.
+3. **Construye el prompt** — el análisis de color se combina con tu identidad de marca en un prompt publicitario que puedes ajustar.
+4. **Genera** — los modelos de IA convierten ese prompt en creativos publicitarios, medidos mediante un sistema de créditos mensuales.
+
+## Arquitectura
+
+Construido con arquitectura modular y de componentes: un frontend en React, TailwindCSS y TypeScript sobre una API en Node.js y Express, con Prisma gestionando la capa de datos sobre PostgreSQL y JWT cubriendo la autenticación. La generación se apoya en los modelos de Pollinations, y el saldo mensual de créditos es lo que mantiene acotado el uso.

@@ -1,0 +1,43 @@
+---
+title: "Spotinder"
+description: "A Tinder-style music recommender that learns from the artists and songs you like and serves up your next favorite track, powered by the Deezer API."
+longDescription: "Swipe your way to a new favorite track. A Tinder-style music recommender with an Apple Liquid Glass aesthetic on Deezer's dark-mode palette — a normal, scrollable web page (no window chrome, no fake phone frame) with a floating glass header and bottom nav. Powered by the Deezer API through a secure Netlify Edge Function proxy."
+technologies: ["React", "TailwindCSS", "TypeScript", "Node JS", "Express", "Deezer API", "Edge Functions"]
+demo: "https://spotinder-suggests.netlify.app/"
+github: "https://github.com/guatgames/spotinder.git"
+video: "/videos/projects/spotinder/spotinder.mp4"
+image: "/images/projects/spotinder/screenshot_2026-09-25_22-11-22.png"
+# Screenshots shown in the case study. Replace the alt text with a line
+# describing what each screen actually shows.
+gallery:
+  - src: "/images/projects/spotinder/screenshot_2026-09-25_22-11-22.png"
+    alt: "Spotinder interface screen 1 of 5"
+  - src: "/images/projects/spotinder/screenshot_2026-09-25_22-11-36.png"
+    alt: "Spotinder interface screen 2 of 5"
+  - src: "/images/projects/spotinder/screenshot_2026-09-25_22-11-40.png"
+    alt: "Spotinder interface screen 3 of 5"
+  - src: "/images/projects/spotinder/screenshot_2026-09-25_22-11-43.png"
+    alt: "Spotinder interface screen 4 of 5"
+  - src: "/images/projects/spotinder/screenshot_2026-09-25_22-11-46.png"
+    alt: "Spotinder interface screen 5 of 5"
+featured: true
+order: 3
+role: "Full-Stack Developer"
+startDate: "2026-08"
+endDate: "2026-09"
+teamSize: 1
+---
+
+# Spotinder
+
+## Overview
+
+Select your favorite singers and get music recommendations built from the artists and songs you already like.
+
+The interface is a normal, scrollable web page — no window chrome, no fake phone frame — dressed in an Apple Liquid Glass aesthetic over Deezer's dark-mode palette, with a floating glass header and bottom navigation. Swiping is the whole interaction: like a track, keep going, and the next recommendation is already on its way.
+
+## Architecture
+
+Built with modular and component-based architecture: a React, TailwindCSS and TypeScript front end over a Node.js and Express backend.
+
+Deezer is never called straight from the browser. Every request goes through a Netlify Edge Function proxy, so the API credentials stay server-side and out of the client bundle.

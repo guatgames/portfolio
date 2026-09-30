@@ -1,0 +1,288 @@
+---
+---
+<!--
+  In-page article reader. Opening a post never navigates: the article body is
+  cloned from the pre-rendered hidden templates rendered by the Blog section,
+  so the reader works with zero requests and works offline.
+
+  Coordinates with the Blog section:
+    - Blog section dispatches  `open-blog-reader`  with the clicked card element.
+    - The reader owns open/close, focus management, scroll lock and locale-aware meta.
+-->
+<div
+  id="blog-reader"
+  class="fixed inset-0 z-90 hidden"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="blog-reader-title"
+  data-blog-reader
+>
+  <!-- Backdrop -->
+  <div
+    class="absolute inset-0 bg-neutral-950/50 backdrop-blur-md opacity-0 transition-opacity duration-300 ease-out-expo"
+    data-blog-reader-backdrop
+    aria-hidden="true"
+  ></div>
+
+  <!-- Scrollable viewport -->
+  <div class="relative z-10 h-full overflow-y-auto px-4 py-6 sm:px-6 sm:py-12 lg:py-16" data-blog-reader-scroll>
+    <div class="flex min-h-full items-center justify-center">
+      <div
+        class="relative w-full max-w-3xl my-auto opacity-0 scale-95 transition-all duration-300 ease-out-expo"
+        data-blog-reader-panel-wrap
+      >
+        <!-- Accent glow pooling behind the glass panel -->
+        <div
+          class="absolute -inset-3 -z-10 rounded-[2rem] bg-gradient-to-br from-brand-500/25 via-accent-cyan/20 to-accent-magenta/25 blur-2xl opacity-0 transition-opacity duration-500"
+          data-blog-reader-aura
+          aria-hidden="true"
+        ></div>
+
+        <article
+          class="relative overflow-hidden rounded-2xl bg-white/85 dark:bg-neutral-900/85 backdrop-blur-2xl border border-neutral-200/60 dark:border-neutral-800/60"
+        >
+          <button
+            type="button"
+            class="btn-icon absolute top-4 right-4 z-10"
+            aria-label="Close"
+            data-blog-reader-close
+            data-i18n-attr="aria-label:common.close"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+
+          <header class="relative px-6 pt-14 pb-7 sm:px-10 sm:pt-16 sm:pb-8">
+            <span class="badge-primary mb-5" data-i18n="blog.title">Blog</span>
+            <h2
+              id="blog-reader-title"
+              class="font-display text-heading-lg lg:text-heading-xl font-bold tracking-tight text-neutral-900 dark:text-neutral-100 mb-4 text-balance"
+              data-blog-reader-title
+            ></h2>
+            <p class="text-body-lg text-neutral-600 dark:text-neutral-400 max-w-2xl" data-blog-reader-description></p>
+            <div class="flex flex-wrap items-center gap-x-5 gap-y-2 mt-6">
+              <time class="text-body-sm text-neutral-500 dark:text-neutral-500 font-mono" data-blog-reader-date></time>
+              <span class="text-body-sm text-neutral-500 dark:text-neutral-500 hidden" data-blog-reader-reading></span>
+              <div class="flex flex-wrap gap-2" data-blog-reader-tags></div>
+            </div>
+          </header>
+
+          <!-- Cover reel/photo and the post's own gallery, cloned in with the body -->
+          <div class="px-6 sm:px-10 pb-10 hidden" data-blog-reader-media></div>
+
+          <div class="px-6 sm:px-10 pb-8">
+            <div
+              class="pt-8 border-t border-neutral-200/50 dark:border-neutral-800/50"
+              data-blog-reader-body
+            ></div>
+          </div>
+
+          <footer class="px-6 sm:px-10 py-6 border-t border-neutral-200/50 dark:border-neutral-800/50">
+            <button type="button" class="btn-ghost text-body-sm group" data-blog-reader-back>
+              <svg class="w-4 h-4 transition-transform duration-300 group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              </svg>
+              <span data-i18n="blog.backToBlog">Back to blog</span>
+            </button>
+          </footer>
+        </article>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const reader = document.querySelector<HTMLElement>('[data-blog-reader]');
+    if (reader) {
+      const backdrop = reader.querySelector<HTMLElement>('[data-blog-reader-backdrop]');
+      const wrap = reader.querySelector<HTMLElement>('[data-blog-reader-panel-wrap]');
+      const aura = reader.querySelector<HTMLElement>('[data-blog-reader-aura]');
+      const scroll = reader.querySelector<HTMLElement>('[data-blog-reader-scroll]');
+      const closeBtn = reader.querySelector<HTMLButtonElement>('[data-blog-reader-close]');
+      const backBtn = reader.querySelector<HTMLButtonElement>('[data-blog-reader-back]');
+      const titleEl = reader.querySelector<HTMLElement>('[data-blog-reader-title]');
+      const descEl = reader.querySelector<HTMLElement>('[data-blog-reader-description]');
+      const dateEl = reader.querySelector<HTMLElement>('[data-blog-reader-date]');
+      const readingEl = reader.querySelector<HTMLElement>('[data-blog-reader-reading]');
+      const tagsEl = reader.querySelector<HTMLElement>('[data-blog-reader-tags]');
+      const bodyEl = reader.querySelector<HTMLElement>('[data-blog-reader-body]');
+      const mediaEl = reader.querySelector<HTMLElement>('[data-blog-reader-media]');
+
+      let isOpen = false;
+      let lastFocused: HTMLElement | null = null;
+      let currentSlug: string | null = null;
+
+      function getLocale(): 'en' | 'es' {
+        const attr = document.documentElement.getAttribute('data-locale');
+        return (window.I18N?.locale || (attr === 'es' ? 'es' : 'en')) as 'en' | 'es';
+      }
+
+      function parseDate(value: string): Date {
+        const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+        if (match) {
+          return new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
+        }
+        return new Date(value);
+      }
+
+      function localeDate(iso: string): string {
+        const date = parseDate(iso);
+        if (Number.isNaN(date.getTime())) return '';
+        return date.toLocaleDateString(getLocale(), { year: 'numeric', month: 'long', day: 'numeric' });
+      }
+
+      /**
+       * Clones a template slot for display. Heading ids are stripped: the
+       * hidden per-locale templates already carry the same ids, and nothing
+       * deep-links into an in-page reader, so keeping them would only put
+       * duplicate ids in the visible document. The slot's own wrapper is kept
+       * because it carries the prose/media presentation.
+       */
+      function cloneTemplate(source: HTMLElement | null | undefined): HTMLElement | null {
+        if (!source) return null;
+        const clone = source.cloneNode(true) as HTMLElement;
+        clone.removeAttribute('id');
+        clone.querySelectorAll('[id]').forEach((el) => el.removeAttribute('id'));
+        return clone;
+      }
+
+      function fillMeta(card: HTMLElement, { keepScroll = false } = {}) {
+        const slug = card.dataset.blogSlug || '';
+        const title = card.dataset.blogTitle || '';
+        const description = card.dataset.blogDescription || '';
+        const date = card.dataset.blogDate || '';
+        const reading = Number(card.dataset.blogReading) || 0;
+        const tags: string[] = card.dataset.blogTags ? (JSON.parse(card.dataset.blogTags) as string[]) : [];
+        const readingText = window.I18N?.t('common.readingTime') || 'min read';
+
+        currentSlug = slug;
+        titleEl.textContent = title;
+        descEl.textContent = description;
+        dateEl.textContent = localeDate(date);
+        dateEl.setAttribute('datetime', date);
+        readingEl.textContent = reading > 0 ? `${reading} ${readingText}` : '';
+        readingEl.classList.toggle('hidden', reading === 0);
+
+        tagsEl.innerHTML = '';
+        tags.forEach((tag) => {
+          const chip = document.createElement('span');
+          chip.className = 'tag';
+          chip.textContent = `#${tag}`;
+          tagsEl.appendChild(chip);
+        });
+        tagsEl.setAttribute('aria-label', window.I18N?.t('blog.taggedWith') || 'Tagged with');
+
+        // A post with no translation falls back to its other-language card,
+        // so read that template rather than showing an empty panel.
+        const bySlug = `[data-blog-body="${CSS.escape(slug)}"]`;
+        const source =
+          document.querySelector<HTMLElement>(`${bySlug}[data-blog-body-locale="${getLocale()}"]`) ??
+          document.querySelector<HTMLElement>(bySlug);
+        const bodySource = source?.querySelector<HTMLElement>('[data-clone-body]');
+        const mediaSource = source?.querySelector<HTMLElement>('[data-clone-media]');
+        const bodyClone = cloneTemplate(bodySource);
+        if (bodyClone) {
+          bodyEl.replaceChildren(bodyClone);
+        } else {
+          const fallback = document.createElement('p');
+          fallback.textContent = window.I18N?.t('blog.contentUnavailable') || 'Post content unavailable.';
+          bodyEl.replaceChildren(fallback);
+        }
+        const mediaClone = cloneTemplate(mediaSource);
+        mediaEl.replaceChildren(...(mediaClone ? [mediaClone] : []));
+        // The slot always exists in the template, so an entry with no cover
+        // and no gallery must not leave an empty padded block behind.
+        mediaEl.classList.toggle('hidden', !mediaClone?.querySelector('figure, [data-media-gallery]'));
+        window.observeAutoplayMedia?.(mediaEl);
+
+        if (!keepScroll) scroll.scrollTop = 0;
+      }
+
+      function open(card: HTMLElement) {
+        if (isOpen) {
+          fillMeta(card);
+          return;
+        }
+        lastFocused = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+        fillMeta(card);
+
+        reader.classList.remove('hidden');
+        requestAnimationFrame(() => {
+          backdrop.classList.remove('opacity-0');
+          backdrop.classList.add('opacity-100');
+          wrap.classList.remove('opacity-0', 'scale-95');
+          wrap.classList.add('opacity-100', 'scale-100');
+          aura.classList.add('opacity-100');
+        });
+
+        document.body.style.overflow = 'hidden';
+        isOpen = true;
+        closeBtn.focus();
+      }
+
+      function close() {
+        if (!isOpen) return;
+        isOpen = false;
+        backdrop.classList.add('opacity-0');
+        backdrop.classList.remove('opacity-100');
+        wrap.classList.add('opacity-0', 'scale-95');
+        wrap.classList.remove('opacity-100', 'scale-100');
+        aura.classList.remove('opacity-100');
+        document.body.style.overflow = '';
+        mediaEl.querySelectorAll('video').forEach((video) => video.pause());
+
+        window.setTimeout(() => {
+          if (isOpen) return;
+          reader.classList.add('hidden');
+          if (lastFocused && document.documentElement.contains(lastFocused)) {
+            lastFocused.focus();
+          }
+        }, 300);
+
+        // Lets the media viewer step aside when it is sitting on top of this.
+        window.dispatchEvent(new CustomEvent('reader-closed'));
+      }
+
+      reader.addEventListener('keydown', (e) => {
+        if (!isOpen) return;
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          close();
+        } else if (e.key === 'Tab') {
+          const focusables = Array.from(
+            reader.querySelectorAll<HTMLElement>('a[href], button:not([disabled])')
+          ).filter(el => el.offsetParent !== null);
+          if (focusables.length === 0) return;
+          const first = focusables[0];
+          const last = focusables[focusables.length - 1];
+          if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
+      });
+
+      backdrop.addEventListener('click', close);
+      closeBtn.addEventListener('click', close);
+      backBtn.addEventListener('click', close);
+
+      window.addEventListener('open-blog-reader', (e: Event) => {
+        const card = (e as CustomEvent<HTMLElement>).detail;
+        if (card) open(card);
+      });
+
+      // Keep meta (dates, title, body) in sync with the active language while reading
+      window.addEventListener('language-changed', () => {
+        if (isOpen && currentSlug) {
+          const card = document.querySelector<HTMLElement>(
+            `[data-blog-card][data-blog-slug="${CSS.escape(currentSlug)}"][data-blog-locale="${getLocale()}"]`
+          );
+          if (card) fillMeta(card, { keepScroll: true });
+        }
+      });
+    }
+  </script>
+</div>

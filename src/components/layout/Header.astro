@@ -1,0 +1,110 @@
+---
+import LanguageToggle from '../ui/LanguageToggle.astro';
+import ThemeToggle from '../ui/ThemeToggle.astro';
+import MobileMenuButton from '../ui/MobileMenuButton.astro';
+import MobileMenu from '../ui/MobileMenu.astro';
+---
+
+<header class="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-neutral-950/80 backdrop-blur-2xl border-b border-neutral-200/50 dark:border-neutral-800/50 transition-all duration-500">
+  <nav class="container-custom" aria-label="Main navigation" data-i18n-attr="aria-label:navigation.mainNav">
+    <div class="flex items-center justify-between h-16 lg:h-20">
+      <div class="flex items-center gap-8">
+
+        <a href="/" class="block shrink-0" aria-label="Guatgames - Home">
+          <img src="/images/favico.jpeg" alt="Guatgames" class="w-9 h-9 lg:w-10 lg:h-10 rounded-xl object-cover dark:hidden" width="40" height="40" loading="eager" />
+          <img src="/images/favico-dark.jpeg" alt="Guatgames" class="w-9 h-9 lg:w-10 lg:h-10 rounded-xl object-cover hidden dark:block" width="40" height="40" loading="eager" />
+        </a>
+
+        <ul class="hidden lg:flex items-center gap-1">
+          <li>
+            <a href="#about" class="nav-link" data-i18n="navigation.about">About</a>
+          </li>
+          <li>
+            <a href="#projects" class="nav-link" data-i18n="navigation.projects">Projects</a>
+          </li>
+          <li>
+            <a href="#technologies" class="nav-link" data-i18n="navigation.technologies">Technologies</a>
+          </li>
+          <li>
+            <a href="#blog" class="nav-link" data-i18n="navigation.blog">Blog</a>
+          </li>
+          <li>
+            <a href="#contact" class="nav-link" data-i18n="navigation.contact">Contact</a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="flex items-center gap-4">
+        <LanguageToggle />
+        <ThemeToggle />
+        <MobileMenuButton />
+      </div>
+    </div>
+
+    <MobileMenu />
+  </nav>
+</header>
+
+<script>
+  // Smooth scroll for section links. The global `scroll-behavior: smooth`
+  // already animates the default anchor jump, so this only keeps the URL hash
+  // in sync and moves focus for assistive tech — without cancelling navigation.
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      const targetId = this.getAttribute('href');
+      if (!targetId || targetId === '#' || targetId === location.hash) return;
+
+      const target = document.querySelector(targetId);
+      if (!target) return;
+
+      // Reflect the section in the URL (deep-linkable, back button works).
+      history.pushState(null, '', targetId);
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      target.focus({ preventScroll: true });
+    });
+  });
+
+  // Header scroll effect
+  let lastScrollY = window.scrollY;
+  const header = document.querySelector('header');
+  
+  window.addEventListener('scroll', () => {
+    const currentScrollY = window.scrollY;
+    
+    if (currentScrollY > 100) {
+      header?.classList.add('bg-white/90', 'dark:bg-neutral-950/90', 'shadow-lg');
+    } else {
+      header?.classList.remove('bg-white/90', 'dark:bg-neutral-950/90', 'shadow-lg');
+    }
+    
+    if (currentScrollY > lastScrollY && currentScrollY > 200) {
+      header?.classList.add('-translate-y-full');
+    } else {
+      header?.classList.remove('-translate-y-full');
+    }
+    
+    lastScrollY = currentScrollY;
+  }, { passive: true });
+</script>
+
+<style>
+  .nav-link {
+    @apply relative px-3 py-2 text-body-sm font-medium text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors;
+  }
+  
+  .nav-link::after {
+    @apply content-[''] absolute bottom-0 left-1/2 w-0 h-0.5 bg-brand-500 transition-all duration-300;
+    transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
+    transform: translateX(-50%);
+  }
+  
+  .nav-link:hover::after,
+  .nav-link.active::after {
+    @apply w-3/4;
+  }
+  
+  header {
+    @apply transition-transform duration-300;
+    transition-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
+  }
+</style>

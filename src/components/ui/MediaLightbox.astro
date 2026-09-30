@@ -1,0 +1,327 @@
+---
+/**
+ * Page-level media viewer. One instance is mounted in the layout; every
+ * surface (project detail view, blog reader, standalone post page) simply
+ * renders `MediaGallery`, whose frames carry the payload.
+ *
+ * Wiring is a single delegated listener on `document`, which is what lets the
+ * project/blog readers clone gallery markup out of hidden locale templates
+ * and still have working frames — no re-binding after a clone.
+ *
+ * Opening and closing are announced with `media-viewer-opened` /
+ * `media-viewer-closed` on `window`, so the carousel behind it can hold still
+ * instead of shifting the set while a fullscreen frame is being read.
+ */
+---
+
+<div
+  id="media-lightbox"
+  class="fixed inset-0 z-100 hidden"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Media viewer"
+  data-i18n-attr="aria-label:media.viewer"
+  data-media-lightbox
+>
+  <div
+    class="absolute inset-0 bg-neutral-950/95 dark:bg-neutral-950/98 backdrop-blur-xl opacity-0 transition-opacity duration-300 ease-out-expo"
+    data-lightbox-backdrop
+    aria-hidden="true"
+  ></div>
+
+  <div class="relative z-10 h-full flex flex-col">
+    <!-- Chrome: what you are looking at, where you are in the set, how to leave -->
+    <header
+      class="flex shrink-0 items-center justify-between gap-4 px-4 sm:px-6 py-4 text-neutral-300 border-b border-white/10 opacity-0 transition-opacity duration-300"
+      data-lightbox-chrome
+    >
+      <p class="text-caption font-mono truncate hidden" data-lightbox-title></p>
+      <div class="flex items-center gap-4">
+        <p class="text-caption font-mono tabular-nums text-neutral-400" data-lightbox-counter aria-live="polite"></p>
+        <button type="button" class="btn-icon shrink-0" data-lightbox-close aria-label="Close" data-i18n-attr="aria-label:common.close">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Stage -->
+    <div class="relative flex-1 flex items-center justify-center px-4 sm:px-6 py-6">
+      <div
+        class="absolute inset-0 flex items-center justify-center opacity-0 scale-[0.98] transition-all duration-500 ease-out-expo"
+        data-lightbox-stage
+      >
+        <figure class="flex flex-col items-center gap-4 max-h-full">
+          <div class="flex items-center justify-center min-h-0" data-lightbox-figure></div>
+          <figcaption
+            class="text-body-sm text-neutral-400 text-center max-w-prose shrink-0 hidden"
+            data-lightbox-caption
+          ></figcaption>
+        </figure>
+      </div>
+
+      <button
+        type="button"
+        class="btn-icon absolute left-2 sm:left-4 z-10 opacity-0 transition-all duration-300 hover:scale-110 data-[visible=true]:opacity-100"
+        data-lightbox-prev
+        aria-label="Previous"
+        data-i18n-attr="aria-label:media.previousItem"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+      </button>
+
+      <button
+        type="button"
+        class="btn-icon absolute right-2 sm:right-4 z-10 opacity-0 transition-all duration-300 hover:scale-110 data-[visible=true]:opacity-100"
+        data-lightbox-next
+        aria-label="Next"
+        data-i18n-attr="aria-label:media.nextItem"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* The viewer sits on near-black in both themes, so its controls get their
+     own colors and a focus ring offset to match — the global ring offsets to
+     white in light mode, which would halo against the backdrop. */
+  [data-lightbox] :global(.btn-icon) {
+    background-color: rgb(255 255 255 / 0.08);
+    color: rgb(255 255 255 / 0.85);
+  }
+  [data-lightbox] :global(.btn-icon:hover) {
+    background-color: rgb(255 255 255 / 0.16);
+    color: #fff;
+  }
+  [data-lightbox] :global(.btn-icon:focus-visible) {
+    box-shadow: 0 0 0 2px #0a0a0a, 0 0 0 4px #ec7d1a;
+  }
+</style>
+
+<script>
+  const lightbox = document.querySelector<HTMLElement>('[data-media-lightbox]');
+
+  if (lightbox) {
+    const backdrop = lightbox.querySelector<HTMLElement>('[data-lightbox-backdrop]')!;
+    const chrome = lightbox.querySelector<HTMLElement>('[data-lightbox-chrome]')!;
+    const stage = lightbox.querySelector<HTMLElement>('[data-lightbox-stage]')!;
+    const figure = lightbox.querySelector<HTMLElement>('[data-lightbox-figure]')!;
+    const captionEl = lightbox.querySelector<HTMLElement>('[data-lightbox-caption]')!;
+    const counterEl = lightbox.querySelector<HTMLElement>('[data-lightbox-counter]')!;
+    const titleEl = lightbox.querySelector<HTMLElement>('[data-lightbox-title]')!;
+    const closeBtn = lightbox.querySelector<HTMLButtonElement>('[data-lightbox-close]')!;
+    const prevBtn = lightbox.querySelector<HTMLButtonElement>('[data-lightbox-prev]')!;
+    const nextBtn = lightbox.querySelector<HTMLButtonElement>('[data-lightbox-next]')!;
+
+    interface ViewerItem {
+      src: string;
+      type?: string;
+      alt?: string;
+      caption?: string;
+    }
+
+    interface ViewerPayload {
+      context: string;
+      items: ViewerItem[];
+    }
+
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    let items: ViewerItem[] = [];
+    let context = '';
+    let index = 0;
+    let open = false;
+    let lastFocused: HTMLElement | null = null;
+    // The viewer usually opens on top of a reader that has already locked the
+    // page; restoring '' on close would unlock the page underneath it.
+    let previousOverflow = '';
+
+    const t = (key: string, fallback: string, params?: Record<string, string | number>) =>
+      window.I18N?.t(key, params) || fallback;
+
+    const isVideoItem = (item: ViewerItem) =>
+      (item.type || (/\.(mp4|webm|ogv|mov|m4v)(\?|#|$)/i.test(item.src) ? 'video' : 'image')) === 'video';
+
+    /** Warm the neighbours so arrowing through a set never shows an empty frame. */
+    function preload(neighbours: number[]) {
+      if (reducedMotion.matches) return;
+      neighbours.forEach((i) => {
+        const item = items[i];
+        if (!item || isVideoItem(item)) return;
+        const preloader = new Image();
+        preloader.src = item.src;
+      });
+    }
+
+    function render() {
+      const item = items[index];
+      if (!item) return;
+      const video = isVideoItem(item);
+
+      figure.replaceChildren();
+      if (video) {
+        const media = document.createElement('video');
+        media.src = item.src;
+        media.className = 'max-h-[70vh] max-w-full w-auto rounded-lg shadow-2xl';
+        media.controls = true;
+        media.muted = true;
+        media.loop = true;
+        media.playsInline = true;
+        media.preload = 'metadata';
+        media.setAttribute('aria-label', item.alt || t('media.video', 'Video'));
+        figure.appendChild(media);
+        media.play().catch(() => {
+          /* Autoplay may be refused; the controls are right there. */
+        });
+      } else {
+        const img = document.createElement('img');
+        img.src = item.src;
+        img.alt = item.alt || '';
+        img.decoding = 'async';
+        img.className = 'max-h-[70vh] max-w-full w-auto rounded-lg shadow-2xl';
+        figure.appendChild(img);
+      }
+
+      const pad = (n: number) => String(n).padStart(2, '0');
+      counterEl.textContent = `${pad(index + 1)} / ${pad(items.length)}`;
+      titleEl.textContent = context;
+      titleEl.classList.toggle('hidden', !context);
+
+      captionEl.textContent = item.caption || '';
+      captionEl.classList.toggle('hidden', !item.caption);
+
+      const single = items.length < 2;
+      prevBtn.dataset.visible = String(!single);
+      nextBtn.dataset.visible = String(!single);
+      prevBtn.setAttribute('aria-hidden', String(single));
+      nextBtn.setAttribute('aria-hidden', String(single));
+      prevBtn.tabIndex = single ? -1 : 0;
+      nextBtn.tabIndex = single ? -1 : 0;
+
+      preload([index + 1, index - 1]);
+    }
+
+    function show() {
+      if (!open) return;
+      lightbox.classList.remove('hidden');
+      previousOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      // Carousels behind the viewer must stop advancing, or the set shifts
+      // under the frame the visitor just opened.
+      window.dispatchEvent(new CustomEvent('media-viewer-opened'));
+      requestAnimationFrame(() => {
+        backdrop.classList.remove('opacity-0');
+        backdrop.classList.add('opacity-100');
+        chrome.classList.remove('opacity-0');
+        stage.classList.remove('opacity-0', 'scale-[0.98]');
+      });
+      closeBtn.focus();
+    }
+
+    function hide() {
+      if (!open) return;
+      open = false;
+      backdrop.classList.add('opacity-0');
+      backdrop.classList.remove('opacity-100');
+      chrome.classList.add('opacity-0');
+      stage.classList.add('opacity-0', 'scale-[0.98]');
+      document.body.style.overflow = previousOverflow;
+
+      // Let the outgoing frame stop making noise before it is torn down.
+      const current = figure.querySelector('video');
+      if (current) current.pause();
+
+      window.setTimeout(() => {
+        if (open) return;
+        lightbox.classList.add('hidden');
+        figure.replaceChildren();
+        window.dispatchEvent(new CustomEvent('media-viewer-closed'));
+        if (lastFocused && document.documentElement.contains(lastFocused)) lastFocused.focus();
+      }, reducedMotion.matches ? 0 : 320);
+    }
+
+    function openAt(nextIndex: number, payload: string, source: HTMLElement) {
+      let parsed: ViewerPayload;
+      try {
+        parsed = JSON.parse(payload) as ViewerPayload;
+      } catch {
+        return;
+      }
+      const list = Array.isArray(parsed?.items) ? parsed.items : [];
+      if (list.length === 0) return;
+      items = list;
+      context = parsed.context || '';
+      const requested = Number.isFinite(nextIndex) ? nextIndex : 0;
+      index = Math.min(Math.max(requested, 0), items.length - 1);
+      lastFocused = source;
+      open = true;
+      render();
+      show();
+    }
+
+    function step(delta: number) {
+      if (!open || items.length < 2) return;
+      index = (index + delta + items.length) % items.length;
+      render();
+    }
+
+    // One delegated listener serves every gallery on the page, including
+    // frames cloned into the project/blog readers after load.
+    document.addEventListener('click', (e) => {
+      if (e.defaultPrevented) return;
+      if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      const trigger = (e.target as HTMLElement).closest<HTMLElement>('[data-lightbox-index]');
+      if (!trigger) return;
+      const owner = trigger.closest<HTMLElement>('[data-lightbox-items]');
+      if (!owner) return;
+      e.preventDefault();
+      openAt(Number(trigger.dataset.lightboxIndex), owner.dataset.lightboxItems || '[]', trigger);
+    });
+
+    backdrop.addEventListener('click', hide);
+    closeBtn.addEventListener('click', hide);
+    prevBtn.addEventListener('click', () => step(-1));
+    nextBtn.addEventListener('click', () => step(1));
+
+    lightbox.addEventListener('keydown', (e) => {
+      if (!open) return;
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        hide();
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        step(-1);
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        step(1);
+      } else if (e.key === 'Tab') {
+        const focusables = Array.from(
+          lightbox.querySelectorAll<HTMLElement>('a[href], button:not([disabled])')
+        ).filter((el) => el.offsetParent !== null && el.getAttribute('aria-hidden') !== 'true');
+        if (focusables.length === 0) return;
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    });
+
+    // A reader closing underneath the viewer must take the viewer with it.
+    window.addEventListener('reader-closed', hide);
+    window.addEventListener('language-changed', () => {
+      if (open) render();
+    });
+  }
+</script>
