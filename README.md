@@ -214,13 +214,34 @@ changes while in system mode.
 
 ## Forms
 
-The contact form posts to Netlify Forms (via a hidden `form-name` field). To use
-a different backend, replace the `fetch('/')` call in
-`src/components/ui/ContactForm.astro` with your endpoint.
+The contact form (`src/components/ui/ContactForm.astro`) posts to Netlify Forms
+via a URL-encoded `fetch` to its own `action`, with the hidden `form-name`
+field. It also has a real `action="/"` so it still works without JavaScript.
+
+Netlify only accepts submissions for forms it found in the deployed HTML, so the
+site must be **redeploy after enabling form detection**:
+
+1. Netlify UI → Forms → **Enable form detection**
+2. Trigger a new deploy (`netlify.toml` pins `command`/`publish` so the form is
+   always inside the published `dist/`)
+3. Confirm it worked: view source of the deployed homepage — Netlify strips
+   `data-netlify="true"` from `<form>` once it has registered it. If the
+   attribute is still there, the deploy did not contain the form.
+4. The form then appears under Forms → your site's forms, named `contact`.
+
+A `404` on submit means the form was never registered (step 2 or 3), not that
+the request was malformed.
+
+To use a different backend, replace the `fetch(...)` call in
+`src/components/ui/ContactForm.astro` with your endpoint and drop the
+`data-netlify` attributes.
 
 ## Deploying
 
-Static output — deploy `dist/` to Netlify, Vercel, or any static host.
+Static output — deploy `dist/` to Netlify, Vercel, or any static host. The
+included `netlify.toml` configures the Netlify build and disables Pretty URLs,
+which would otherwise rewrite form submissions off the page where the form was
+registered.
 
 ## Customization
 

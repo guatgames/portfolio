@@ -5,8 +5,10 @@
   class="card p-8 lg:p-10"
   method="POST"
   name="contact"
+  action="/"
   data-netlify="true"
   netlify-honeypot="bot-field"
+  data-netlify-honeypot="bot-field"
   data-animate="slide-up"
   data-delay="300"
   novalidate
@@ -252,21 +254,27 @@
     submitButton?.setAttribute('disabled', 'true');
     submitButton?.classList.add('opacity-50', 'cursor-not-allowed');
     
+    // Netlify Forms only accepts URL-encoded bodies (JSON is not supported).
+    const payload = new URLSearchParams();
+    formData.forEach((value, key) => payload.append(key, String(value)));
+
     try {
-      // Submit to Netlify Forms
-      const response = await fetch('/', {
+      // Post to the form's own action so the request always lands on the page
+      // where Netlify registered the form at build time.
+      const endpoint = form?.getAttribute('action') || '/';
+      const response = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams(formData as any).toString()
+        body: payload.toString()
       });
-      
-      if (response.ok) {
-        form.reset();
-        showStatus('success', t('contact.form.success', 'Message sent successfully! I\'ll get back to you soon.'));
-        if (submitText) submitText.textContent = t('contact.form.submit', 'Send Message');
-      } else {
-        throw new Error('Failed to submit');
+
+      if (!response.ok) {
+        throw new Error(`Netlify responded ${response.status} ${response.statusText}`);
       }
+
+      form.reset();
+      showStatus('success', t('contact.form.success', 'Message sent successfully! I\'ll get back to you soon.'));
+      if (submitText) submitText.textContent = t('contact.form.submit', 'Send Message');
     } catch (error) {
       console.error('Form submission error:', error);
       showStatus('error', t('contact.form.error', 'Failed to send message. Please try again or email me directly.'));

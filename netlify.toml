@@ -1,0 +1,21 @@
+# Netlify configuration for this Astro site.
+# Keeping build settings here (instead of only in the Netlify UI) guarantees the
+# publish directory always contains the HTML with the Netlify form markup, which
+# is what Netlify's form detection scans at deploy time.
+
+[build]
+  command = "pnpm run build"
+  publish = "dist"
+
+# Astro already emits `index.html` files, so Pretty URLs post-processing would
+# only rewrite form submissions away from the page Netlify registered the form
+# on (a common cause of "404 - Failed to submit").
+[build.processing.html]
+  pretty_urls = false
+
+[dev]
+  command = "pnpm run dev"
+  targetPort = 4321
+  port = 8888
+  publish = "dist"
+  framework = "#custom"
