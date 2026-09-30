@@ -1,0 +1,124 @@
+\documentclass[10.5pt,a4paper]{article}
+
+% ===================== PACKAGES =====================
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1.7cm,top=1.4cm,bottom=1.4cm]{geometry}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{tabularx}
+\usepackage{marvosym}
+
+% --- Conditional load of FontAwesome5 (if available on the local system) ---
+\IfFileExists{fontawesome5.sty}{
+  \usepackage{fontawesome5}
+  \newcommand{\iconEmail}{\faEnvelope\ }
+  \newcommand{\iconGithub}{\faGithub\ }
+  \newcommand{\iconLinkedin}{\faLinkedin\ }
+  \newcommand{\iconGlobe}{\faGlobe\ }
+}{
+  \newcommand{\iconEmail}{\Email\ }
+  \newcommand{\iconGithub}{}
+  \newcommand{\iconLinkedin}{}
+  \newcommand{\iconGlobe}{}
+}
+
+% ===================== COLORS =====================
+\definecolor{darknavy}{RGB}{24,42,64}
+\definecolor{accent}{RGB}{41,98,150}
+\definecolor{graytext}{RGB}{85,85,85}
+\definecolor{lightrule}{RGB}{200,208,216}
+
+% ===================== HYPERREF =====================
+\hypersetup{
+  colorlinks=true,
+  linkcolor=accent,
+  urlcolor=accent,
+  pdftitle={Angel Alfaro - Resume},
+  pdfauthor={Angel Alfaro}
+}
+
+% ===================== SECTION STYLE =====================
+\titleformat{\section}
+  {\large\bfseries\color{darknavy}}
+  {}{0em}{}
+  [\vspace{-2pt}{\color{lightrule}\titlerule[1pt]}\vspace{2pt}]
+\titlespacing*{\section}{0pt}{10pt}{6pt}
+
+\setlength{\parindent}{0pt}
+\pagestyle{empty}
+
+% ===================== HELPER COMMANDS =====================
+\newcommand{\skillrow}[2]{%
+  \textbf{\color{darknavy}#1:} \, #2\\[3pt]
+}
+
+\newcommand{\projectitem}[4]{%
+  \textbf{\color{darknavy}#1} \hfill {\small\color{graytext}#2}\\
+  {\small\color{accent}\textit{#3}}\\[2pt]
+  #4\\[6pt]
+}
+
+\begin{document}
+
+% ===================== HEADER =====================
+\begin{center}
+  {\Huge\bfseries\color{darknavy} Angel Alfaro}\\[3pt]
+  {\large\color{accent} Full Stack Developer \& Creative Developer \textbar\ ``Guatgames''}\\[6pt]
+  {\small
+    \iconEmail\href{mailto:adalfaroochoa@gmail.com}{adalfaroochoa@gmail.com} \quad\textbar\quad
+    \iconGithub\href{https://github.com/guatgames}{github.com/guatgames} \quad\textbar\quad
+    \iconLinkedin\href{https://linkedin.com/in/guatgames}{linkedin.com/in/guatgames} \quad\textbar\quad
+    \iconGlobe\href{https://angel-alfaro.me}{angel-alfaro.me}
+  }
+\end{center}
+
+\vspace{2pt}
+
+% ===================== PROFESSIONAL SUMMARY =====================
+\section*{Professional Summary}
+Full Stack Developer and active student at Fundación Kinal, passionate about building digital experiences that are beautiful, functional, and accessible. Started programming at age 11 and has since built over 5 years of continuous learning, delivering 5+ completed projects and mastering 27+ technologies across frontend, backend, and DevOps tooling. Recognized for technical leadership: served as Scrum Master on university-level projects and has spoken publicly to help fellow students reach their goals in software development. Open to freelance projects and new professional opportunities.
+
+% ===================== TECHNICAL SKILLS =====================
+\section*{Technical Skills}
+\skillrow{Frontend}{Astro, React, TypeScript, Tailwind CSS, Next.js, HTML5, CSS3, JavaScript}
+\skillrow{Backend}{Node.js, Spring Boot, Flask, Python, Java, REST APIs, GraphQL}
+\skillrow{Databases}{PostgreSQL, MySQL, Prisma}
+\skillrow{Tools \& DevOps}{Git/GitHub, Docker, Vercel, Netlify, AWS, Figma, Shell Scripting}
+\skillrow{Other}{NumPy, GameMaker Studio 2, Flet, Arch Linux}
+
+% ===================== FEATURED PROJECTS =====================
+\section*{Featured Projects}
+
+\projectitem{Kinal Connections}{2026}
+{React \textbar\ TailwindCSS \textbar\ TypeScript \textbar\ PostgreSQL \textbar\ Spring Boot \textbar\ GraphQL}
+{A social network and recruitment platform for Fundación Kinal students, where companies can browse registered student profiles, post job openings, and share information, while users showcase their skills, projects, technical focus, and certifications. Selected for Expo Kinal 2026 out of 200+ submitted projects (only 56 selected). Built using SCRUM methodology, serving as the team's \textbf{Scrum Master}.}
+
+\projectitem{Promova}{}
+{React \textbar\ TailwindCSS \textbar\ TypeScript \textbar\ Node.js \textbar\ Express \textbar\ Prisma}
+{A SaaS platform that automatically generates advertising content, designed to streamline the workflow of marketing teams through automation and intelligent content generation.}
+
+\projectitem{Spotinder}{}
+{React \textbar\ TailwindCSS \textbar\ TypeScript \textbar\ Node.js \textbar\ Express \textbar\ Deezer API}
+{A music discovery platform with a ``Tinder-style'' swipe interaction, integrated with the Deezer API to recommend new songs based on user preferences.}
+
+% ===================== EDUCATION =====================
+\section*{Education}
+\textbf{\color{darknavy}Fundación Kinal} \hfill {\small\color{graytext}Guatemala}\\
+{\small\color{accent}\textit{High School Diploma in Computer Science (Bachillerato en Informática) --- 5th year, evening program (currently enrolled)}}\\[3pt]
+\begin{itemize}[leftmargin=14pt, itemsep=1pt, topsep=3pt]
+  \item Presented projects at Expo Kinal 2025, Expo Kinal 2026, and Senacyt's National Science, Technology, and Innovation Week at Universidad Galileo.
+  \item Leadership and speaking role: supports fellow students in reaching their goals in software development.
+\end{itemize}
+
+% ===================== LANGUAGES =====================
+\section*{Languages}
+\textbf{\color{darknavy}Spanish:} Native \quad\textbar\quad \textbf{\color{darknavy}English:} Upper-Intermediate / Advanced \textit{(personal portfolio and blog written in English)}
+
+% ===================== INTERESTS =====================
+\section*{Interests}
+Video games \textbullet\ Basketball \textbullet\ Mechanical keyboards \textbullet\ Playing guitar
+
+\end{document}

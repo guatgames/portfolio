@@ -1,0 +1,131 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { countMedia, withCoverMedia } from '../../lib/media';
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+  featured: boolean;
+  index: number;
+}
+
+const { post, featured, index } = Astro.props;
+const { title, description, date, tags, coverImage, video, readingTime, gallery } = post.data;
+// Spanish entries live under `es/` in the collection; everything else is English.
+const locale: 'en' | 'es' = post.slug.startsWith('es/') ? 'es' : 'en';
+// Base slug (no locale prefix) keys the card to its article bodies in the reader.
+const slug = post.slug.startsWith('es/') ? post.slug.slice(3) : post.slug;
+// Build a timezone-safe date key (YYYY-MM-DD) from the local calendar date so
+// display never shifts a day via ISO/UTC conversion.
+const y = date.getFullYear();
+const m = String(date.getMonth() + 1).padStart(2, '0');
+const d = String(date.getDate()).padStart(2, '0');
+const dateKey = `${y}-${m}-${d}`;
+const formattedDate = new Date(y, date.getMonth(), date.getDate()).toLocaleDateString(locale === 'es' ? 'es-ES' : 'en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+const tagsJson = JSON.stringify(tags);
+const extraTags = Math.max(tags.length - 3, 0);
+// Counts the carousel the reader shows, cover included.
+const mediaCounts = countMedia(withCoverMedia(gallery, { image: coverImage, video }));
+---
+
+<article
+  class="card card-hover overflow-hidden group flex flex-col cursor-pointer"
+  data-animate="slide-up"
+  data-delay={String((index + 1) * 100)}
+  data-reveal-child
+  data-blog-card
+  data-blog-slug={slug}
+  data-blog-locale={locale}
+  data-blog-title={title}
+  data-blog-description={description}
+  data-blog-date={dateKey}
+  data-blog-reading={readingTime}
+  data-blog-tags={tagsJson}
+>
+  {(video || coverImage) && (
+    <div class="relative aspect-video overflow-hidden">
+      {video ? (
+        /* Optional muted looped reel; plays while the card is in view. */
+        <video
+          src={video}
+          poster={coverImage || undefined}
+          muted
+          playsinline
+          loop
+          preload="metadata"
+          disablepictureinpicture
+          data-autoplay-inview
+          aria-hidden="true"
+          tabindex="-1"
+          class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+        ></video>
+      ) : (
+        <img
+          src={coverImage}
+          alt=""
+          class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+          loading="lazy"
+        />
+      )}
+      <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" aria-hidden="true"></div>
+
+      {featured && (
+        <div class="absolute top-4 left-4">
+          <span class="badge badge-primary" data-i18n="common.featured">Featured</span>
+        </div>
+      )}
+
+      {/* Tells you the post carries more than the cover before you commit to it. */}
+      {mediaCounts.total > 0 && (
+        <div class="absolute top-4 right-4">
+          <span class="inline-flex items-center gap-1.5 rounded-full bg-black/45 backdrop-blur-md border border-white/20 px-2.5 py-1 text-caption font-mono text-white/90">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 5h16v4H4zM4 15h16v4H4zM4 10h16v4H4z" />
+            </svg>
+            <span data-i18n="media.items" data-i18n-params={JSON.stringify({ count: mediaCounts.total })}>{mediaCounts.total}</span>
+          </span>
+        </div>
+      )}
+    </div>
+  )}
+  
+  <div class="p-6 flex flex-col flex-1">
+    <div class="flex items-center gap-3 mb-3">
+      <time class="text-caption text-neutral-500 dark:text-neutral-500 font-mono" dateTime={dateKey} data-blog-card-date>
+        {formattedDate}
+      </time>
+      {readingTime && (
+        <span class="text-caption text-neutral-500 dark:text-neutral-500">
+          {readingTime} <span data-i18n="common.readingTime">min read</span>
+        </span>
+      )}
+    </div>
+    
+    <h3 class="font-display text-heading-md font-bold text-neutral-900 dark:text-neutral-100 mb-3 group-hover:text-brand-500 dark:group-hover:text-brand-400 transition-colors line-clamp-2">
+      {title}
+    </h3>
+    
+    <p class="text-body-md text-neutral-600 dark:text-neutral-400 mb-4 line-clamp-3 flex-1">
+      {description}
+    </p>
+    
+    <div class="flex flex-wrap gap-2 mb-4" aria-label="Tags">
+      {tags.slice(0, 3).map((tag: string) => (
+        <span class="tag">{tag}</span>
+      ))}
+      {extraTags > 0 && (
+        <span class="tag text-neutral-500 dark:text-neutral-500">+{extraTags}</span>
+      )}
+    </div>
+    
+    <a href={`/blog/${post.slug}/`} class="link mt-auto group" data-blog-open>
+      <span data-i18n="common.readMore">Read more</span>
+      <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+      </svg>
+    </a>
+  </div>
+</article>

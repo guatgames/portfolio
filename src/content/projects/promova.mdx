@@ -1,0 +1,40 @@
+---
+title: "Promova"
+description: "An AI-powered SaaS studio that turns a single product photo into ready-to-post advertising creative — colour analysis, brand-aware prompts, and generated visuals, metered by monthly credits."
+longDescription: "Promova is an AI-assisted advertising studio. Upload a product photo, get automatic colorimetry analysis (dominant color, background, and color palette), build an advertising prompt with your brand identity, and generate ad creatives with AI models — all managed through a monthly credit system."
+technologies: ["React", "TailwindCSS", "TypeScript", "Node JS", "Express", "Prisma", "PostgreSQL", "JWT", "Pollinations"]
+video: "/videos/projects/promova/promova-video.mp4"
+image: "/images/projects/promova/Captura de pantalla 2026-09-23 131647.png"
+# Screenshots shown in the case study. Replace the alt text with a line
+# describing what each screen actually shows.
+gallery:
+  - src: "/images/projects/promova/Captura de pantalla 2026-09-23 131647.png"
+    alt: "Promova interface screen 1 of 2"
+  - src: "/images/projects/promova/Captura de pantalla 2026-09-23 133611.png"
+    alt: "Promova interface screen 2 of 2"
+featured: true
+order: 2
+role: "Lead Developer"
+startDate: "2026-08"
+endDate: "2026-09"
+teamSize: 5
+---
+
+# Promova
+
+## Overview
+
+Send a picture and get an advertisement for your social networks.
+
+The flow is deliberately short. Upload one product photo and Promova derives the colourimetry of that shot — the dominant colour, the background colour and a full palette — then carries those colours into the prompt, so the generated creative stays on brand instead of inventing its own look.
+
+## How it works
+
+1. **Upload** a product photo.
+2. **Analyse** — Promova extracts the dominant colour, the background colour and generates a matching palette.
+3. **Build the prompt** — the colour analysis is combined with your brand identity into an advertising prompt you can tune.
+4. **Generate** — AI models turn that prompt into ad creatives, metered through a monthly credit system.
+
+## Architecture
+
+Built with modular and component-based architecture: a React, TailwindCSS and TypeScript front end over a Node.js and Express API, with Prisma handling the data layer on PostgreSQL and JWT covering authentication. Generation runs through the Pollinations models, and the monthly credit balance is what keeps usage bounded.

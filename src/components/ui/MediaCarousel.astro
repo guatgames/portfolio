@@ -1,0 +1,387 @@
+---
+/**
+ * Carousel runtime. Ships no markup: `MediaGallery` renders the frames and this
+ * component owns every behaviour, mounted once in `Layout.astro`.
+ *
+ * Two constraints shaped it:
+ *
+ *   1. The readers clone gallery markup out of hidden locale templates after
+ *      load, so nothing here may be bound once at page load and forgotten. The
+ *      registry re-binds roots as they appear (a MutationObserver) and the
+ *      click/key wiring lives on `document`, exactly like the media viewer.
+ *   2. A single page holds several carousels at once (one per project, one per
+ *      post, per locale) plus the reader's clones. Auto-advancing all of them
+ *      would be absurd, so a carousel only advances while it is actually on
+ *      screen, un-hovered, unfocused, and not sitting under the viewer.
+ */
+---
+
+<script>
+  const SELECTOR = '[data-carousel]';
+  /**
+   * The controls that mean the visitor is stepping through the set themselves.
+   * The stage frame is deliberately absent: the viewer hands focus back to it
+   * on close, and treating that as engagement would leave the set paused
+   * forever after a single fullscreen visit.
+   */
+  const ENGAGED =
+    '[data-carousel-prev], [data-carousel-next], [data-carousel-goto], [data-carousel-playpause]';
+  /**
+   * The clickable controls. Kept identical to ENGAGED today, but the stage
+   * button belongs to the media viewer's delegation — calling preventDefault
+   * on it here would make the viewer bail out of opening.
+   */
+  const CONTROL = ENGAGED;
+  const TICK_MS = 250;
+
+  interface CarouselState {
+    root: HTMLElement;
+    index: number;
+    /** What the visitor asked for. Hover/focus only ever suspends on top of it. */
+    wanted: boolean;
+    /** On screen right now. */
+    visible: boolean;
+    hovered: boolean;
+    focused: boolean;
+    /** Timestamp the next automatic advance is due. */
+    due: number;
+    duration: number;
+  }
+
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  const states = new Map<HTMLElement, CarouselState>();
+  // A WeakSet, not a dataset flag: the readers clone these nodes, and a
+  // "bound" marker would ride along into the clone and suppress its own bind.
+  const seen = new WeakSet<HTMLElement>();
+
+  let viewerOpen = false;
+  let interval: number | null = null;
+
+  const t = (key: string, fallback: string, params?: Record<string, string | number>) =>
+    window.I18N?.t(key, params) || fallback;
+
+  const slidesOf = (root: HTMLElement) =>
+    Array.from(root.querySelectorAll<HTMLElement>('[data-carousel-slide]'));
+
+  /**
+   * `--carousel-dur` is authored in ms but a minifier is free to hand it back
+   * as `5s`, so the unit has to be read rather than assumed — guessing wrong
+   * turns a five-second dwell into a five-millisecond one.
+   */
+  function durationOf(root: HTMLElement): number {
+    const raw = getComputedStyle(root).getPropertyValue('--carousel-dur').trim();
+    const value = Number.parseFloat(raw);
+    if (!Number.isFinite(value) || value <= 0) return 5000;
+    return /^ms$/i.test(raw.replace(/[\d.\s+-]/g, '')) ? value : value * 1000;
+  }
+
+  const pad = (n: number) => String(n).padStart(2, '0');
+
+  /**
+   * A carousel only advances while someone could plausibly be watching it.
+   * Every clause here is a way the visitor loses the content mid-read.
+   */
+  function playing(state: CarouselState): boolean {
+    return (
+      state.wanted &&
+      state.visible &&
+      !state.hovered &&
+      !state.focused &&
+      !viewerOpen &&
+      !document.hidden &&
+      !reduced.matches
+    );
+  }
+
+  function restartProgress(root: HTMLElement) {
+    const bar = root.querySelector<HTMLElement>('[data-carousel-progress]');
+    if (!bar) return;
+    bar.style.animation = 'none';
+    // Read layout so the cleared animation restarts instead of being coalesced.
+    void bar.offsetWidth;
+    bar.style.animation = '';
+  }
+
+  /** Announced on every change; the visible counter is decorative. */
+  function updateStatus(root: HTMLElement, index: number, total: number) {
+    const status = root.querySelector<HTMLElement>('[data-carousel-status]');
+    if (!status) return;
+    status.textContent = t('media.slideOf', 'Slide {index} of {total}', {
+      index: index + 1,
+      total,
+    });
+  }
+
+  function render(state: CarouselState, revealThumb = false) {
+    const { root } = state;
+    const slides = slidesOf(root);
+    if (slides.length === 0) return;
+
+    const i = Math.min(Math.max(state.index, 0), slides.length - 1);
+    state.index = i;
+    root.dataset.carouselIndex = String(i);
+
+    const track = root.querySelector<HTMLElement>('[data-carousel-track]');
+    if (track) track.style.transform = `translate3d(-${i * 100}%, 0, 0)`;
+
+    // Off-screen frames must leave the tab order and the accessibility tree,
+    // or Tab walks the whole set behind the one frame you can actually see.
+    slides.forEach((slide, n) => {
+      if (n === i) {
+        slide.removeAttribute('inert');
+        slide.removeAttribute('aria-hidden');
+      } else {
+        slide.setAttribute('inert', '');
+        slide.setAttribute('aria-hidden', 'true');
+      }
+    });
+
+    const counter = root.querySelector<HTMLElement>('[data-carousel-counter]');
+    if (counter) counter.textContent = `${pad(i + 1)} / ${pad(slides.length)}`;
+
+    updateStatus(root, i, slides.length);
+
+    root.querySelectorAll<HTMLElement>('[data-carousel-goto]').forEach((thumb, n) => {
+      if (n === i) thumb.setAttribute('aria-current', 'true');
+      else thumb.removeAttribute('aria-current');
+    });
+
+    // Never on first paint: seven carousels all yanking the page at once is
+    // worse than a thumb sitting half a row off-screen.
+    if (revealThumb) {
+      const active = root.querySelector<HTMLElement>('[data-carousel-goto][aria-current="true"]');
+      active?.scrollIntoView({
+        block: 'nearest',
+        inline: 'nearest',
+        behavior: reduced.matches ? 'auto' : 'smooth',
+      });
+    }
+
+    restartProgress(root);
+  }
+
+  function goTo(state: CarouselState, next: number, revealThumb = true) {
+    const total = slidesOf(state.root).length;
+    if (total === 0) return;
+    state.index = ((next % total) + total) % total;
+    state.due = Date.now() + state.duration;
+    render(state, revealThumb);
+  }
+
+  const step = (state: CarouselState, delta: number, revealThumb = true) =>
+    goTo(state, state.index + delta, revealThumb);
+
+  function syncPlayButton(state: CarouselState) {
+    const btn = state.root.querySelector<HTMLButtonElement>('[data-carousel-playpause]');
+    if (!btn) return;
+    state.root.dataset.carouselPlaying = String(state.wanted);
+    // The name states the action, not the state, so it has to flip with it.
+    btn.setAttribute(
+      'aria-label',
+      state.wanted
+        ? t('media.pauseSlideshow', 'Pause slideshow')
+        : t('media.playSlideshow', 'Play slideshow')
+    );
+    btn.querySelectorAll<HTMLElement>('[data-carousel-glyph]').forEach((glyph) => {
+      const wantsPlay = glyph.dataset.carouselGlyph === 'play';
+      if (wantsPlay === state.wanted) glyph.setAttribute('hidden', '');
+      else glyph.removeAttribute('hidden');
+    });
+  }
+
+  /** One predicate, two effects: the progress bar's play-state and the ticker. */
+  function sync() {
+    let anyPlaying = false;
+    states.forEach((state) => {
+      const on = playing(state);
+      if (on) anyPlaying = true;
+      if (on !== state.root.classList.contains('is-advancing')) {
+        state.root.classList.toggle('is-advancing', on);
+      }
+    });
+
+    if (anyPlaying && interval === null) interval = window.setInterval(tick, TICK_MS);
+    if (!anyPlaying && interval !== null) {
+      window.clearInterval(interval);
+      interval = null;
+    }
+  }
+
+  function tick() {
+    const now = Date.now();
+    states.forEach((state) => {
+      // Paused time is not banked: resuming always buys a full interval.
+      if (!playing(state)) {
+        state.due = now + state.duration;
+        return;
+      }
+      if (now >= state.due) step(state, 1, false);
+    });
+    sync();
+  }
+
+  const visibility = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        const state = states.get(entry.target as HTMLElement);
+        if (!state) return;
+        state.visible = entry.isIntersecting && entry.intersectionRatio > 0.25;
+      });
+      sync();
+    },
+    { threshold: [0, 0.25, 0.6] }
+  );
+
+  function register(root: HTMLElement) {
+    if (seen.has(root)) return;
+    // Hidden locale templates are never mounted. Binding them would leave
+    // observers and listeners on markup nobody can reach.
+    if (root.closest('[hidden]')) return;
+    seen.add(root);
+
+    const slides = slidesOf(root);
+    if (slides.length === 0) return;
+
+    const duration = durationOf(root);
+    const state: CarouselState = {
+      root,
+      index: Number.parseInt(root.dataset.carouselIndex ?? '0', 10) || 0,
+      // Auto-advance starts on for multi-frame sets and never under reduced
+      // motion; the visitor can always stop it from the control row.
+      wanted: slides.length > 1 && !reduced.matches,
+      visible: false,
+      hovered: false,
+      focused: false,
+      due: Date.now() + duration,
+      duration,
+    };
+    states.set(root, state);
+
+    // Per-root listeners are fine: the registry already re-binds clones, so
+    // these never end up bound to markup that gets replaced underneath them.
+    root.addEventListener('mouseenter', () => {
+      state.hovered = true;
+      sync();
+    });
+    root.addEventListener('mouseleave', () => {
+      state.hovered = false;
+      sync();
+    });
+    root.addEventListener('focusin', (event) => {
+      // Only the carousel's own controls count as engaging with the set. The
+      // readers focus their close button on open, and that must not read as
+      // the visitor sitting on the carousel — otherwise it never advances.
+      state.focused = Boolean(
+        (event.target as HTMLElement | null)?.closest?.(ENGAGED)
+      );
+      sync();
+    });
+    root.addEventListener('focusout', (event) => {
+      const next = event.relatedTarget as HTMLElement | null;
+      if (next && root.contains(next) && next.closest(ENGAGED)) return;
+      state.focused = false;
+      sync();
+    });
+
+    render(state, false);
+    syncPlayButton(state);
+    visibility.observe(root);
+    sync();
+  }
+
+  // ------------------------------------------------------------- delegation
+
+  document.addEventListener('click', (event) => {
+    const origin = event.target as HTMLElement | null;
+    const control = origin?.closest?.<HTMLElement>(CONTROL);
+    if (!control) return;
+
+    const root = control.closest<HTMLElement>(SELECTOR);
+    const state = root ? states.get(root) : undefined;
+    // A control inside a template that never registered stays inert.
+    if (!state) return;
+
+    event.preventDefault();
+
+    if (control.hasAttribute('data-carousel-playpause')) {
+      state.wanted = !state.wanted;
+      state.due = Date.now() + state.duration;
+      syncPlayButton(state);
+      sync();
+      return;
+    }
+
+    if (control.hasAttribute('data-carousel-prev')) return void step(state, -1);
+    if (control.hasAttribute('data-carousel-next')) return void step(state, 1);
+
+    const target = Number.parseInt(control.dataset.carouselGoto ?? '', 10);
+    if (Number.isFinite(target)) goTo(state, target);
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.defaultPrevented || event.metaKey || event.ctrlKey || event.altKey) return;
+    if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+
+    // Scoped to focus: arrow keys must keep scrolling the page everywhere else.
+    const root = (document.activeElement as HTMLElement | null)?.closest?.<HTMLElement>(SELECTOR);
+    const state = root ? states.get(root) : undefined;
+    if (!state) return;
+
+    event.preventDefault();
+    step(state, event.key === 'ArrowRight' ? 1 : -1);
+  });
+
+  // The viewer owns the screen while it is open; the set behind it must hold still.
+  window.addEventListener('media-viewer-opened', () => {
+    viewerOpen = true;
+    sync();
+  });
+  window.addEventListener('media-viewer-closed', () => {
+    viewerOpen = false;
+    sync();
+  });
+
+  window.addEventListener('language-changed', () =>
+    states.forEach((state) => {
+      syncPlayButton(state);
+      // The live region is written by the runtime, so i18n never reaches it.
+      updateStatus(state.root, state.index, slidesOf(state.root).length);
+    })
+  );
+  document.addEventListener('visibilitychange', sync);
+  reduced.addEventListener('change', sync);
+
+  // Cloned galleries arrive after load, so pick roots up as they land and drop
+  // them when a reader tears its clone back out.
+  new MutationObserver((records) => {
+    let added = false;
+    records.forEach((record) => {
+      record.addedNodes.forEach((node) => {
+        if (!(node instanceof Element)) return;
+        if (node.matches(SELECTOR)) {
+          register(node as HTMLElement);
+          added = true;
+          return;
+        }
+        const found = node.querySelectorAll<HTMLElement>(SELECTOR);
+        if (found.length > 0) added = true;
+        found.forEach(register);
+      });
+      record.removedNodes.forEach((node) => {
+        if (!(node instanceof Element)) return;
+        const roots = [
+          ...((node.matches(SELECTOR) ? [node] : []) as HTMLElement[]),
+          ...node.querySelectorAll<HTMLElement>(SELECTOR),
+        ];
+        roots.forEach((root) => {
+          if (!states.delete(root)) return;
+          visibility.unobserve(root);
+        });
+      });
+    });
+    if (added) sync();
+  }).observe(document.body, { childList: true, subtree: true });
+
+  document.querySelectorAll<HTMLElement>(SELECTOR).forEach(register);
+</script>

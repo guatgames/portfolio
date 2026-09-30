@@ -1,0 +1,226 @@
+[
+  {
+    "id": "astro",
+    "name": "Astro",
+    "category": "framework",
+    "color": "#FF5D01",
+    "proficiency": 5,
+    "url": "https://astro.build"
+  },
+  {
+    "id": "react",
+    "name": "React",
+    "category": "library",
+    "color": "#61DAFB",
+    "proficiency": 5,
+    "url": "https://react.dev"
+  },
+  {
+    "id": "typescript",
+    "name": "TypeScript",
+    "category": "language",
+    "color": "#3178C6",
+    "proficiency": 5,
+    "url": "https://typescriptlang.org"
+  },
+  {
+    "id": "tailwind",
+    "name": "Tailwind CSS",
+    "category": "framework",
+    "color": "#06B6D4",
+    "proficiency": 5,
+    "url": "https://tailwindcss.com"
+  },
+  {
+    "id": "nextjs",
+    "name": "Next.js",
+    "category": "framework",
+    "color": "#000000",
+    "proficiency": 4,
+    "url": "https://nextjs.org"
+  },
+  {
+    "id": "flask",
+    "name": "Flask",
+    "category": "framework",
+    "color": "#000000",
+    "proficiency": 4,
+    "url": "https://flask.palletsprojects.com"
+  },
+  {
+    "id":"springboot",
+    "name":"Spring Boot",
+    "category":"framework",
+    "color":"#6DB33F",
+    "proficiency":4,
+    "url":"https://spring.io/projects/spring-boot"
+  },
+  {
+    "id": "node",
+    "name": "Node.js",
+    "category": "platform",
+    "color": "#339933",
+    "proficiency": 4,
+    "url": "https://nodejs.org"
+  },
+  {
+    "id": "postgres",
+    "name": "PostgreSQL",
+    "category": "database",
+    "color": "#4169E1",
+    "proficiency": 4,
+    "url": "https://postgresql.org"
+  },
+  {
+    "id": "graphql",
+    "name": "GraphQL",
+    "category": "tool",
+    "color": "#E10098",
+    "proficiency": 4,
+    "url": "https://graphql.org"
+  },
+  {
+    "id": "docker",
+    "name": "Docker",
+    "category": "tool",
+    "color": "#2496ED",
+    "proficiency": 4,
+    "url": "https://docker.com"
+  },
+  {
+    "id": "git",
+    "name": "Git",
+    "category": "tool",
+    "color": "#F05032",
+    "proficiency": 5,
+    "url": "https://git-scm.com"
+  },
+  {
+    "id": "github",
+    "name": "GitHub",
+    "category": "platform",
+    "color": "#181717",
+    "proficiency": 5,
+    "url": "https://github.com"
+  },
+  {
+    "id": "vercel",
+    "name": "Vercel",
+    "category": "platform",
+    "color": "#000000",
+    "proficiency": 4,
+    "url": "https://vercel.com"
+  },
+  {
+    "id": "netlify",
+    "name": "Netlify",
+    "category": "platform",
+    "color": "#00C7B7",
+    "proficiency": 4,
+    "url": "https://netlify.com"
+  },
+  {
+    "id": "javascript",
+    "name": "JavaScript",
+    "category": "language",
+    "color": "#F7DF1E",
+    "proficiency": 5,
+    "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript"
+  },
+  {
+    "id": "python",
+    "name": "Python",
+    "category": "language",
+    "color": "#3776AB",
+    "proficiency": 4,
+    "url": "https://python.org"
+  },
+  {
+    "id": "java",
+    "name": "Java",
+    "category": "language",
+    "color": "#007396",
+    "proficiency": 4,
+    "url": "https://java.com"
+  },
+  {
+    "id": "html",
+    "name": "HTML5",
+    "category": "language",
+    "color": "#E34F26",
+    "proficiency": 5,
+    "url": "https://developer.mozilla.org/en-US/docs/Web/HTML"
+  },
+  {
+    "id": "css",
+    "name": "CSS3",
+    "category": "language",
+    "color": "#1572B6",
+    "proficiency": 5,
+    "url": "https://developer.mozilla.org/en-US/docs/Web/CSS"
+  },
+  {
+    "id": "figma",
+    "name": "Figma",
+    "category": "tool",
+    "color": "#F24E1E",
+    "proficiency": 4,
+    "url": "https://figma.com"
+  },
+  {
+    "id": "prisma",
+    "name": "Prisma",
+    "category": "tool",
+    "color": "#2D3748",
+    "proficiency": 4,
+    "url": "https://prisma.io"
+  },
+  {
+    "id":"numpy",
+    "name":"NumPy",
+    "category":"library",
+    "color":"#013243",
+    "proficiency":4,
+    "url":"https://numpy.org"
+  },
+  {
+    "id": "flet",
+    "name": "Flet",
+    "category": "framework",
+    "color": "#000000",
+    "proficiency": 4,
+    "url": "https://flet.dev"
+  },
+  {
+    "id": "MySQL",
+    "name": "MySQL",
+    "category": "database",
+    "color": "#4479A1",
+    "proficiency": 4,
+    "url": "https://mysql.com"
+  },
+  {
+    "id": "shell",
+    "name": "Shell Scripting",
+    "category": "language",
+    "color": "#89E051",
+    "proficiency": 4,
+    "url": "https://www.gnu.org/software/bash/"
+  },
+  {
+    "id": "GameMaker",
+    "name": "GameMaker Studio 2",
+    "category": "tool",
+    "color": "#8B5CF6",
+    "proficiency": 4,
+    "url": "https://www.yoyogames.com/gamemaker"
+  },
+  {
+    "id": "Arch Linux",
+    "name": "Arch Linux",
+    "category": "platform",
+    "color": "#1793D1",
+    "proficiency": 4,
+    "url": "https://archlinux.org"
+  }
+]

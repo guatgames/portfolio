@@ -1,0 +1,183 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-21T22:55:00Z",
+  "title": "Design System: Guatgames Portfolio",
+  "extensions": {
+    "colorMeta": {
+      "arcade-orange": {
+        "role": "primary",
+        "displayName": "Arcade Orange",
+        "canonical": "oklch(66% 0.16 48)",
+        "tonalRamp": ["#3f1408", "#752d13", "#923515", "#b84410", "#de5f10", "#ec7d1a", "#f19e3d", "#f6bf73", "#fad9ad", "#fef7ee"]
+      },
+      "arcade-cyan": {
+        "role": "secondary",
+        "displayName": "Arcade Cyan",
+        "canonical": "oklch(88% 0.17 178)",
+        "tonalRamp": ["#0a3a34", "#0d5349", "#0f6d5f", "#0f8776", "#12a18e", "#12a895", "#2bb9a6", "#63d2c0", "#9fe7db", "#d9f7f1"]
+      },
+      "arcade-magenta": {
+        "role": "tertiary",
+        "displayName": "Arcade Magenta",
+        "canonical": "oklch(62% 0.28 355)",
+        "tonalRamp": ["#3f0820", "#580b2c", "#721039", "#8c1447", "#a81856", "#c52067", "#e23c7c", "#ee6d9e", "#f5aec7", "#fbe3ec"]
+      },
+      "arcade-lime": {
+        "role": "neutral",
+        "displayName": "Arcade Lime",
+        "canonical": "oklch(92% 0.26 120)",
+        "tonalRamp": ["#2b3d08", "#415e0d", "#5a8113", "#74a719", "#8cc61f", "#a3e028", "#b6ec4d", "#ccf57e", "#e1fac0", "#f4fee6"]
+      },
+      "surface-paper": {
+        "role": "neutral",
+        "displayName": "Paper",
+        "canonical": "oklch(100% 0 0)",
+        "tonalRamp": ["#a3a3a3", "#b5b5b5", "#c7c7c7", "#d9d9d9", "#ebebeb", "#f2f2f2", "#f7f7f7", "#fafafa", "#fdfdfd", "#ffffff"]
+      },
+      "surface-night": {
+        "role": "neutral",
+        "displayName": "Night",
+        "canonical": "oklch(6% 0 0)",
+        "tonalRamp": ["#000000", "#040404", "#0a0a0a", "#101010", "#121212", "#151515", "#1a1a1a", "#262626", "#333333", "#404040"]
+      }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "The marquee: hero name and section titles. Space Grotesk, 800 weight, clamp 4rem-10rem, line-height 0.9." },
+      "headline": { "displayName": "Headline", "purpose": "Card titles and form headings. Space Grotesk 700." },
+      "body": { "displayName": "Body", "purpose": "Paragraphs, descriptions, long-form. DM Sans 400/1.7." },
+      "label": { "displayName": "Label", "purpose": "Badges, captions, scroll hints. DM Sans 500, 0.75rem, +0.05em, uppercase where labelled." },
+      "mono": { "displayName": "Mono", "purpose": "Code chrome, syntax highlight, file labels. JetBrains Mono." }
+    },
+    "shadows": [
+      { "name": "glow-orange", "value": "0 0 20px rgb(236 125 26 / 0.4)", "purpose": "Primary accent glow on hover and emphasis (primary button, brand accents)." },
+      { "name": "glow-cyan", "value": "0 0 20px rgb(0 245 212 / 0.4)", "purpose": "Reserved for cyan accents (secondary interactions, tech highlights)." },
+      { "name": "glow-magenta", "value": "0 0 20px rgb(255 0 110 / 0.4)", "purpose": "Reserved for magenta accents (floating hero cards, tertiary moments)." },
+      { "name": "elevation-lg", "value": "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)", "purpose": "Standard elevation, permitted on header after scroll and solid buttons only." },
+      { "name": "elevation-xl", "value": "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)", "purpose": "Card hover lift in combination with translateY(-8px)." }
+    ],
+    "motion": [
+      { "name": "ease-out-expo", "value": "cubic-bezier(0.19, 1, 0.22, 1)", "purpose": "Signature easing for reveals, underlines, and header transitions." },
+      { "name": "gradient-shift", "value": "8s ease-in-out infinite", "purpose": "Section-title and logo gradient drift (background-position 0%->100%->0%)." },
+      { "name": "mesh-morph", "value": "12s ease-in-out infinite", "purpose": "Border-radius morphing on decorative mesh blobs." },
+      { "name": "float", "value": "6s ease-in-out infinite", "purpose": "Floating accent shapes and hero cards." },
+      { "name": "pulse-soft", "value": "3s ease-in-out infinite", "purpose": "Availability dot and gentle emphasis pulses." },
+      { "name": "text-reveal", "value": "0.8s ease-out forwards", "purpose": "Hero headline reveal (translateY 100% to 0)." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "xl", "value": "1280px" },
+      { "name": "2xl", "value": "1536px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The flagship CTA. Solid Arcade Orange, orange glow on hover, icon nudges right.",
+      "html": "<button class=\"ds-btn-primary\"><span>View Projects</span><svg class=\"ds-ic\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M17 8l4 4m0 0l-4 4m4-4H3\"/></svg></button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 24px; border-radius: 8px; border: none; cursor: pointer; background: #ec7d1a; color: #ffffff; font: 500 16px 'DM Sans', system-ui, sans-serif; box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); transition: background 0.3s, box-shadow 0.3s; } .ds-btn-primary:hover { background: #de5f10; box-shadow: 0 0 20px rgb(236 125 26 / 0.4), 0 10px 15px -3px rgb(0 0 0 / 0.15); } .ds-btn-primary:hover .ds-ic { transform: translateX(4px); } .ds-btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #ec7d1a; } .ds-ic { transition: transform 0.3s; }"
+    },
+    {
+      "name": "Accent Button",
+      "kind": "button",
+      "refersTo": "button-accent",
+      "description": "Outlined counterpart for secondary actions ('Get in Touch'). 2px orange border, fills on hover.",
+      "html": "<button class=\"ds-btn-accent\"><span>Get in Touch</span><svg class=\"ds-ic-ac\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z\"/></svg></button>",
+      "css": ".ds-btn-accent { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 24px; border-radius: 8px; border: 2px solid #ec7d1a; background: transparent; color: #ec7d1a; cursor: pointer; font: 500 16px 'DM Sans', system-ui, sans-serif; transition: background 0.3s, color 0.3s; } .ds-btn-accent:hover { background: #ec7d1a; color: #ffffff; } .ds-btn-accent:hover .ds-ic-ac { transform: translateX(4px); } .ds-btn-accent:focus-visible { outline: none; box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #ec7d1a; } .ds-ic-ac { transition: transform 0.3s; }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Soft neutral chip for quiet actions (source code). Follows the theme surface.",
+      "html": "<button class=\"ds-btn-secondary\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z\"/></svg><span>Source</span></button>",
+      "css": ".ds-btn-secondary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 24px; border-radius: 8px; border: 1px solid #e5e5e5; background: #fafafa; color: #171717; cursor: pointer; font: 500 16px 'DM Sans', system-ui, sans-serif; transition: background 0.3s; } .ds-btn-secondary:hover { background: #e5e5e5; } .ds-btn-secondary:focus-visible { outline: none; box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #737373; }"
+    },
+    {
+      "name": "Glass Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "The frosted surface: translucent, blurred, hairline border, glow lift on hover.",
+      "html": "<div class=\"ds-card\"><div class=\"ds-card-title\">Performance</div><div class=\"ds-card-sub\">100/100 Lighthouse</div></div>",
+      "css": ".ds-card { border-radius: 16px; background: rgba(255, 255, 255, 0.8); border: 1px solid rgba(229, 229, 229, 0.5); padding: 24px; backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); color: #171717; font-family: 'DM Sans', system-ui, sans-serif; transition: transform 0.5s, box-shadow 0.5s, border-color 0.5s; } .ds-card:hover { transform: translateY(-8px); border-color: rgba(236, 125, 26, 0.3); box-shadow: 0 0 20px rgb(236 125 26 / 0.1), 0 20px 25px -5px rgb(0 0 0 / 0.1); } .ds-card-title { font: 700 18px 'Space Grotesk', system-ui, sans-serif; margin-bottom: 4px; } .ds-card-sub { font-size: 14px; color: #525252; }"
+    },
+    {
+      "name": "Primary Badge",
+      "kind": "chip",
+      "refersTo": "badge",
+      "description": "Pill label for status/feature flags. Orange-tinted translucent chip.",
+      "html": "<span class=\"ds-badge\"><span class=\"ds-dot\"></span>Now open for freelance projects</span>",
+      "css": ".ds-badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 9999px; background: rgba(255, 255, 255, 0.8); border: 1px solid rgba(229, 229, 229, 0.5); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); font: 500 12px 'DM Sans', system-ui, sans-serif; color: #525252; } .ds-dot { width: 8px; height: 8px; border-radius: 9999px; background: #ec7d1a; animation: ds-pulse 3s ease-in-out infinite; } @keyframes ds-pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.7; transform: scale(1.02); } }"
+    },
+    {
+      "name": "Technology Tag",
+      "kind": "chip",
+      "refersTo": "tag",
+      "description": "Small soft-neutral tag under cards for technologies.",
+      "html": "<span class=\"ds-tag\">Astro</span>",
+      "css": ".ds-tag { display: inline-flex; align-items: center; padding: 6px 10px; border-radius: 8px; background: #fafafa; color: #525252; font: 500 12px 'DM Sans', system-ui, sans-serif; }"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Form field: soft border, brand-orange focus ring, helper legend above.",
+      "html": "<div style=\"font-family:'DM Sans',system-ui,sans-serif;\"><label class=\"ds-label\" for=\"f\">Email Address</label><input class=\"ds-input\" id=\"f\" type=\"email\" placeholder=\"john@example.com\"></div>",
+      "css": ".ds-label { display: block; font-size: 14px; font-weight: 500; color: #525252; margin-bottom: 8px; } .ds-input { width: 100%; padding: 12px 16px; border-radius: 8px; border: 1px solid #e5e5e5; background: #ffffff; color: #171717; font: 400 16px 'DM Sans', system-ui, sans-serif; transition: border-color 0.3s, box-shadow 0.3s; box-sizing: border-box; } .ds-input::placeholder { color: #a3a3a3; } .ds-input:focus { outline: none; border-color: #ec7d1a; box-shadow: 0 0 0 2px rgba(236, 125, 26, 0.2); }"
+    },
+    {
+      "name": "Gradient Section Title",
+      "kind": "custom",
+      "refersTo": "section-title",
+      "description": "The brand's signature mark: orange-cyan-magenta gradient text with a slow drift.",
+      "html": "<h2 class=\"ds-title\">Projects</h2>",
+      "css": ".ds-title { font-family: 'Space Grotesk', system-ui, sans-serif; font-weight: 700; font-size: clamp(2.5rem, 6vw, 4rem); line-height: 1.1; margin: 0 0 24px; background: linear-gradient(135deg, #ec7d1a, #00f5d4, #ff006e); background-size: 200% 200%; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; animation: ds-shift 8s ease-in-out infinite; } @keyframes ds-shift { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }"
+    },
+    {
+      "name": "Navigation Link",
+      "kind": "nav",
+      "refersTo": "nav-link",
+      "description": "Quiet muted link whose brand-orange underline grows from center on hover.",
+      "html": "<a class=\"ds-nav\" href=\"#\">About</a>",
+      "css": ".ds-nav { position: relative; display: inline-block; padding: 8px 12px; color: #525252; text-decoration: none; font: 500 14px 'DM Sans', system-ui, sans-serif; transition: color 0.3s; } .ds-nav::after { content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 0; height: 2px; background: #ec7d1a; transition: width 0.3s cubic-bezier(0.19, 1, 0.22, 1); } .ds-nav:hover, .ds-nav:focus-visible { color: #171717; } .ds-nav:hover::after, .ds-nav:focus-visible::after { width: 75%; } .ds-nav:focus-visible { outline: none; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Neon Arcade Gallery",
+    "overview": "The site is a gallery wall under arcade lighting: near-black or paper surfaces behind it, a faint grid scratched into the floor, glassy panels floating over blurred pools of orange, cyan, magenta, and lime light, and one enormous Space Grotesk headline acting as the marquee. The visitor walks a single scroll — hero, about, projects, technologies, blog, contact — and each section is a new cabinet on the wall, but the whole room runs on the same power supply. The system is deliberately maximal but physics-light. Nothing is heavy, nothing sits with hard grey shadows; surfaces are translucent and lit, motion is everywhere (scroll reveals, text scramble, parallax float, animated mesh gradients), and noise texture rides faintly over backgrounds. Dark mode is the marquee with the house lights off; light mode is the same room at noon. The owner is a creative developer and designer selling both halves, and the design is the proof of both.",
+    "keyCharacteristics": [
+      "Translucent glass cards with backdrop blur floating over accent-tinted glow blobs.",
+      "A three-color accent trio (orange #ec7d1a, cyan #00f5d4, magenta #ff006e) with lime #ccff00 and orange #ff6b00 as occasional fourths.",
+      "Giant Space Grotesk display type with tight line-height (0.9) and wide tracking.",
+      "Gradient text as the brand signature: orange → cyan → magenta at 200% size, animated.",
+      "Continuous motion: mesh-morph gradient shapes, float, pulse-soft, text reveal, scroll-initiated stagger.",
+      "Hard grid pattern at ~5% opacity and noise at 2-5% opacity as ambient texture."
+    ],
+    "rules": [
+      { "name": "The Carnival Trio Rule", "body": "Any prominently colored composition must show at least two members of the orange/cyan/magenta trio together — never a solo accent carrying a headline moment. The signature gradient (orange → cyan → magenta) is the canonical instance.", "section": "colors" },
+      { "name": "The Rare Raw Rule", "body": "Raw hex accent colors appear only in translucency (blobs, glows, tints, text-on-dark). Solid accent fills are reserved for small elements: primary buttons, dots, chips, small icons.", "section": "colors" },
+      { "name": "The Marquee Rule", "body": "There is exactly one display-XL headline per viewport. It owns the hero; nowhere else gets the full marquee treatment.", "section": "typography" },
+      { "name": "The Flat-By-Default Rule", "body": "Nothing casts a hard ambient shadow at rest. Colored glow appears only as hover/emphasis response or on dedicated glow accents.", "section": "elevation" },
+      { "name": "The Glass Border Rule", "body": "Surfaces are frosted; borders are at most 50% opacity hairlines. Any border that turns solid inside a content surface is a bug.", "section": "shapes" }
+    ],
+    "dos": [
+      "Do use the trio gradient (orange → cyan → magenta) for every section title and the logo.",
+      "Do keep cards frosted (translucent + backdrop-blur) over accent-tinted glow blobs.",
+      "Do animate motion in: reveals, floats, pulse-soft, text-reveal, mesh morph — motion is the identity.",
+      "Do respect prefers-reduced-motion: collapse animation, float, parallax, and scrolling to instant/linear.",
+      "Do keep the hero to one display-XL headline and small stat numbers below it.",
+      "Do use JetBrains Mono for everything that reads \"code\" or \"chrome\"."
+    ],
+    "donts": [
+      "Don't use flat opaque cards or hard grey drop shadows for content surfaces.",
+      "Don't let any single accent color carry a headline moment alone (Carnival Trio Rule).",
+      "Don't apply the marquee treatment (display-XL) to more than one element per viewport.",
+      "Don't make borders more than 50% opacity inside surfaces (Glass Border Rule).",
+      "Don't remove the grid/noise ambient texture from backgrounds that have it.",
+      "Don't replace the gradient \"G\" with a flat-colored wordmark."
+    ]
+  }
+}

@@ -1,0 +1,351 @@
+---
+---
+<!--
+  In-page case study reader. Clicking a project never navigates: the gallery
+  and the article body are cloned from the pre-rendered hidden templates the
+  Projects section builds, exactly like the blog reader. Meta that only exists
+  in frontmatter (role, dates, team, links) travels as JSON on the card and is
+  resolved here with the active locale's labels.
+
+  Coordinates with the Projects section:
+    - Projects section dispatches `open-project-reader` with the clicked card.
+    - The reader owns open/close, focus management, scroll lock and meta.
+    - Both readers broadcast `reader-closed` so the media viewer can step aside.
+-->
+<div
+  id="project-reader"
+  class="fixed inset-0 z-90 hidden"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="project-reader-title"
+  data-project-reader
+>
+  <div
+    class="absolute inset-0 bg-neutral-950/50 backdrop-blur-md opacity-0 transition-opacity duration-300 ease-out-expo"
+    data-project-reader-backdrop
+    aria-hidden="true"
+  ></div>
+
+  <div class="relative z-10 h-full overflow-y-auto px-4 py-6 sm:px-6 sm:py-12 lg:py-16" data-project-reader-scroll>
+    <div class="flex min-h-full items-center justify-center">
+      <div
+        class="relative w-full max-w-4xl my-auto opacity-0 scale-95 transition-all duration-300 ease-out-expo"
+        data-project-reader-panel-wrap
+      >
+        <!-- Accent glow pooling behind the glass panel -->
+        <div
+          class="absolute -inset-3 -z-10 rounded-[2rem] bg-gradient-to-br from-brand-500/25 via-accent-cyan/20 to-accent-magenta/25 blur-2xl opacity-0 transition-opacity duration-500"
+          data-project-reader-aura
+          aria-hidden="true"
+        ></div>
+
+        <article
+          class="relative overflow-hidden rounded-2xl bg-white/85 dark:bg-neutral-900/85 backdrop-blur-2xl border border-neutral-200/60 dark:border-neutral-800/60"
+        >
+          <button
+            type="button"
+            class="btn-icon absolute top-4 right-4 z-10"
+            aria-label="Close"
+            data-project-reader-close
+            data-i18n-attr="aria-label:common.close"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+
+          <header class="relative px-6 pt-14 pb-7 sm:px-10 sm:pt-16 sm:pb-8">
+            <span class="badge-primary mb-5" data-i18n="projects.caseStudy">Case study</span>
+            <h2
+              id="project-reader-title"
+              class="font-display text-heading-lg lg:text-heading-xl font-bold tracking-tight text-neutral-900 dark:text-neutral-100 mb-4 text-balance"
+              data-project-reader-title
+            ></h2>
+            <p class="text-body-lg text-neutral-600 dark:text-neutral-400 max-w-2xl" data-project-reader-description></p>
+
+            <!-- Facts, set in mono like the rest of the "chrome" -->
+            <dl
+              class="flex flex-wrap items-center gap-x-6 gap-y-3 mt-7 pt-6 border-t border-neutral-200/50 dark:border-neutral-800/50"
+              data-project-reader-meta
+            ></dl>
+          </header>
+
+          <div class="px-6 sm:px-10 pb-10" data-project-reader-media></div>
+
+          <div class="px-6 sm:px-10 pb-10" data-project-reader-body></div>
+
+          <footer
+            class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 px-6 sm:px-10 py-6 border-t border-neutral-200/50 dark:border-neutral-800/50"
+          >
+            <button type="button" class="btn-ghost text-body-sm group" data-project-reader-back>
+              <svg class="w-4 h-4 transition-transform duration-300 group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              </svg>
+              <span data-i18n="projects.backToProjects">Back to projects</span>
+            </button>
+
+            <div class="flex flex-wrap items-center gap-2" data-project-reader-links></div>
+          </footer>
+        </article>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const reader = document.querySelector<HTMLElement>('[data-project-reader]');
+    if (reader) {
+      const backdrop = reader.querySelector<HTMLElement>('[data-project-reader-backdrop]');
+      const wrap = reader.querySelector<HTMLElement>('[data-project-reader-panel-wrap]');
+      const aura = reader.querySelector<HTMLElement>('[data-project-reader-aura]');
+      const scroll = reader.querySelector<HTMLElement>('[data-project-reader-scroll]');
+      const closeBtn = reader.querySelector<HTMLButtonElement>('[data-project-reader-close]');
+      const backBtn = reader.querySelector<HTMLButtonElement>('[data-project-reader-back]');
+      const titleEl = reader.querySelector<HTMLElement>('[data-project-reader-title]');
+      const descEl = reader.querySelector<HTMLElement>('[data-project-reader-description]');
+      const metaEl = reader.querySelector<HTMLElement>('[data-project-reader-meta]');
+      const mediaEl = reader.querySelector<HTMLElement>('[data-project-reader-media]');
+      const bodyEl = reader.querySelector<HTMLElement>('[data-project-reader-body]');
+      const linksEl = reader.querySelector<HTMLElement>('[data-project-reader-links]');
+
+      interface ProjectMeta {
+        title?: string;
+        description?: string;
+        longDescription?: string;
+        role?: string;
+        startDate?: string;
+        endDate?: string;
+        teamSize?: number;
+        technologies?: string[];
+        demo?: string;
+        github?: string;
+        galleryCount?: number;
+      }
+
+      let isOpen = false;
+      let lastFocused: HTMLElement | null = null;
+      let currentSlug: string | null = null;
+
+      function getLocale(): 'en' | 'es' {
+        const attr = document.documentElement.getAttribute('data-locale');
+        return (window.I18N?.locale || (attr === 'es' ? 'es' : 'en')) as 'en' | 'es';
+      }
+
+      const t = (key: string, fallback: string): string => {
+        return window.I18N?.t(key) || fallback;
+      };
+
+      /**
+       * Clones a template slot for display. Heading ids are stripped: the
+       * hidden per-locale templates already carry the same ids, and nothing
+       * deep-links into an in-page reader, so keeping them would only put
+       * duplicate ids in the visible document. The slot's own wrapper is kept
+       * because it carries the prose/media presentation.
+       */
+      function cloneTemplate(source: HTMLElement | null | undefined): HTMLElement | null {
+        if (!source) return null;
+        const clone = source.cloneNode(true) as HTMLElement;
+        clone.removeAttribute('id');
+        clone.querySelectorAll('[id]').forEach((el) => el.removeAttribute('id'));
+        return clone;
+      }
+
+      /** "2026-08" → "Aug 2026", locale-aware, undefined when absent. */
+      function formatMonth(value?: string): string {
+        if (!value) return '';
+        const match = /^(\d{4})-(\d{2})/.exec(value);
+        const date = match ? new Date(Number(match[1]), Number(match[2]) - 1, 1) : new Date(value);
+        if (Number.isNaN(date.getTime())) return value;
+        return date.toLocaleDateString(getLocale(), { year: 'numeric', month: 'short' });
+      }
+
+      function period(start?: string, end?: string): string {
+        const from = formatMonth(start);
+        const to = formatMonth(end);
+        if (from && to) return `${from} — ${to}`;
+        return from || to || '';
+      }
+
+      function addFact(label: string, value: string, icon: string) {
+        const group = document.createElement('div');
+        group.className = 'flex items-center gap-2';
+        group.innerHTML = icon;
+        const term = document.createElement('dt');
+        term.className = 'sr-only';
+        term.textContent = label;
+        const detail = document.createElement('dd');
+        detail.className = 'text-body-sm font-mono text-neutral-700 dark:text-neutral-200';
+        detail.textContent = value;
+        group.appendChild(term);
+        group.appendChild(detail);
+        metaEl.appendChild(group);
+      }
+
+      const ICONS = {
+        role: '<svg class="w-4 h-4 text-brand-500 dark:text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 017 7H5a7 7 0 017-7z"/></svg>',
+        period: '<svg class="w-4 h-4 text-accent-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 2v3M16 2v3M3 8h18M5 5h14a2 2 0 012 2v12a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2z"/></svg>',
+        team: '<svg class="w-4 h-4 text-accent-magenta" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87M16 3.13a4 4 0 010 7.75M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>',
+        stack: '<svg class="w-4 h-4 text-brand-500 dark:text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 5h16v4H4zM4 15h16v4H4zM4 10h16v4H4z"/></svg>',
+      };
+
+      function fillMeta(card: HTMLElement, { keepScroll = false } = {}) {
+        const slug = card.dataset.projectSlug || '';
+        let data: ProjectMeta = {};
+        try {
+          data = JSON.parse(card.dataset.project || '{}') as ProjectMeta;
+        } catch {
+          data = {};
+        }
+
+        currentSlug = slug;
+        titleEl.textContent = data.title || '';
+        descEl.textContent = data.longDescription || data.description || '';
+
+        metaEl.replaceChildren();
+        metaEl.classList.toggle('hidden', false);
+        if (data.role) addFact(t('common.role', 'Role'), data.role, ICONS.role);
+        const when = period(data.startDate, data.endDate);
+        if (when) addFact(t('common.duration', 'Duration'), when, ICONS.period);
+        if (data.teamSize) {
+          addFact(
+            t('common.team', 'Team size'),
+            String(data.teamSize),
+            ICONS.team
+          );
+        }
+        if (data.galleryCount) {
+          addFact(
+            t('media.mediaCount', 'Media'),
+            String(data.galleryCount),
+            ICONS.stack
+          );
+        }
+        metaEl.classList.toggle('hidden', metaEl.children.length === 0);
+
+        // Gallery + prose body come from the hidden per-locale template so
+        // they are rendered once, at build time, like the blog reader. When a
+        // project has no translation, its card falls back to the entry in the
+        // other language — read that one rather than showing an empty panel.
+        const bySlug = `[data-project-body="${CSS.escape(slug)}"]`;
+        const source =
+          document.querySelector<HTMLElement>(`${bySlug}[data-project-body-locale="${getLocale()}"]`) ??
+          document.querySelector<HTMLElement>(bySlug);
+        const mediaSource = source?.querySelector<HTMLElement>('[data-clone-media]');
+        const bodySource = source?.querySelector<HTMLElement>('[data-clone-body]');
+        const mediaClone = cloneTemplate(mediaSource);
+        const bodyClone = cloneTemplate(bodySource);
+        mediaEl.replaceChildren(...(mediaClone ? [mediaClone] : []));
+        bodyEl.replaceChildren(...(bodyClone ? [bodyClone] : []));
+        // The media slot always exists in the template; only show it when the
+        // project actually contributed a reel, a cover or a gallery.
+        mediaEl.classList.toggle('hidden', !mediaClone?.querySelector('figure, [data-media-gallery]'));
+        bodyEl.classList.toggle('hidden', !bodyClone);
+        window.observeAutoplayMedia?.(mediaEl);
+
+        linksEl.replaceChildren();
+        if (data.demo) {
+          const link = document.createElement('a');
+          link.href = data.demo;
+          link.target = '_blank';
+          link.rel = 'noopener noreferrer';
+          link.className = 'btn-primary text-body-sm px-4 py-2';
+          link.textContent = t('common.liveDemo', 'Live demo');
+          linksEl.appendChild(link);
+        }
+        if (data.github) {
+          const link = document.createElement('a');
+          link.href = data.github;
+          link.target = '_blank';
+          link.rel = 'noopener noreferrer';
+          link.className = 'btn-secondary text-body-sm px-4 py-2';
+          link.textContent = t('common.sourceCode', 'Source code');
+          linksEl.appendChild(link);
+        }
+
+        if (!keepScroll) scroll.scrollTop = 0;
+      }
+
+      function open(card: HTMLElement) {
+        if (isOpen) {
+          fillMeta(card);
+          return;
+        }
+        lastFocused = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+        fillMeta(card);
+
+        reader.classList.remove('hidden');
+        requestAnimationFrame(() => {
+          backdrop.classList.remove('opacity-0');
+          backdrop.classList.add('opacity-100');
+          wrap.classList.remove('opacity-0', 'scale-95');
+          wrap.classList.add('opacity-100', 'scale-100');
+          aura.classList.add('opacity-100');
+        });
+
+        document.body.style.overflow = 'hidden';
+        isOpen = true;
+        closeBtn.focus();
+      }
+
+      function close() {
+        if (!isOpen) return;
+        isOpen = false;
+        backdrop.classList.add('opacity-0');
+        backdrop.classList.remove('opacity-100');
+        wrap.classList.add('opacity-0', 'scale-95');
+        wrap.classList.remove('opacity-100', 'scale-100');
+        aura.classList.remove('opacity-100');
+        document.body.style.overflow = '';
+        mediaEl.querySelectorAll('video').forEach((video) => video.pause());
+
+        window.setTimeout(() => {
+          if (isOpen) return;
+          reader.classList.add('hidden');
+          if (lastFocused && document.documentElement.contains(lastFocused)) lastFocused.focus();
+        }, 300);
+
+        window.dispatchEvent(new CustomEvent('reader-closed'));
+      }
+
+      reader.addEventListener('keydown', (e) => {
+        if (!isOpen) return;
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          close();
+        } else if (e.key === 'Tab') {
+          const focusables = Array.from(
+            reader.querySelectorAll<HTMLElement>('a[href], button:not([disabled])')
+          ).filter((el) => el.offsetParent !== null);
+          if (focusables.length === 0) return;
+          const first = focusables[0];
+          const last = focusables[focusables.length - 1];
+          if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
+      });
+
+      backdrop.addEventListener('click', close);
+      closeBtn.addEventListener('click', close);
+      backBtn.addEventListener('click', close);
+
+      window.addEventListener('open-project-reader', (e: Event) => {
+        const card = (e as CustomEvent<HTMLElement>).detail;
+        if (card) open(card);
+      });
+
+      // Keep the open case study in sync with the active language.
+      window.addEventListener('language-changed', () => {
+        if (!isOpen || !currentSlug) return;
+        const bySlug = `[data-project-slug="${CSS.escape(currentSlug)}"]`;
+        const card =
+          document.querySelector<HTMLElement>(`${bySlug}[data-project-locale="${getLocale()}"]`) ??
+          document.querySelector<HTMLElement>(`${bySlug}[data-project-locale]`);
+        if (card) fillMeta(card, { keepScroll: true });
+      });
+    }
+  </script>
+</div>

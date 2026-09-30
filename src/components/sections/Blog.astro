@@ -1,0 +1,161 @@
+---
+import { getCollection, render } from 'astro:content';
+import BlogCard from '../ui/BlogCard.astro';
+import BlogReader from '../ui/BlogReader.astro';
+import MediaGallery from '../ui/MediaGallery.astro';
+import { withCoverMedia } from '../../lib/media';
+
+type Post = Awaited<ReturnType<typeof getCollection<'blog'>>>[number];
+
+const allPosts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+
+// Spanish entries live under `es/` in the collection; everything else is English.
+const localeOf = (slug: string): 'en' | 'es' => (slug.startsWith('es/') ? 'es' : 'en');
+const baseOf = (slug: string): string => (slug.startsWith('es/') ? slug.slice(3) : slug);
+
+const byLocale = (locale: 'en' | 'es') => allPosts.filter((p) => localeOf(p.slug) === locale);
+
+const enPosts = byLocale('en');
+const esPosts = byLocale('es');
+
+// Pre-render every locale's article body once, at build time, so the in-page
+// reader can display full posts without navigating to another route.
+const postsWithContent = await Promise.all(
+  allPosts.map(async (post) => {
+    const { Content } = await render(post);
+    return { post, Content };
+  })
+);
+
+// Pair every English post with its Spanish twin (fall back to the English
+// entry when a translation is missing so a card never disappears).
+const postPairs = enPosts.map((enEntry) => ({
+  en: enEntry,
+  es: esPosts.find((post) => baseOf(post.slug) === baseOf(enEntry.slug)) || enEntry,
+}));
+---
+
+<section id="blog" class="section" aria-labelledby="blog-title">
+  <div class="container-custom">
+    <div class="section-header" data-animate="slide-up" data-delay="100">
+      <span class="badge-primary mb-4" data-animate="fade-in" data-delay="200" data-i18n="blog.title">Blog</span>
+      <h2 id="blog-title" class="section-title" data-animate="text-reveal" data-delay="300" data-i18n="blog.subtitle">Experiences, events and knowledge</h2>
+      <p class="section-subtitle" data-animate="fade-in" data-delay="400" data-i18n="blog.description">
+        Sharing knowledge about web development, design, and technology.
+      </p>
+    </div>
+    
+    {enPosts.length > 0 ? (
+      <div data-animate="fade-in" data-delay="200">
+        <div
+          class="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
+          data-reveal
+          data-reveal-stagger="120"
+          role="list"
+          aria-label="Latest blog posts"
+          data-blog-grid
+          data-i18n-attr="aria-label:blog.latestPosts"
+        >
+          {postPairs.map(({ en, es }, index) => (
+            <Fragment>
+              <div data-i18n-content="en">
+                <BlogCard post={en} featured={index === 0} index={index} />
+              </div>
+              <div data-i18n-content="es" hidden>
+                <BlogCard post={es} featured={index === 0} index={index} />
+              </div>
+            </Fragment>
+          ))}
+        </div>
+
+        <!-- Pre-rendered article bodies consumed by the in-page reader, one per locale.
+             Media sits in its own wrapper so the reader can frame the prose
+             without inheriting typography styles meant for article text. -->
+        {postsWithContent.map(({ post, Content }) => (
+          <div hidden aria-hidden="true" data-blog-body={baseOf(post.slug)} data-blog-body-locale={localeOf(post.slug)}>
+            {/* Cover folded into the carousel — one media surface, not two. */}
+            <div data-clone-media>
+              <MediaGallery
+                id={post.slug}
+                items={withCoverMedia(post.data.gallery, {
+                  image: post.data.coverImage,
+                  video: post.data.video,
+                  alt: post.data.description,
+                })}
+                context={post.data.title}
+              />
+            </div>
+            <div data-clone-body class="prose prose-lg dark:prose-invert max-w-none">
+              <Content />
+            </div>
+          </div>
+        ))}
+      </div>
+    ) : (
+      <div class="text-center py-16" data-animate="fade-in" data-delay="200">
+        <div class="w-20 h-20 rounded-2xl bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center mx-auto mb-6">
+          <svg class="w-10 h-10 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+          </svg>
+        </div>
+        <h3 class="font-display text-heading-md font-bold text-neutral-900 dark:text-neutral-100 mb-2" data-i18n="blog.noPostsTitle">No posts yet</h3>
+        <p class="text-body-md text-neutral-600 dark:text-neutral-400" data-i18n="blog.noPosts">No posts found.</p>
+      </div>
+    )}
+  </div>
+
+  <BlogReader />
+</section>
+
+<script>
+  const blogSection = document.getElementById('blog');
+  if (blogSection) {
+    const grid = blogSection.querySelector<HTMLElement>('[data-blog-grid]');
+    const hasReader = !!document.querySelector('[data-blog-reader]');
+
+    // --- Open articles in-page (never leave the single page) ---
+    function activeLocale(): 'en' | 'es' {
+      return (window.I18N?.locale || 'en') as 'en' | 'es';
+    }
+
+    function articleEmbedded(slug: string): boolean {
+      return !!document.querySelector(
+        `[data-blog-body="${CSS.escape(slug)}"][data-blog-body-locale="${activeLocale()}"]`
+      );
+    }
+
+    grid?.addEventListener('click', (e) => {
+      if (!hasReader) return;
+      if (e.defaultPrevented) return;
+      if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+
+      const card = (e.target as HTMLElement).closest<HTMLElement>('[data-blog-card]');
+      if (!card) return;
+      const slug = card.dataset.blogSlug;
+      if (!slug || !articleEmbedded(slug)) return;
+
+      e.preventDefault();
+      window.dispatchEvent(new CustomEvent('open-blog-reader', { detail: card }));
+    });
+
+    // --- Locale-aware dates on cards ---
+    function formatCardDates() {
+      const locale = window.I18N?.locale || 'en';
+      blogSection.querySelectorAll<HTMLElement>('[data-blog-card-date]').forEach((el) => {
+        const key = el.getAttribute('datetime');
+        if (!key) return;
+        const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(key);
+        const date = match
+          ? new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]))
+          : new Date(key);
+        if (!Number.isNaN(date.getTime())) {
+          el.textContent = date.toLocaleDateString(locale, { year: 'numeric', month: 'long', day: 'numeric' });
+        }
+      });
+    }
+    formatCardDates();
+    window.addEventListener('language-changed', formatCardDates);
+  }
+</script>
