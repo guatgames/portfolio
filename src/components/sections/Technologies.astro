@@ -36,15 +36,6 @@ const categoryColors: Record<string, string> = {
   other: 'neutral',
 };
 
-const categoryBgClasses: Record<string, string> = {
-  brand: 'bg-brand-500/10',
-  'accent-cyan': 'bg-accent-cyan/10',
-  'accent-magenta': 'bg-accent-magenta/10',
-  'accent-lime': 'bg-accent-lime/10',
-  'accent-orange': 'bg-accent-orange/10',
-  'accent-pink': 'bg-accent-pink/10',
-  neutral: 'bg-neutral-500/10',
-};
 ---
 
 <section id="technologies" class="section" aria-labelledby="technologies-title">
@@ -67,7 +58,7 @@ const categoryBgClasses: Record<string, string> = {
         return (
           <div class="tech-category" data-animate="slide-up" data-delay={String((catIndex + 1) * 100)}>
             <div class="flex items-center gap-3 mb-8">
-              <span class={`w-12 h-12 rounded-xl ${categoryBgClasses[color] || 'bg-neutral-500/10'} flex items-center justify-center`}>
+              <span class="w-12 h-12 border-2 border-[var(--color-border-primary)] text-neutral-600 dark:text-[var(--color-text-tertiary)] flex items-center justify-center">
                 <span set:html={categoryIcons[category.key] || categoryIcons.other}></span>
               </span>
               <h3 class="font-display text-heading-lg font-bold text-neutral-900 dark:text-neutral-100" data-i18n={`technologies.categories.${category.key}`}>{category.label}</h3>

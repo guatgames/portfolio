@@ -1,67 +1,162 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-21T22:55:00Z",
+  "generatedAt": "2026-11-25T05:05:49Z",
   "title": "Design System: Guatgames Portfolio",
   "extensions": {
     "colorMeta": {
-      "arcade-orange": {
-        "role": "primary",
-        "displayName": "Arcade Orange",
-        "canonical": "oklch(66% 0.16 48)",
-        "tonalRamp": ["#3f1408", "#752d13", "#923515", "#b84410", "#de5f10", "#ec7d1a", "#f19e3d", "#f6bf73", "#fad9ad", "#fef7ee"]
-      },
-      "arcade-cyan": {
-        "role": "secondary",
-        "displayName": "Arcade Cyan",
-        "canonical": "oklch(88% 0.17 178)",
-        "tonalRamp": ["#0a3a34", "#0d5349", "#0f6d5f", "#0f8776", "#12a18e", "#12a895", "#2bb9a6", "#63d2c0", "#9fe7db", "#d9f7f1"]
-      },
-      "arcade-magenta": {
-        "role": "tertiary",
-        "displayName": "Arcade Magenta",
-        "canonical": "oklch(62% 0.28 355)",
-        "tonalRamp": ["#3f0820", "#580b2c", "#721039", "#8c1447", "#a81856", "#c52067", "#e23c7c", "#ee6d9e", "#f5aec7", "#fbe3ec"]
-      },
-      "arcade-lime": {
-        "role": "neutral",
-        "displayName": "Arcade Lime",
-        "canonical": "oklch(92% 0.26 120)",
-        "tonalRamp": ["#2b3d08", "#415e0d", "#5a8113", "#74a719", "#8cc61f", "#a3e028", "#b6ec4d", "#ccf57e", "#e1fac0", "#f4fee6"]
-      },
-      "surface-paper": {
+      "paper": {
         "role": "neutral",
         "displayName": "Paper",
-        "canonical": "oklch(100% 0 0)",
-        "tonalRamp": ["#a3a3a3", "#b5b5b5", "#c7c7c7", "#d9d9d9", "#ebebeb", "#f2f2f2", "#f7f7f7", "#fafafa", "#fdfdfd", "#ffffff"]
+        "canonical": "#f7f8f9",
+        "tonalRamp": ["#d9dde0", "#e5e8eb", "#eef0f2", "#f4f5f6", "#f7f8f9", "#fafbfb", "#fcfcfd", "#ffffff"]
       },
-      "surface-night": {
+      "paper-alt": {
+        "role": "neutral",
+        "displayName": "Paper Alt",
+        "canonical": "#eef0f2",
+        "tonalRamp": ["#c4cbd0", "#d3d9dd", "#e5e8eb", "#eaedf0", "#eef0f2", "#f4f5f6", "#f8f9fa", "#fcfcfd"]
+      },
+      "paper-deep": {
+        "role": "neutral",
+        "displayName": "Paper Deep",
+        "canonical": "#e5e8eb",
+        "tonalRamp": ["#b9c0c5", "#cbd1d5", "#d9dde0", "#e0e4e7", "#e5e8eb", "#eef0f2", "#f4f5f6", "#fafbfb"]
+      },
+      "ink": {
+        "role": "primary",
+        "displayName": "Ink",
+        "canonical": "#171b1e",
+        "tonalRamp": ["#050708", "#0c0e10", "#131719", "#1b2023", "#262c31", "#394148", "#4b545b", "#626c74"]
+      },
+      "ink-secondary": {
+        "role": "neutral",
+        "displayName": "Ink Secondary",
+        "canonical": "#4b545b",
+        "tonalRamp": ["#171b1e", "#262c31", "#394148", "#4b545b", "#626c74", "#757e85", "#8e979e", "#aab3ba"]
+      },
+      "ink-tertiary": {
+        "role": "neutral",
+        "displayName": "Ink Tertiary",
+        "canonical": "#626c74",
+        "tonalRamp": ["#262c31", "#394148", "#4b545b", "#5b656c", "#626c74", "#757e85", "#8e979e", "#aab3ba"]
+      },
+      "rule": {
+        "role": "neutral",
+        "displayName": "Rule",
+        "canonical": "#7c858c",
+        "tonalRamp": ["#394148", "#4b545b", "#626c74", "#6e777e", "#7c858c", "#8b949b", "#9aa2a9", "#b9c0c5"]
+      },
+      "rule-strong": {
+        "role": "neutral",
+        "displayName": "Rule Strong",
+        "canonical": "#626c74",
+        "tonalRamp": ["#394148", "#4b545b", "#5b656c", "#626c74", "#6e777e", "#757e85", "#8e979e", "#a4adb4"]
+      },
+      "slate": {
+        "role": "neutral",
+        "displayName": "Slate",
+        "canonical": "#8e979e",
+        "tonalRamp": ["#394148", "#4b545b", "#626c74", "#757e85", "#8e979e", "#9aa2a9", "#aab3ba", "#c7cdd2"]
+      },
+      "graphite": {
+        "role": "neutral",
+        "displayName": "Graphite",
+        "canonical": "#7e878e",
+        "tonalRamp": ["#262c31", "#394148", "#4b545b", "#626c74", "#7e878e", "#9099a0", "#aab3ba", "#c7cdd2"]
+      },
+      "silver": {
+        "role": "neutral",
+        "displayName": "Silver",
+        "canonical": "#c7cdd2",
+        "tonalRamp": ["#626c74", "#757e85", "#8e979e", "#a4adb4", "#b9c0c5", "#c7cdd2", "#d9dde0", "#eef0f2"]
+      },
+      "smoke": {
+        "role": "neutral",
+        "displayName": "Smoke",
+        "canonical": "#9099a0",
+        "tonalRamp": ["#394148", "#4b545b", "#626c74", "#757e85", "#9099a0", "#a4adb4", "#b9c0c5", "#d9dde0"]
+      },
+      "steel": {
+        "role": "neutral",
+        "displayName": "Steel",
+        "canonical": "#757e85",
+        "tonalRamp": ["#262c31", "#394148", "#4b545b", "#626c74", "#757e85", "#8e979e", "#aab3ba", "#c7cdd2"]
+      },
+      "ash": {
+        "role": "neutral",
+        "displayName": "Ash",
+        "canonical": "#9aa2a9",
+        "tonalRamp": ["#394148", "#4b545b", "#626c74", "#7e878e", "#9aa2a9", "#aab3ba", "#c7cdd2", "#e5e8eb"]
+      },
+      "night": {
         "role": "neutral",
         "displayName": "Night",
-        "canonical": "oklch(6% 0 0)",
-        "tonalRamp": ["#000000", "#040404", "#0a0a0a", "#101010", "#121212", "#151515", "#1a1a1a", "#262626", "#333333", "#404040"]
+        "canonical": "#0d0f11",
+        "tonalRamp": ["#050708", "#0a0a0a", "#0c0e10", "#0d0f11", "#131619", "#191d20", "#262c31", "#394148"]
+      },
+      "night-alt": {
+        "role": "neutral",
+        "displayName": "Night Alt",
+        "canonical": "#131619",
+        "tonalRamp": ["#050708", "#0a0a0a", "#0d0f11", "#101315", "#131619", "#191d20", "#202529", "#262c31"]
+      },
+      "night-elevated": {
+        "role": "neutral",
+        "displayName": "Night Elevated",
+        "canonical": "#191d20",
+        "tonalRamp": ["#0a0a0a", "#0d0f11", "#131619", "#161a1d", "#191d20", "#202529", "#262c31", "#394148"]
+      },
+      "night-ink": {
+        "role": "primary",
+        "displayName": "Night Ink",
+        "canonical": "#f2f4f5",
+        "tonalRamp": ["#7e878e", "#9aa2a9", "#aab3ba", "#c7cdd2", "#d9dde0", "#e5e8eb", "#f2f4f5", "#ffffff"]
+      },
+      "night-ink-secondary": {
+        "role": "neutral",
+        "displayName": "Night Ink Secondary",
+        "canonical": "#aab3ba",
+        "tonalRamp": ["#4b545b", "#626c74", "#757e85", "#8e979e", "#aab3ba", "#c7cdd2", "#d9dde0", "#f2f4f5"]
+      },
+      "night-rule": {
+        "role": "neutral",
+        "displayName": "Night Rule",
+        "canonical": "#68727a",
+        "tonalRamp": ["#262c31", "#394148", "#4b545b", "#5c656c", "#68727a", "#737d85", "#8e979e", "#aab3ba"]
+      },
+      "lightbox-void": {
+        "role": "neutral",
+        "displayName": "Lightbox Void",
+        "canonical": "#0a0a0a",
+        "tonalRamp": ["#000000", "#050505", "#080808", "#0a0a0a", "#0d0f11", "#131619", "#1a1d20", "#262c31"]
       }
     },
     "typographyMeta": {
-      "display": { "displayName": "Display", "purpose": "The marquee: hero name and section titles. Space Grotesk, 800 weight, clamp 4rem-10rem, line-height 0.9." },
-      "headline": { "displayName": "Headline", "purpose": "Card titles and form headings. Space Grotesk 700." },
-      "body": { "displayName": "Body", "purpose": "Paragraphs, descriptions, long-form. DM Sans 400/1.7." },
-      "label": { "displayName": "Label", "purpose": "Badges, captions, scroll hints. DM Sans 500, 0.75rem, +0.05em, uppercase where labelled." },
-      "mono": { "displayName": "Mono", "purpose": "Code chrome, syntax highlight, file labels. JetBrains Mono." }
+      "display": { "displayName": "Display", "purpose": "Hero masthead only; Archivo 800, clamp 3.5–6rem, tracking -0.04em." },
+      "section": { "displayName": "Section", "purpose": "Section titles under a strong rule; Archivo 800, clamp 2.25–3.75rem." },
+      "headline": { "displayName": "Headline", "purpose": "Reader and major entry headings; Archivo 700." },
+      "title": { "displayName": "Title", "purpose": "Entry titles; Archivo 700." },
+      "stat": { "displayName": "Stat", "purpose": "Tabular counters in the ruled index row; Archivo 700." },
+      "body": { "displayName": "Body", "purpose": "Long-form copy; Source Sans 3 400, 1rem/1.65, 65–75ch." },
+      "body-lead": { "displayName": "Body Lead", "purpose": "Section subtitles and reader descriptions; Source Sans 3, 1.0625rem." },
+      "body-sm": { "displayName": "Body Small", "purpose": "Supporting copy and captions; Source Sans 3, 0.875rem." },
+      "caption": { "displayName": "Caption", "purpose": "Small supporting text; Source Sans 3, 0.75rem, +0.08em." },
+      "stat-label": { "displayName": "Stat Label", "purpose": "Labels under counters; Source Sans 3, 0.8125rem." },
+      "meta": { "displayName": "Meta", "purpose": "Uppercase mono labels; JetBrains Mono 500, 0.6875rem, +0.12em." },
+      "ledger": { "displayName": "Ledger", "purpose": "Hero code specimen; JetBrains Mono, 0.75rem/1.75." },
+      "mono": { "displayName": "Mono", "purpose": "Dates, tags, and measurement text; JetBrains Mono, 0.875rem." }
     },
     "shadows": [
-      { "name": "glow-orange", "value": "0 0 20px rgb(236 125 26 / 0.4)", "purpose": "Primary accent glow on hover and emphasis (primary button, brand accents)." },
-      { "name": "glow-cyan", "value": "0 0 20px rgb(0 245 212 / 0.4)", "purpose": "Reserved for cyan accents (secondary interactions, tech highlights)." },
-      { "name": "glow-magenta", "value": "0 0 20px rgb(255 0 110 / 0.4)", "purpose": "Reserved for magenta accents (floating hero cards, tertiary moments)." },
-      { "name": "elevation-lg", "value": "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)", "purpose": "Standard elevation, permitted on header after scroll and solid buttons only." },
-      { "name": "elevation-xl", "value": "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)", "purpose": "Card hover lift in combination with translateY(-8px)." }
+      { "name": "none", "value": "none", "purpose": "Default resting state for every surface; depth comes from rules and spacing." },
+      { "name": "lightbox-focus", "value": "0 0 0 2px #0a0a0a, 0 0 0 4px #c7cdd2", "purpose": "Focus ring on icon controls over the dark media viewer only." }
     ],
     "motion": [
-      { "name": "ease-out-expo", "value": "cubic-bezier(0.19, 1, 0.22, 1)", "purpose": "Signature easing for reveals, underlines, and header transitions." },
-      { "name": "gradient-shift", "value": "8s ease-in-out infinite", "purpose": "Section-title and logo gradient drift (background-position 0%->100%->0%)." },
-      { "name": "mesh-morph", "value": "12s ease-in-out infinite", "purpose": "Border-radius morphing on decorative mesh blobs." },
-      { "name": "float", "value": "6s ease-in-out infinite", "purpose": "Floating accent shapes and hero cards." },
-      { "name": "pulse-soft", "value": "3s ease-in-out infinite", "purpose": "Availability dot and gentle emphasis pulses." },
-      { "name": "text-reveal", "value": "0.8s ease-out forwards", "purpose": "Hero headline reveal (translateY 100% to 0)." }
+      { "name": "ease-out-expo", "value": "cubic-bezier(0.19, 1, 0.22, 1)", "purpose": "Reveals and ledger parallax settling." },
+      { "name": "ease-in-out-expo", "value": "cubic-bezier(0.87, 0, 0.13, 1)", "purpose": "Rare paired state changes." },
+      { "name": "fade-in", "value": "0.6s ease-out forwards", "purpose": "One quiet entrance for supporting content." },
+      { "name": "slide-up", "value": "0.6s ease-out forwards", "purpose": "Section-level entrance from an already-visible default." },
+      { "name": "text-reveal", "value": "0.8s ease-out forwards", "purpose": "Hero masthead reveal only." },
+      { "name": "reduced-motion", "value": "all 0.01ms !important", "purpose": "Honors prefers-reduced-motion across every animated element." }
     ],
     "breakpoints": [
       { "name": "sm", "value": "640px" },
@@ -76,108 +171,106 @@
       "name": "Primary Button",
       "kind": "button",
       "refersTo": "button-primary",
-      "description": "The flagship CTA. Solid Arcade Orange, orange glow on hover, icon nudges right.",
-      "html": "<button class=\"ds-btn-primary\"><span>View Projects</span><svg class=\"ds-ic\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M17 8l4 4m0 0l-4 4m4-4H3\"/></svg></button>",
-      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 24px; border-radius: 8px; border: none; cursor: pointer; background: #ec7d1a; color: #ffffff; font: 500 16px 'DM Sans', system-ui, sans-serif; box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); transition: background 0.3s, box-shadow 0.3s; } .ds-btn-primary:hover { background: #de5f10; box-shadow: 0 0 20px rgb(236 125 26 / 0.4), 0 10px 15px -3px rgb(0 0 0 / 0.15); } .ds-btn-primary:hover .ds-ic { transform: translateX(4px); } .ds-btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #ec7d1a; } .ds-ic { transition: transform 0.3s; }"
-    },
-    {
-      "name": "Accent Button",
-      "kind": "button",
-      "refersTo": "button-accent",
-      "description": "Outlined counterpart for secondary actions ('Get in Touch'). 2px orange border, fills on hover.",
-      "html": "<button class=\"ds-btn-accent\"><span>Get in Touch</span><svg class=\"ds-ic-ac\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z\"/></svg></button>",
-      "css": ".ds-btn-accent { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 24px; border-radius: 8px; border: 2px solid #ec7d1a; background: transparent; color: #ec7d1a; cursor: pointer; font: 500 16px 'DM Sans', system-ui, sans-serif; transition: background 0.3s, color 0.3s; } .ds-btn-accent:hover { background: #ec7d1a; color: #ffffff; } .ds-btn-accent:hover .ds-ic-ac { transform: translateX(4px); } .ds-btn-accent:focus-visible { outline: none; box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #ec7d1a; } .ds-ic-ac { transition: transform 0.3s; }"
+      "description": "Solid ink action used at contact and form submission points.",
+      "html": "<button class=\"ds-btn-primary\">SEND MESSAGE</button>",
+      "css": ".ds-btn-primary { display:inline-flex; align-items:center; justify-content:center; padding:12px 20px; border:1px solid var(--color-text-primary); border-radius:0; background:var(--color-text-primary); color:var(--color-bg-primary); font:600 14px/1.3 'Source Sans 3', system-ui, sans-serif; cursor:pointer; transition:background 200ms ease, color 200ms ease; } .ds-btn-primary:hover { background:transparent; color:var(--color-text-primary); } .ds-btn-primary:focus-visible { outline:2px solid var(--color-text-primary); outline-offset:3px; }"
     },
     {
       "name": "Secondary Button",
       "kind": "button",
       "refersTo": "button-secondary",
-      "description": "Soft neutral chip for quiet actions (source code). Follows the theme surface.",
-      "html": "<button class=\"ds-btn-secondary\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z\"/></svg><span>Source</span></button>",
-      "css": ".ds-btn-secondary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 24px; border-radius: 8px; border: 1px solid #e5e5e5; background: #fafafa; color: #171717; cursor: pointer; font: 500 16px 'DM Sans', system-ui, sans-serif; transition: background 0.3s; } .ds-btn-secondary:hover { background: #e5e5e5; } .ds-btn-secondary:focus-visible { outline: none; box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #737373; }"
+      "description": "Quiet outlined counterpart for dismissive or alternate actions.",
+      "html": "<button class=\"ds-btn-secondary\">CANCEL</button>",
+      "css": ".ds-btn-secondary { display:inline-flex; align-items:center; justify-content:center; padding:12px 20px; border:1px solid var(--color-border-secondary); border-radius:0; background:transparent; color:var(--color-text-primary); font:600 14px/1.3 'Source Sans 3', system-ui, sans-serif; cursor:pointer; transition:border-color 200ms ease; } .ds-btn-secondary:hover { border-color:var(--color-text-primary); } .ds-btn-secondary:focus-visible { outline:2px solid var(--color-text-primary); outline-offset:3px; }"
     },
     {
-      "name": "Glass Card",
-      "kind": "card",
-      "refersTo": "card",
-      "description": "The frosted surface: translucent, blurred, hairline border, glow lift on hover.",
-      "html": "<div class=\"ds-card\"><div class=\"ds-card-title\">Performance</div><div class=\"ds-card-sub\">100/100 Lighthouse</div></div>",
-      "css": ".ds-card { border-radius: 16px; background: rgba(255, 255, 255, 0.8); border: 1px solid rgba(229, 229, 229, 0.5); padding: 24px; backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); color: #171717; font-family: 'DM Sans', system-ui, sans-serif; transition: transform 0.5s, box-shadow 0.5s, border-color 0.5s; } .ds-card:hover { transform: translateY(-8px); border-color: rgba(236, 125, 26, 0.3); box-shadow: 0 0 20px rgb(236 125 26 / 0.1), 0 20px 25px -5px rgb(0 0 0 / 0.1); } .ds-card-title { font: 700 18px 'Space Grotesk', system-ui, sans-serif; margin-bottom: 4px; } .ds-card-sub { font-size: 14px; color: #525252; }"
+      "name": "Text Action",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Underlined text link used for the hero's two navigation actions.",
+      "html": "<a class=\"ds-text-action\" href=\"#projects\">View Projects</a>",
+      "css": ".ds-text-action { display:inline-flex; align-items:center; gap:8px; padding-bottom:4px; border-bottom:1px solid currentColor; color:var(--color-text-primary); font:600 14px/1.3 'Source Sans 3', system-ui, sans-serif; text-decoration:none; transition:opacity 200ms ease; } .ds-text-action:hover { opacity:0.6; } .ds-text-action:focus-visible { outline:2px solid var(--color-text-primary); outline-offset:3px; }"
     },
     {
-      "name": "Primary Badge",
-      "kind": "chip",
-      "refersTo": "badge",
-      "description": "Pill label for status/feature flags. Orange-tinted translucent chip.",
-      "html": "<span class=\"ds-badge\"><span class=\"ds-dot\"></span>Now open for freelance projects</span>",
-      "css": ".ds-badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 9999px; background: rgba(255, 255, 255, 0.8); border: 1px solid rgba(229, 229, 229, 0.5); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); font: 500 12px 'DM Sans', system-ui, sans-serif; color: #525252; } .ds-dot { width: 8px; height: 8px; border-radius: 9999px; background: #ec7d1a; animation: ds-pulse 3s ease-in-out infinite; } @keyframes ds-pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.7; transform: scale(1.02); } }"
+      "name": "Icon Button",
+      "kind": "button",
+      "refersTo": "button-icon",
+      "description": "Square 40px control for theme, language, and media navigation.",
+      "html": "<button class=\"ds-btn-icon\" aria-label=\"Next\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\"><path d=\"M9 18l6-6-6-6\"/></svg></button>",
+      "css": ".ds-btn-icon { display:inline-flex; align-items:center; justify-content:center; width:40px; height:40px; border:2px solid var(--color-border-primary); border-radius:0; background:transparent; color:var(--color-text-secondary); cursor:pointer; transition:border-color 200ms ease, color 200ms ease; } .ds-btn-icon:hover { border-color:var(--color-text-primary); color:var(--color-text-primary); } .ds-btn-icon:focus-visible { outline:2px solid var(--color-text-primary); outline-offset:3px; }"
     },
     {
-      "name": "Technology Tag",
-      "kind": "chip",
-      "refersTo": "tag",
-      "description": "Small soft-neutral tag under cards for technologies.",
-      "html": "<span class=\"ds-tag\">Astro</span>",
-      "css": ".ds-tag { display: inline-flex; align-items: center; padding: 6px 10px; border-radius: 8px; background: #fafafa; color: #525252; font: 500 12px 'DM Sans', system-ui, sans-serif; }"
-    },
-    {
-      "name": "Text Field",
+      "name": "Input Field",
       "kind": "input",
       "refersTo": "input",
-      "description": "Form field: soft border, brand-orange focus ring, helper legend above.",
-      "html": "<div style=\"font-family:'DM Sans',system-ui,sans-serif;\"><label class=\"ds-label\" for=\"f\">Email Address</label><input class=\"ds-input\" id=\"f\" type=\"email\" placeholder=\"john@example.com\"></div>",
-      "css": ".ds-label { display: block; font-size: 14px; font-weight: 500; color: #525252; margin-bottom: 8px; } .ds-input { width: 100%; padding: 12px 16px; border-radius: 8px; border: 1px solid #e5e5e5; background: #ffffff; color: #171717; font: 400 16px 'DM Sans', system-ui, sans-serif; transition: border-color 0.3s, box-shadow 0.3s; box-sizing: border-box; } .ds-input::placeholder { color: #a3a3a3; } .ds-input:focus { outline: none; border-color: #ec7d1a; box-shadow: 0 0 0 2px rgba(236, 125, 26, 0.2); }"
+      "description": "Underline-only text field used in the contact form.",
+      "html": "<label class=\"ds-field\"><span>Email</span><input type=\"email\" placeholder=\"you@example.com\" /></label>",
+      "css": ".ds-field { display:block; } .ds-field span { display:block; margin-bottom:8px; color:var(--color-text-secondary); font:500 11px/1.5 'JetBrains Mono', monospace; letter-spacing:0.1em; text-transform:uppercase; } .ds-field input { display:block; width:100%; padding:12px 0; border:0; border-bottom:2px solid var(--color-border-secondary); border-radius:0; background:transparent; color:var(--color-text-primary); font:400 16px/1.65 'Source Sans 3', system-ui, sans-serif; } .ds-field input::placeholder { color:var(--color-text-tertiary); } .ds-field input:focus { outline:none; border-bottom-color:var(--color-text-primary); }"
     },
     {
-      "name": "Gradient Section Title",
+      "name": "Ruled Tag",
+      "kind": "chip",
+      "refersTo": "tag",
+      "description": "Square mono label for featured work and technology counts.",
+      "html": "<span class=\"ds-tag\">Astro</span>",
+      "css": ".ds-tag { display:inline-flex; align-items:center; padding:3px 7px; border:2px solid var(--color-border-primary); border-radius:0; background:transparent; color:var(--color-text-secondary); font:400 11px/1.5 'JetBrains Mono', monospace; letter-spacing:0.02em; }"
+    },
+    {
+      "name": "Ruled Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Flat, square entry surface; hover changes only the rule color.",
+      "html": "<article class=\"ds-card\"><h3>Project title</h3><p>Short proof of work.</p></article>",
+      "css": ".ds-card { padding:24px; border:2px solid var(--color-border-primary); border-radius:0; background:transparent; color:var(--color-text-primary); font-family:'Source Sans 3', system-ui, sans-serif; transition:border-color 250ms ease; } .ds-card:hover { border-color:var(--color-text-primary); } .ds-card h3 { margin:0 0 8px; font:700 18px/1.3 'Archivo', system-ui, sans-serif; letter-spacing:-0.01em; } .ds-card p { margin:0; color:var(--color-text-secondary); font-size:16px; line-height:1.65; }"
+    },
+    {
+      "name": "Code Ledger",
       "kind": "custom",
-      "refersTo": "section-title",
-      "description": "The brand's signature mark: orange-cyan-magenta gradient text with a slow drift.",
-      "html": "<h2 class=\"ds-title\">Projects</h2>",
-      "css": ".ds-title { font-family: 'Space Grotesk', system-ui, sans-serif; font-weight: 700; font-size: clamp(2.5rem, 6vw, 4rem); line-height: 1.1; margin: 0 0 24px; background: linear-gradient(135deg, #ec7d1a, #00f5d4, #ff006e); background-size: 200% 200%; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; animation: ds-shift 8s ease-in-out infinite; } @keyframes ds-shift { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }"
+      "refersTo": "card",
+      "description": "The hero's ruled code specimen under a version stamp.",
+      "html": "<div class=\"ds-ledger\"><div class=\"ds-ledger-head\"><span>v1.0</span></div><pre class=\"ds-ledger-code\">const developer = { role: \"Creative Developer\" };</pre></div>",
+      "css": ".ds-ledger { border-left:2px solid var(--color-border-primary); padding-left:40px; } .ds-ledger-head { display:flex; justify-content:space-between; padding-bottom:12px; border-bottom:2px solid var(--color-text-primary); color:var(--color-text-tertiary); font:500 11px/1.5 'JetBrains Mono', monospace; letter-spacing:0.12em; text-transform:uppercase; } .ds-ledger-code { margin:20px 0 0; color:var(--color-text-secondary); font:400 12px/1.75 'JetBrains Mono', monospace; white-space:pre-wrap; }"
     },
     {
-      "name": "Navigation Link",
-      "kind": "nav",
-      "refersTo": "nav-link",
-      "description": "Quiet muted link whose brand-orange underline grows from center on hover.",
-      "html": "<a class=\"ds-nav\" href=\"#\">About</a>",
-      "css": ".ds-nav { position: relative; display: inline-block; padding: 8px 12px; color: #525252; text-decoration: none; font: 500 14px 'DM Sans', system-ui, sans-serif; transition: color 0.3s; } .ds-nav::after { content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 0; height: 2px; background: #ec7d1a; transition: width 0.3s cubic-bezier(0.19, 1, 0.22, 1); } .ds-nav:hover, .ds-nav:focus-visible { color: #171717; } .ds-nav:hover::after, .ds-nav:focus-visible::after { width: 75%; } .ds-nav:focus-visible { outline: none; }"
+      "name": "Reader Sheet",
+      "kind": "card",
+      "refersTo": "reader-sheet",
+      "description": "Flat modal sheet for project and blog readers.",
+      "html": "<article class=\"ds-reader\"><h2>Case study</h2><p>Full article content.</p></article>",
+      "css": ".ds-reader { max-width:900px; margin:auto; padding:56px 40px; border:2px solid var(--color-border-primary); border-radius:0; background:var(--color-bg-primary); color:var(--color-text-primary); font-family:'Source Sans 3', system-ui, sans-serif; } .ds-reader h2 { margin:0 0 16px; padding-bottom:28px; border-bottom:1px solid var(--color-border-primary); font:800 clamp(24px, 3vw, 36px)/1.15 'Archivo', system-ui, sans-serif; letter-spacing:-0.025em; } .ds-reader p { margin:0; max-width:68ch; color:var(--color-text-secondary); font-size:16px; line-height:1.65; }"
     }
   ],
   "narrative": {
-    "northStar": "The Neon Arcade Gallery",
-    "overview": "The site is a gallery wall under arcade lighting: near-black or paper surfaces behind it, a faint grid scratched into the floor, glassy panels floating over blurred pools of orange, cyan, magenta, and lime light, and one enormous Space Grotesk headline acting as the marquee. The visitor walks a single scroll — hero, about, projects, technologies, blog, contact — and each section is a new cabinet on the wall, but the whole room runs on the same power supply. The system is deliberately maximal but physics-light. Nothing is heavy, nothing sits with hard grey shadows; surfaces are translucent and lit, motion is everywhere (scroll reveals, text scramble, parallax float, animated mesh gradients), and noise texture rides faintly over backgrounds. Dark mode is the marquee with the house lights off; light mode is the same room at noon. The owner is a creative developer and designer selling both halves, and the design is the proof of both.",
+    "northStar": "The Editorial Proof Sheet",
+    "overview": "The portfolio is one continuous proof sheet: paper-white or near-black ground, strong dark rules, square corners, and typography doing all the structural work. The name and the work are the evidence. Nothing floats, glows, or blurs; precision is the craft being sold, so spacing, alignment, and measured type carry the identity.\n\nThe page reads as a ruled index of proof: masthead, about, projects, technologies, writing, contact. Each section uses the same left-aligned header, the same dark grey rules, and the same flat surfaces. Light is a cool paper ground; dark is the same system on near-black. Motion is sparse and exponential, never decorative weather.",
     "keyCharacteristics": [
-      "Translucent glass cards with backdrop blur floating over accent-tinted glow blobs.",
-      "A three-color accent trio (orange #ec7d1a, cyan #00f5d4, magenta #ff006e) with lime #ccff00 and orange #ff6b00 as occasional fourths.",
-      "Giant Space Grotesk display type with tight line-height (0.9) and wide tracking.",
-      "Gradient text as the brand signature: orange → cyan → magenta at 200% size, animated.",
-      "Continuous motion: mesh-morph gradient shapes, float, pulse-soft, text reveal, scroll-initiated stagger.",
-      "Hard grid pattern at ~5% opacity and noise at 2-5% opacity as ambient texture."
+      "Strictly greyscale interface; no signal hue, gradient text, or colored glow. Only media and technology marks carry color.",
+      "Archivo for masthead and headings, Source Sans 3 for reading, JetBrains Mono for code and metadata.",
+      "Emphasized 2px structural rules, 1px internal rules, flat transparent surfaces, square corners, tabular numerals.",
+      "A three-column stat index and a flat code ledger instead of floating cards.",
+      "Project/blog imagery and video in full color; technology marks in their own brand hue."
     ],
     "rules": [
-      { "name": "The Carnival Trio Rule", "body": "Any prominently colored composition must show at least two members of the orange/cyan/magenta trio together — never a solo accent carrying a headline moment. The signature gradient (orange → cyan → magenta) is the canonical instance.", "section": "colors" },
-      { "name": "The Rare Raw Rule", "body": "Raw hex accent colors appear only in translucency (blobs, glows, tints, text-on-dark). Solid accent fills are reserved for small elements: primary buttons, dots, chips, small icons.", "section": "colors" },
-      { "name": "The Marquee Rule", "body": "There is exactly one display-XL headline per viewport. It owns the hero; nowhere else gets the full marquee treatment.", "section": "typography" },
-      { "name": "The Flat-By-Default Rule", "body": "Nothing casts a hard ambient shadow at rest. Colored glow appears only as hover/emphasis response or on dedicated glow accents.", "section": "elevation" },
-      { "name": "The Glass Border Rule", "body": "Surfaces are frosted; borders are at most 50% opacity hairlines. Any border that turns solid inside a content surface is a bug.", "section": "shapes" }
+      { "name": "The Strong Rule", "body": "Structure comes from visible dark grey rules and alignment, never from glow, blur, or colored borders. Containers carry 2px; internal separators carry 1px.", "section": "colors" },
+      { "name": "The Greyscale Interface Rule", "body": "Every component, glyph, and state uses neutral greys. Technology marks and project/blog media keep their original color because they are the evidence.", "section": "colors" },
+      { "name": "The Tight-But-Legible Rule", "body": "Display tracking never goes past -0.04em; body copy never passes 75ch. Emphasis comes from weight and scale, not color.", "section": "typography" },
+      { "name": "The Flat Sheet Rule", "body": "A surface is a sheet on the ground, not a floating object. If it needs separation, use a rule or spacing.", "section": "elevation" },
+      { "name": "The Square Rule", "body": "A radius would make an entry feel like a card. Keep the corner square and let the rule define the edge.", "section": "shapes" }
     ],
     "dos": [
-      "Do use the trio gradient (orange → cyan → magenta) for every section title and the logo.",
-      "Do keep cards frosted (translucent + backdrop-blur) over accent-tinted glow blobs.",
-      "Do animate motion in: reveals, floats, pulse-soft, text-reveal, mesh morph — motion is the identity.",
-      "Do respect prefers-reduced-motion: collapse animation, float, parallax, and scrolling to instant/linear.",
-      "Do keep the hero to one display-XL headline and small stat numbers below it.",
-      "Do use JetBrains Mono for everything that reads \"code\" or \"chrome\"."
+      "Do align entries to the 84rem container and its 1.25/2/3rem gutters.",
+      "Do use 2px rules in Rule (#7c858c) or Night Rule (#68727a) for structure, and 1px internal rules for fine separators.",
+      "Do keep display tracking at -0.04em or looser and body measure within 65–75ch.",
+      "Do ship project/blog photography and video in full color; the work's own hue is part of the proof.",
+      "Do keep every interface glyph grey, and leave technology marks their official brand color.",
+      "Do use tabular numerals for counters, dates, and carousel positions."
     ],
     "donts": [
-      "Don't use flat opaque cards or hard grey drop shadows for content surfaces.",
-      "Don't let any single accent color carry a headline moment alone (Carnival Trio Rule).",
-      "Don't apply the marquee treatment (display-XL) to more than one element per viewport.",
-      "Don't make borders more than 50% opacity inside surfaces (Glass Border Rule).",
-      "Don't remove the grid/noise ambient texture from backgrounds that have it.",
-      "Don't replace the gradient \"G\" with a flat-colored wordmark."
+      "Don't reintroduce gradient text, glass blur, colored glow, or noise/mesh decoration; the user replaced them.",
+      "Don't add a kicker or eyebrow above a heading; the heading carries its own weight.",
+      "Don't use rounded pills or floating metric cards for the hero index.",
+      "Don't let small text fall below 4.5:1; Ink Tertiary and Night Tertiary are the lightest allowed small-text values.",
+      "Don't invent credentials, metrics, or testimonials; the proof sheet only shows existing facts."
     ]
   }
 }
