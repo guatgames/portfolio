@@ -4,7 +4,7 @@
   <!-- Trigger -->
   <button
     type="button"
-    class="btn-icon relative overflow-hidden"
+    class="btn-icon btn-icon-lang relative overflow-hidden"
     aria-haspopup="menu"
     aria-expanded="false"
     aria-label="Select language"
@@ -22,13 +22,13 @@
 
   <!-- Dropdown -->
   <div
-    class="absolute right-0 top-full mt-2 w-48 origin-top-right rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 shadow-2xl shadow-neutral-950/10 overflow-hidden z-50 opacity-0 invisible scale-y-95 transition-all duration-200 ease-out-expo"
+    class="absolute right-0 top-full mt-2 w-48 origin-top-right bg-[var(--color-bg-primary)] border-2 border-[var(--color-border-secondary)] overflow-hidden z-50 opacity-0 invisible scale-y-95 transition-all duration-200 ease-out-expo"
     role="menu"
     aria-label="Select language"
     data-lang-toggle-dropdown
     data-i18n-attr="aria-label:language.select"
   >
-    <div class="px-4 pt-3 pb-2 text-caption uppercase tracking-wider font-mono text-neutral-400 dark:text-neutral-500" data-i18n="language.select">Select language</div>
+    <div class="px-4 pt-3 pb-2 text-caption uppercase tracking-wider font-mono text-[var(--color-text-tertiary)] dark:text-[var(--color-text-tertiary)]" data-i18n="language.select">Select language</div>
 
     <button
       type="button"
@@ -205,8 +205,14 @@
 </script>
 
 <style>
+  /* The globe plus the EN/ES label needs more than the 40px square reserved
+     for single-glyph controls; without this the label is clipped on desktop. */
+  .btn-icon-lang {
+    @apply w-auto min-w-[2.5rem] px-2;
+  }
+
   .lang-option-code {
-    @apply w-6 h-6 flex items-center justify-center rounded-lg text-caption font-mono font-medium bg-neutral-100 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 transition-colors duration-200 shrink-0;
+    @apply w-6 h-6 flex items-center justify-center text-caption font-mono font-medium bg-[var(--color-bg-secondary)] text-[var(--color-text-secondary)] transition-colors duration-200 shrink-0;
   }
 
   .lang-option-check {

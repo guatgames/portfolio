@@ -1,14 +1,14 @@
 ---
 ---
-<footer class="relative border-t border-neutral-200 dark:border-neutral-800 bg-white/50 dark:bg-neutral-950/50 backdrop-blur-2xl" role="contentinfo">
+<footer class="relative border-t-2 border-[var(--color-border-primary)]" role="contentinfo">
   <div class="container-custom py-space-2xl lg:py-space-3xl">
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-space-2xl mb-space-2xl">
       <div class="lg:col-span-1">
         <a href="/" class="block w-fit mb-6" aria-label="Guatgames - Home">
-          <img src="/images/favico.jpeg" alt="Guatgames" class="w-12 h-12 rounded-xl object-cover dark:hidden" width="48" height="48" loading="lazy" />
-          <img src="/images/favico-dark.jpeg" alt="Guatgames" class="w-12 h-12 rounded-xl object-cover hidden dark:block" width="48" height="48" loading="lazy" />
+          <img src="/images/favico.jpeg" alt="Guatgames" class="w-10 h-10 object-cover dark:hidden" width="48" height="48" loading="lazy" />
+          <img src="/images/favico-dark.jpeg" alt="Guatgames" class="w-10 h-10 object-cover hidden dark:block" width="48" height="48" loading="lazy" />
         </a>
-        <p class="text-body-md text-neutral-600 dark:text-neutral-400 mb-6 leading-relaxed" data-i18n="footer.tagline">
+        <p class="text-body-md text-neutral-600 dark:text-[var(--color-text-tertiary)] mb-6 leading-relaxed" data-i18n="footer.tagline">
           Creative Developer &amp; Designer building delightful digital experiences with code and creativity.
         </p>
         <div class="flex items-center gap-4" role="list" aria-label="Social links">
@@ -51,23 +51,23 @@
       
       <div class="lg:col-span-1">
         <h3 class="font-display text-heading-sm font-bold text-neutral-900 dark:text-neutral-100 mb-6" data-i18n="footer.contact">Contact</h3>
-        <address class="not-italic space-y-3 text-body-md text-neutral-600 dark:text-neutral-400">
+        <address class="not-italic space-y-3 text-body-md text-neutral-600 dark:text-[var(--color-text-tertiary)]">
           <p data-i18n="footer.availableFor">Available for freelance &amp; full-time opportunities</p>
           <a href="mailto:adalfaroochoa@gmail.com" class="footer-link block">a...@gmail.com</a>
-          <p class="text-caption text-neutral-500 dark:text-neutral-500" data-i18n="footer.responseTime">Typically responds within 24-48 hours</p>
+          <p class="text-caption text-[var(--color-text-tertiary)] dark:text-[var(--color-text-tertiary)]" data-i18n="footer.responseTime">Typically responds within 24-48 hours</p>
         </address>
       </div>
     </div>
     
-    <div class="pt-8 border-t border-neutral-200 dark:border-neutral-800">
+    <div class="pt-8 border-t-2 border-[var(--color-border-primary)]">
       <div class="flex flex-col md:flex-row items-center justify-between gap-4">
-        <p class="text-body-sm text-neutral-500 dark:text-neutral-500" data-i18n="footer.copyright" data-i18n-params={JSON.stringify({ year: new Date().getFullYear(), name: 'Angel Alfaro' })}>
+        <p class="text-body-sm text-[var(--color-text-tertiary)] dark:text-[var(--color-text-tertiary)]" data-i18n="footer.copyright" data-i18n-params={JSON.stringify({ year: new Date().getFullYear(), name: 'Angel Alfaro' })}>
           © {new Date().getFullYear()} Angel Alfaro. All rights reserved.
         </p>
-        <div class="flex items-center gap-6 text-caption text-neutral-500 dark:text-neutral-500">
+        <div class="flex items-center gap-6 text-caption text-[var(--color-text-tertiary)] dark:text-[var(--color-text-tertiary)]">
           <span data-i18n="footer.builtWith" data-i18n-params={JSON.stringify({ tech: 'Astro 5 & Tailwind CSS' })}>Built with Astro 5 &amp; Tailwind CSS</span>
           <span data-i18n="footer.deployedOn" data-i18n-params={JSON.stringify({ platform: 'Netlify' })}>Deployed on Netlify</span>
-          <a href="https://github.com/guatgames/portfolio" target="_blank" rel="noopener noreferrer" class="hover:text-brand-500 dark:hover:text-brand-400 transition-colors" data-i18n="footer.sourceCode">
+          <a href="https://github.com/guatgames/portfolio" target="_blank" rel="noopener noreferrer" class="hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors" data-i18n="footer.sourceCode">
             Source code available on GitHub
           </a>
         </div>
@@ -81,10 +81,10 @@
 
 <style>
   .social-link {
-    @apply w-10 h-10 flex items-center justify-center rounded-xl bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 transition-all duration-300 hover:bg-brand-500 hover:text-white hover:shadow-lg hover:shadow-brand-500/30;
+    @apply w-9 h-9 flex items-center justify-center border-2 border-[var(--color-border-primary)] text-[var(--color-text-secondary)] transition-colors duration-300 hover:border-[var(--color-text-primary)] hover:text-[var(--color-text-primary)];
   }
-  
+
   .footer-link {
-    @apply text-body-md text-neutral-600 dark:text-neutral-400 hover:text-brand-500 dark:hover:text-brand-400 transition-colors;
+    @apply text-body-md text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] underline decoration-[var(--color-border-secondary)] underline-offset-4 transition-colors;
   }
 </style>

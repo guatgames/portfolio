@@ -70,7 +70,7 @@ const mediaCounts = countMedia(withCoverMedia(gallery, { image: coverImage, vide
           loading="lazy"
         />
       )}
-      <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" aria-hidden="true"></div>
+      <div class="absolute inset-0 bg-neutral-950/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300" aria-hidden="true"></div>
 
       {featured && (
         <div class="absolute top-4 left-4">
@@ -81,7 +81,7 @@ const mediaCounts = countMedia(withCoverMedia(gallery, { image: coverImage, vide
       {/* Tells you the post carries more than the cover before you commit to it. */}
       {mediaCounts.total > 0 && (
         <div class="absolute top-4 right-4">
-          <span class="inline-flex items-center gap-1.5 rounded-full bg-black/45 backdrop-blur-md border border-white/20 px-2.5 py-1 text-caption font-mono text-white/90">
+          <span class="inline-flex items-center gap-1.5 bg-neutral-950/80 border border-white/20 px-2.5 py-1 text-caption font-mono text-white/90">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" d="M4 5h16v4H4zM4 15h16v4H4zM4 10h16v4H4z" />
             </svg>
@@ -94,21 +94,21 @@ const mediaCounts = countMedia(withCoverMedia(gallery, { image: coverImage, vide
   
   <div class="p-6 flex flex-col flex-1">
     <div class="flex items-center gap-3 mb-3">
-      <time class="text-caption text-neutral-500 dark:text-neutral-500 font-mono" dateTime={dateKey} data-blog-card-date>
+      <time class="text-caption text-[var(--color-text-tertiary)] dark:text-[var(--color-text-tertiary)] font-mono" dateTime={dateKey} data-blog-card-date>
         {formattedDate}
       </time>
       {readingTime && (
-        <span class="text-caption text-neutral-500 dark:text-neutral-500">
+        <span class="text-caption text-[var(--color-text-tertiary)] dark:text-[var(--color-text-tertiary)]">
           {readingTime} <span data-i18n="common.readingTime">min read</span>
         </span>
       )}
     </div>
     
-    <h3 class="font-display text-heading-md font-bold text-neutral-900 dark:text-neutral-100 mb-3 group-hover:text-brand-500 dark:group-hover:text-brand-400 transition-colors line-clamp-2">
+    <h3 class="font-display text-heading-md font-bold text-neutral-900 dark:text-neutral-100 mb-3 group-hover:opacity-60 transition-opacity line-clamp-2">
       {title}
     </h3>
     
-    <p class="text-body-md text-neutral-600 dark:text-neutral-400 mb-4 line-clamp-3 flex-1">
+    <p class="text-body-md text-neutral-600 dark:text-[var(--color-text-tertiary)] mb-4 line-clamp-3 flex-1">
       {description}
     </p>
     
@@ -117,7 +117,7 @@ const mediaCounts = countMedia(withCoverMedia(gallery, { image: coverImage, vide
         <span class="tag">{tag}</span>
       ))}
       {extraTags > 0 && (
-        <span class="tag text-neutral-500 dark:text-neutral-500">+{extraTags}</span>
+        <span class="tag text-[var(--color-text-tertiary)] dark:text-[var(--color-text-tertiary)]">+{extraTags}</span>
       )}
     </div>
     

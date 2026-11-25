@@ -21,7 +21,7 @@
   data-project-reader
 >
   <div
-    class="absolute inset-0 bg-neutral-950/50 backdrop-blur-md opacity-0 transition-opacity duration-300 ease-out-expo"
+    class="absolute inset-0 bg-neutral-950/85 opacity-0 transition-opacity duration-300 ease-out-expo"
     data-project-reader-backdrop
     aria-hidden="true"
   ></div>
@@ -32,15 +32,11 @@
         class="relative w-full max-w-4xl my-auto opacity-0 scale-95 transition-all duration-300 ease-out-expo"
         data-project-reader-panel-wrap
       >
-        <!-- Accent glow pooling behind the glass panel -->
-        <div
-          class="absolute -inset-3 -z-10 rounded-[2rem] bg-gradient-to-br from-brand-500/25 via-accent-cyan/20 to-accent-magenta/25 blur-2xl opacity-0 transition-opacity duration-500"
-          data-project-reader-aura
-          aria-hidden="true"
-        ></div>
+        <!-- Retained as a script hook; the editorial sheet has no glow. -->
+        <div class="hidden" data-project-reader-aura aria-hidden="true"></div>
 
         <article
-          class="relative overflow-hidden rounded-2xl bg-white/85 dark:bg-neutral-900/85 backdrop-blur-2xl border border-neutral-200/60 dark:border-neutral-800/60"
+          class="relative overflow-hidden bg-[var(--color-bg-primary)] border-2 border-[var(--color-border-primary)]"
         >
           <button
             type="button"
@@ -54,18 +50,18 @@
             </svg>
           </button>
 
-          <header class="relative px-6 pt-14 pb-7 sm:px-10 sm:pt-16 sm:pb-8">
-            <span class="badge-primary mb-5" data-i18n="projects.caseStudy">Case study</span>
+          <header class="relative px-6 pt-14 pb-7 sm:px-10 sm:pt-16 sm:pb-8 border-b-2 border-[var(--color-border-primary)]">
             <h2
               id="project-reader-title"
               class="font-display text-heading-lg lg:text-heading-xl font-bold tracking-tight text-neutral-900 dark:text-neutral-100 mb-4 text-balance"
               data-project-reader-title
             ></h2>
-            <p class="text-body-lg text-neutral-600 dark:text-neutral-400 max-w-2xl" data-project-reader-description></p>
+            <p class="text-body-lg text-neutral-600 dark:text-[var(--color-text-tertiary)] max-w-2xl" data-project-reader-description></p>
+            <span class="meta-label mt-5 block" data-i18n="projects.caseStudy">Case study</span>
 
             <!-- Facts, set in mono like the rest of the "chrome" -->
             <dl
-              class="flex flex-wrap items-center gap-x-6 gap-y-3 mt-7 pt-6 border-t border-neutral-200/50 dark:border-neutral-800/50"
+              class="flex flex-wrap items-center gap-x-6 gap-y-3 mt-7 pt-6 border-t border-[var(--color-border-primary)]"
               data-project-reader-meta
             ></dl>
           </header>
@@ -75,7 +71,7 @@
           <div class="px-6 sm:px-10 pb-10" data-project-reader-body></div>
 
           <footer
-            class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 px-6 sm:px-10 py-6 border-t border-neutral-200/50 dark:border-neutral-800/50"
+            class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 px-6 sm:px-10 py-6 border-t border-[var(--color-border-primary)]"
           >
             <button type="button" class="btn-ghost text-body-sm group" data-project-reader-back>
               <svg class="w-4 h-4 transition-transform duration-300 group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -181,10 +177,10 @@
       }
 
       const ICONS = {
-        role: '<svg class="w-4 h-4 text-brand-500 dark:text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 017 7H5a7 7 0 017-7z"/></svg>',
-        period: '<svg class="w-4 h-4 text-accent-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 2v3M16 2v3M3 8h18M5 5h14a2 2 0 012 2v12a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2z"/></svg>',
-        team: '<svg class="w-4 h-4 text-accent-magenta" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87M16 3.13a4 4 0 010 7.75M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>',
-        stack: '<svg class="w-4 h-4 text-brand-500 dark:text-brand-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 5h16v4H4zM4 15h16v4H4zM4 10h16v4H4z"/></svg>',
+        role: '<svg class="w-4 h-4 text-neutral-600 dark:text-[var(--color-text-tertiary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 017 7H5a7 7 0 017-7z"/></svg>',
+        period: '<svg class="w-4 h-4 text-neutral-600 dark:text-[var(--color-text-tertiary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 2v3M16 2v3M3 8h18M5 5h14a2 2 0 012 2v12a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2z"/></svg>',
+        team: '<svg class="w-4 h-4 text-neutral-600 dark:text-[var(--color-text-tertiary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87M16 3.13a4 4 0 010 7.75M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>',
+        stack: '<svg class="w-4 h-4 text-neutral-600 dark:text-[var(--color-text-tertiary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 5h16v4H4zM4 15h16v4H4zM4 10h16v4H4z"/></svg>',
       };
 
       function fillMeta(card: HTMLElement, { keepScroll = false } = {}) {

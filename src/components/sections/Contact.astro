@@ -46,21 +46,18 @@ import ContactCard from '../ui/ContactCard.astro';
           
         </div>
         
-        <!-- Availability status -->
-        <div class="card glass p-6 flex items-center gap-4" data-animate="slide-up" data-delay="200">
-          <div class="relative flex items-center justify-center w-12 h-12 rounded-xl bg-brand-500/10">
-            <span class="w-3 h-3 rounded-full bg-brand-500 animate-pulse-soft" aria-hidden="true"></span>
-            <span class="absolute w-6 h-6 rounded-full bg-brand-500/20 animate-ping" aria-hidden="true"></span>
-          </div>
+        <!-- Availability status: a ruled fact, not a pulsing badge. -->
+        <div class="flex items-start gap-4 pt-5 border-t-2 border-[var(--color-border-primary)]" data-animate="slide-up" data-delay="200">
+          <span class="w-2 h-2 mt-2 bg-[var(--color-text-primary)] shrink-0" aria-hidden="true"></span>
           <div>
             <h4 class="font-display text-heading-sm font-bold text-neutral-900 dark:text-neutral-100 mb-1" data-i18n="contact.availability">Currently Available</h4>
-            <p class="text-body-sm text-neutral-600 dark:text-neutral-400" data-i18n="contact.availabilityDesc">Open for freelance projects &amp; new opportunities</p>
+            <p class="text-body-sm text-neutral-600 dark:text-[var(--color-text-tertiary)]" data-i18n="contact.availabilityDesc">Open for freelance projects &amp; new opportunities</p>
           </div>
         </div>
         
         <!-- Response time -->
-        <div class="flex items-start gap-4 text-body-sm text-neutral-600 dark:text-neutral-400" data-animate="slide-up" data-delay="300">
-          <svg class="w-5 h-5 text-accent-cyan shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <div class="flex items-start gap-4 text-body-sm text-neutral-600 dark:text-[var(--color-text-tertiary)]" data-animate="slide-up" data-delay="300">
+          <svg class="w-5 h-5 text-[var(--color-text-tertiary)] dark:text-[var(--color-text-tertiary)] shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           <p><span data-i18n="contact.responseTimePrefix">I typically respond within</span> <strong class="font-medium text-neutral-900 dark:text-neutral-100">24-48 hours</strong><span data-i18n="contact.responseTimeSuffix">. For urgent requests, please reach out via email directly.</span></p>
@@ -90,7 +87,7 @@ import ContactCard from '../ui/ContactCard.astro';
   function syncCopyLabels(): void {
     contactCards.forEach(card => {
       const btn = card.querySelector('[data-copy-value]');
-      if (!(btn instanceof HTMLButtonElement) || btn.classList.contains('text-emerald-500')) return;
+      if (!(btn instanceof HTMLButtonElement) || btn.dataset.copied === 'true') return;
       btn.setAttribute('aria-label', copyButtonLabel(btn, btn.getAttribute('aria-label') || ''));
     });
   }
@@ -111,14 +108,16 @@ import ContactCard from '../ui/ContactCard.astro';
         const originalD = path?.getAttribute('d') || '';
         const originalLabel = copyButtonLabel(copyBtn, copyBtn.getAttribute('aria-label') || '');
         
-        // Success feedback: check icon, emerald tint, i18n'd label
+        // Success feedback: check icon, inverted neutral state, i18n'd label.
         if (path) path.setAttribute('d', CHECK_ICON_PATH);
-        copyBtn.classList.add('text-emerald-500', 'dark:text-emerald-400', 'hover:text-emerald-500', 'dark:hover:text-emerald-400', 'bg-emerald-500/10', 'hover:bg-emerald-500/10');
+        copyBtn.classList.add('text-neutral-900', 'dark:text-neutral-100', 'bg-neutral-200', 'dark:bg-neutral-800');
+        copyBtn.dataset.copied = 'true';
         copyBtn.setAttribute('aria-label', window.I18N?.t('common.copied') || 'Copied!');
-        
+
         window.setTimeout(() => {
           if (path) path.setAttribute('d', originalD);
-          copyBtn.classList.remove('text-emerald-500', 'dark:text-emerald-400', 'hover:text-emerald-500', 'dark:hover:text-emerald-400', 'bg-emerald-500/10', 'hover:bg-emerald-500/10');
+          copyBtn.classList.remove('text-neutral-900', 'dark:text-neutral-100', 'bg-neutral-200', 'dark:bg-neutral-800');
+          delete copyBtn.dataset.copied;
           copyBtn.setAttribute('aria-label', originalLabel);
         }, 2000);
       } catch (error) {

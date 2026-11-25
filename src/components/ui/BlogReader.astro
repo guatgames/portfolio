@@ -19,7 +19,7 @@
 >
   <!-- Backdrop -->
   <div
-    class="absolute inset-0 bg-neutral-950/50 backdrop-blur-md opacity-0 transition-opacity duration-300 ease-out-expo"
+    class="absolute inset-0 bg-neutral-950/85 opacity-0 transition-opacity duration-300 ease-out-expo"
     data-blog-reader-backdrop
     aria-hidden="true"
   ></div>
@@ -31,15 +31,11 @@
         class="relative w-full max-w-3xl my-auto opacity-0 scale-95 transition-all duration-300 ease-out-expo"
         data-blog-reader-panel-wrap
       >
-        <!-- Accent glow pooling behind the glass panel -->
-        <div
-          class="absolute -inset-3 -z-10 rounded-[2rem] bg-gradient-to-br from-brand-500/25 via-accent-cyan/20 to-accent-magenta/25 blur-2xl opacity-0 transition-opacity duration-500"
-          data-blog-reader-aura
-          aria-hidden="true"
-        ></div>
+        <!-- Retained as a script hook; the editorial sheet has no glow. -->
+        <div class="hidden" data-blog-reader-aura aria-hidden="true"></div>
 
         <article
-          class="relative overflow-hidden rounded-2xl bg-white/85 dark:bg-neutral-900/85 backdrop-blur-2xl border border-neutral-200/60 dark:border-neutral-800/60"
+          class="relative overflow-hidden bg-[var(--color-bg-primary)] border-2 border-[var(--color-border-primary)]"
         >
           <button
             type="button"
@@ -53,17 +49,17 @@
             </svg>
           </button>
 
-          <header class="relative px-6 pt-14 pb-7 sm:px-10 sm:pt-16 sm:pb-8">
-            <span class="badge-primary mb-5" data-i18n="blog.title">Blog</span>
+          <header class="relative px-6 pt-14 pb-7 sm:px-10 sm:pt-16 sm:pb-8 border-b-2 border-[var(--color-border-primary)]">
             <h2
               id="blog-reader-title"
               class="font-display text-heading-lg lg:text-heading-xl font-bold tracking-tight text-neutral-900 dark:text-neutral-100 mb-4 text-balance"
               data-blog-reader-title
             ></h2>
-            <p class="text-body-lg text-neutral-600 dark:text-neutral-400 max-w-2xl" data-blog-reader-description></p>
+            <p class="text-body-lg text-neutral-600 dark:text-[var(--color-text-tertiary)] max-w-2xl" data-blog-reader-description></p>
+            <span class="meta-label mt-5 block" data-i18n="blog.title">Blog</span>
             <div class="flex flex-wrap items-center gap-x-5 gap-y-2 mt-6">
-              <time class="text-body-sm text-neutral-500 dark:text-neutral-500 font-mono" data-blog-reader-date></time>
-              <span class="text-body-sm text-neutral-500 dark:text-neutral-500 hidden" data-blog-reader-reading></span>
+              <time class="text-body-sm text-[var(--color-text-tertiary)] dark:text-[var(--color-text-tertiary)] font-mono" data-blog-reader-date></time>
+              <span class="text-body-sm text-[var(--color-text-tertiary)] dark:text-[var(--color-text-tertiary)] hidden" data-blog-reader-reading></span>
               <div class="flex flex-wrap gap-2" data-blog-reader-tags></div>
             </div>
           </header>
@@ -73,12 +69,12 @@
 
           <div class="px-6 sm:px-10 pb-8">
             <div
-              class="pt-8 border-t border-neutral-200/50 dark:border-neutral-800/50"
+              class="pt-8 border-t border-[var(--color-border-primary)]"
               data-blog-reader-body
             ></div>
           </div>
 
-          <footer class="px-6 sm:px-10 py-6 border-t border-neutral-200/50 dark:border-neutral-800/50">
+          <footer class="px-6 sm:px-10 py-6 border-t border-[var(--color-border-primary)]">
             <button type="button" class="btn-ghost text-body-sm group" data-blog-reader-back>
               <svg class="w-4 h-4 transition-transform duration-300 group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />

@@ -6,7 +6,7 @@ import SkillBar from '../ui/SkillBar.astro';
   <div class="container-custom">
     <div class="section-header" data-animate="slide-up" data-delay="100">
       <span class="badge-primary mb-4" data-animate="fade-in" data-delay="200" data-i18n="about.title">About Me</span>
-      <h2 id="about-title" class="section-title p-4" data-animate="text-reveal" data-delay="300" data-i18n="about.subtitle">Get to know the person behind the code</h2>
+      <h2 id="about-title" class="section-title" data-animate="text-reveal" data-delay="300" data-i18n="about.subtitle">Get to know the person behind the code</h2>
       <p class="section-subtitle" data-animate="fade-in" data-delay="400" data-i18n="about.tagline">
         I'm a passionate developer with a love for creating beautiful, functional, and accessible digital experiences.
       </p>
@@ -24,46 +24,23 @@ import SkillBar from '../ui/SkillBar.astro';
           </p>
         </div>
         
-        <!-- Highlights -->
-        <div class="grid grid-cols-2 gap-4" data-animate="fade-in" data-delay="400" data-stagger="100">
-          <div class="card card-hover p-6" data-stagger-child="slide-up">
-            <div class="w-12 h-12 rounded-xl bg-brand-500/10 flex items-center justify-center mb-4">
-              <svg class="w-6 h-6 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-            <h3 class="font-display text-heading-sm font-bold text-neutral-900 dark:text-neutral-100 mb-2" data-i18n="about.highlightYears">5+ Years Learning</h3>
-            <p class="text-body-md text-neutral-600 dark:text-neutral-400" data-i18n="about.highlightYearsDesc">Continuous learning and skill development</p>
+        <!-- Highlights read as a ruled index, not a wall of icon cards. -->
+        <div class="grid sm:grid-cols-2 gap-x-10" data-animate="fade-in" data-delay="400" data-stagger="100">
+          <div class="py-5 border-b-2 border-[var(--color-border-primary)]" data-stagger-child="fade-in">
+            <h3 class="font-display text-heading-sm font-bold text-neutral-900 dark:text-neutral-100 mb-1" data-i18n="about.highlightYears">5+ Years Learning</h3>
+            <p class="text-body-md text-neutral-600 dark:text-[var(--color-text-tertiary)]" data-i18n="about.highlightYearsDesc">Continuous learning and skill development</p>
           </div>
-          
-          <div class="card card-hover p-6" data-stagger-child="slide-up">
-            <div class="w-12 h-12 rounded-xl bg-accent-cyan/10 flex items-center justify-center mb-4">
-              <svg class="w-6 h-6 text-accent-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-              </svg>
-            </div>
-            <h3 class="font-display text-heading-sm font-bold text-neutral-900 dark:text-neutral-100 mb-2" data-i18n="about.highlightOpenSource">Presenting projects</h3>
-            <p class="text-body-md text-neutral-600 dark:text-neutral-400" data-i18n="about.highlightOpenSourceDesc">Showcasing projects at school and university events</p>
+          <div class="py-5 border-b-2 border-[var(--color-border-primary)]" data-stagger-child="fade-in">
+            <h3 class="font-display text-heading-sm font-bold text-neutral-900 dark:text-neutral-100 mb-1" data-i18n="about.highlightOpenSource">Presenting projects</h3>
+            <p class="text-body-md text-neutral-600 dark:text-[var(--color-text-tertiary)]" data-i18n="about.highlightOpenSourceDesc">Showcasing projects at school and university events</p>
           </div>
-          
-          <div class="card card-hover p-6" data-stagger-child="slide-up">
-            <div class="w-12 h-12 rounded-xl bg-accent-magenta/10 flex items-center justify-center mb-4">
-              <svg class="w-6 h-6 text-accent-magenta" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-              </svg>
-            </div>
-            <h3 class="font-display text-heading-sm font-bold text-neutral-900 dark:text-neutral-100 mb-2" data-i18n="about.highlightMentor">Leader &amp; Speaker</h3>
-            <p class="text-body-md text-neutral-600 dark:text-neutral-400" data-i18n="about.highlightMentorDesc">Helping partners achieve their goals in the programming world</p>
+          <div class="py-5 border-b-2 border-[var(--color-border-primary)]" data-stagger-child="fade-in">
+            <h3 class="font-display text-heading-sm font-bold text-neutral-900 dark:text-neutral-100 mb-1" data-i18n="about.highlightMentor">Leader &amp; Speaker</h3>
+            <p class="text-body-md text-neutral-600 dark:text-[var(--color-text-tertiary)]" data-i18n="about.highlightMentorDesc">Helping partners achieve their goals in the programming world</p>
           </div>
-          
-          <div class="card card-hover p-6" data-stagger-child="slide-up">
-            <div class="w-12 h-12 rounded-xl bg-accent-lime/10 flex items-center justify-center mb-4">
-              <svg class="w-6 h-6 text-accent-lime" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-              </svg>
-            </div>
-            <h3 class="font-display text-heading-sm font-bold text-neutral-900 dark:text-neutral-100 mb-2" data-i18n="about.highlightLearner">Lifelong Learner</h3>
-            <p class="text-body-md text-neutral-600 dark:text-neutral-400" data-i18n="about.highlightLearnerDesc">Constantly exploring new technologies &amp; patterns</p>
+          <div class="py-5 border-b-2 border-[var(--color-border-primary)]" data-stagger-child="fade-in">
+            <h3 class="font-display text-heading-sm font-bold text-neutral-900 dark:text-neutral-100 mb-1" data-i18n="about.highlightLearner">Lifelong Learner</h3>
+            <p class="text-body-md text-neutral-600 dark:text-[var(--color-text-tertiary)]" data-i18n="about.highlightLearnerDesc">Constantly exploring new technologies &amp; patterns</p>
           </div>
         </div>
         
@@ -89,8 +66,8 @@ import SkillBar from '../ui/SkillBar.astro';
         <!-- Core Skills -->
         <div data-animate="fade-in" data-delay="300">
           <h3 class="font-display text-heading-lg font-bold text-neutral-900 dark:text-neutral-100 mb-6 flex items-center gap-3">
-            <span class="w-10 h-10 rounded-xl bg-brand-500/10 flex items-center justify-center">
-              <svg class="w-5 h-5 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <span class="w-10 h-10 border-2 border-[var(--color-border-primary)] flex items-center justify-center">
+              <svg class="w-5 h-5 text-neutral-600 dark:text-[var(--color-text-tertiary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
               </svg>
             </span>
@@ -99,7 +76,7 @@ import SkillBar from '../ui/SkillBar.astro';
           
           <div class="space-y-6">
             <!-- Frontend -->
-            <div class="skill-panel card card-hover p-6" style="--skill-accent: #ec7d1a" data-animate="slide-up" data-delay="100" data-stagger="45">
+            <div class="skill-panel py-6" data-animate="slide-up" data-delay="100" data-stagger="45">
               <div class="flex items-center gap-4 mb-6">
                 <span class="skill-panel-icon" aria-hidden="true">
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -111,15 +88,15 @@ import SkillBar from '../ui/SkillBar.astro';
                 </div>
               </div>
               <div class="flex flex-wrap gap-3">
-                <SkillBar name="Astro" color="brand" />
-                <SkillBar name="React" color="accent-cyan" />
-                <SkillBar name="TypeScript" color="accent-cyan" />
-                <SkillBar name="Tailwind CSS" color="accent-cyan" />
+                <SkillBar name="Astro" />
+                <SkillBar name="React" />
+                <SkillBar name="TypeScript" />
+                <SkillBar name="Tailwind CSS" />
               </div>
             </div>
             
             <!-- Backend -->
-            <div class="skill-panel card card-hover p-6" style="--skill-accent: #00f5d4" data-animate="slide-up" data-delay="200" data-stagger="45">
+            <div class="skill-panel py-6" data-animate="slide-up" data-delay="200" data-stagger="45">
               <div class="flex items-center gap-4 mb-6">
                 <span class="skill-panel-icon" aria-hidden="true">
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -131,17 +108,17 @@ import SkillBar from '../ui/SkillBar.astro';
                 </div>
               </div>
               <div class="flex flex-wrap gap-3">
-                <SkillBar name="Node.js" color="accent-lime" />
-                <SkillBar name="Spring Boot" color="brand" />
-                <SkillBar name="Flask" color="brand" />
-                <SkillBar name="PostgreSQL" color="accent-magenta" />
-                <SkillBar name="GraphQL" color="accent-magenta" />
-                <SkillBar name="REST APIs" color="brand" />
+                <SkillBar name="Node.js" />
+                <SkillBar name="Spring Boot" />
+                <SkillBar name="Flask" />
+                <SkillBar name="PostgreSQL" />
+                <SkillBar name="GraphQL" />
+                <SkillBar name="REST APIs" />
               </div>
             </div>
             
             <!-- Tools & DevOps -->
-            <div class="skill-panel card card-hover p-6" style="--skill-accent: #ff006e" data-animate="slide-up" data-delay="300" data-stagger="45">
+            <div class="skill-panel py-6" data-animate="slide-up" data-delay="300" data-stagger="45">
               <div class="flex items-center gap-4 mb-6">
                 <span class="skill-panel-icon" aria-hidden="true">
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -154,10 +131,10 @@ import SkillBar from '../ui/SkillBar.astro';
                 </div>
               </div>
               <div class="flex flex-wrap gap-3">
-                <SkillBar name="Git/GitHub" color="accent-magenta" />
-                <SkillBar name="Docker" color="accent-cyan" />
-                <SkillBar name="Vercel/Netlify" color="accent-cyan" />
-                <SkillBar name="AWS" color="accent-orange" />
+                <SkillBar name="Git/GitHub" />
+                <SkillBar name="Docker" />
+                <SkillBar name="Vercel/Netlify" />
+                <SkillBar name="AWS" />
               </div>
             </div>
           </div>
@@ -166,8 +143,8 @@ import SkillBar from '../ui/SkillBar.astro';
         <!-- Interests -->
         <div data-animate="fade-in" data-delay="400">
           <h3 class="font-display text-heading-lg font-bold text-neutral-900 dark:text-neutral-100 mb-6 flex items-center gap-3">
-            <span class="w-10 h-10 rounded-xl bg-accent-cyan/10 flex items-center justify-center">
-              <svg class="w-5 h-5 text-accent-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <span class="w-10 h-10 border-2 border-[var(--color-border-primary)] flex items-center justify-center">
+              <svg class="w-5 h-5 text-neutral-600 dark:text-[var(--color-text-tertiary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
               </svg>
             </span>
@@ -212,12 +189,12 @@ import SkillBar from '../ui/SkillBar.astro';
     @apply relative overflow-hidden;
   }
 
-  /* Category accent bar pooling along the panel top edge */
+  /* Category marker is a ruled index, not a glowing accent bar. */
   .skill-panel::before {
     content: '';
-    @apply absolute inset-x-0 top-0 h-0.5 pointer-events-none;
-    background: linear-gradient(90deg, transparent, var(--skill-accent), transparent);
-    opacity: 0.5;
+    @apply absolute inset-x-0 top-0 h-px pointer-events-none;
+    background: var(--color-border-primary);
+    opacity: 0.45;
     transition: opacity 0.3s ease;
   }
 
@@ -225,28 +202,18 @@ import SkillBar from '../ui/SkillBar.astro';
     opacity: 1;
   }
 
-  .skill-panel:hover {
-    border-color: color-mix(in srgb, var(--skill-accent) 45%, transparent);
-    box-shadow: 0 20px 50px -12px color-mix(in srgb, var(--skill-accent) 25%, transparent);
-  }
-
   .skill-panel-icon {
-    @apply w-11 h-11 rounded-xl flex items-center justify-center shrink-0 transition-shadow duration-300;
-    background: color-mix(in srgb, var(--skill-accent) 12%, transparent);
-    color: var(--skill-accent);
-  }
-
-  .skill-panel:hover .skill-panel-icon {
-    box-shadow: 0 0 26px color-mix(in srgb, var(--skill-accent) 38%, transparent);
+    @apply w-10 h-10 flex items-center justify-center shrink-0 border-2 border-[var(--color-border-primary)];
+    color: var(--color-text-secondary);
   }
 
   .skill-panel-index {
     @apply font-mono text-caption font-medium tracking-widest;
-    color: color-mix(in srgb, var(--skill-accent) 80%, transparent);
+    color: var(--color-text-tertiary);
   }
 
   .interest-tag {
-    @apply inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-caption font-medium bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border border-neutral-200 dark:border-neutral-700 transition-all duration-300 hover:border-brand-500/50 dark:hover:border-brand-500/50 hover:bg-brand-500/5 dark:hover:bg-brand-500/5;
+    @apply inline-flex items-center gap-2 px-3 py-1.5 text-caption font-medium text-[var(--color-text-secondary)] border border-[var(--color-border-primary)] transition-colors duration-300 hover:border-[var(--color-text-primary)];
   }
 
   .interest-tag svg {

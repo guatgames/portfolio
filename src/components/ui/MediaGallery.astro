@@ -74,14 +74,14 @@ const labelled = showHeading && multi;
         >
           Gallery
         </h3>
-        <span class="text-caption font-mono text-neutral-500 dark:text-neutral-400" data-media-gallery-count>
+        <span class="text-caption font-mono text-[var(--color-text-tertiary)] dark:text-[var(--color-text-tertiary)]" data-media-gallery-count>
           {String(counts.total).padStart(2, '0')}
         </span>
       </div>
     )}
 
     {/* Stage: the artifact, unadorned. The only thing on it is the expand cue. */}
-    <div class="relative overflow-hidden rounded-xl bg-neutral-950 border border-neutral-200/60 dark:border-neutral-800/60">
+    <div class="relative overflow-hidden bg-neutral-950 border-2 border-[var(--color-border-primary)]">
       <div
         class="flex h-full w-full motion-reduce:transition-none"
         data-carousel-track
@@ -125,14 +125,14 @@ const labelled = showHeading && multi;
               {/* Scrim only appears once there is something to read against it. */}
               {item.caption && (
                 <span
-                  class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/85 via-black/10 to-transparent"
+                  class="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-neutral-950/75"
                   aria-hidden="true"
                 ></span>
               )}
 
               {isVideo(item) && (
                 <span
-                  class="pointer-events-none absolute top-3 right-3 w-8 h-8 rounded-full bg-black/45 backdrop-blur-md border border-white/20 flex items-center justify-center text-white"
+                  class="pointer-events-none absolute top-3 right-3 w-8 h-8 bg-neutral-950/80 border border-white/25 flex items-center justify-center text-white"
                   aria-hidden="true"
                 >
                   <svg class="w-3.5 h-3.5 translate-x-px" fill="currentColor" viewBox="0 0 20 20">
@@ -146,7 +146,7 @@ const labelled = showHeading && multi;
                 class="pointer-events-none absolute inset-0 flex items-center justify-center opacity-0 group-hover/stage:opacity-100 group-focus-visible/stage:opacity-100 transition-opacity duration-500"
                 aria-hidden="true"
               >
-                <span class="w-11 h-11 rounded-full bg-black/45 backdrop-blur-md border border-white/20 flex items-center justify-center text-white">
+                <span class="w-11 h-11 bg-neutral-950/80 border border-white/25 flex items-center justify-center text-white">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 3h6v6M9 21H3v-6M21 3l-7.5 7.5M3 21l7.5-7.5" />
                   </svg>
@@ -173,7 +173,7 @@ const labelled = showHeading && multi;
       {/* How long until it moves. Only ever runs while the set is advancing. */}
       {autoAdvance && (
         <span
-          class="pointer-events-none absolute inset-x-0 bottom-0 h-0.5 origin-left scale-x-0 bg-gradient-to-r from-brand-500 via-accent-cyan to-accent-magenta"
+          class="pointer-events-none absolute inset-x-0 bottom-0 h-0.5 origin-left scale-x-0 bg-neutral-100"
           data-carousel-progress
           aria-hidden="true"
         ></span>
@@ -201,7 +201,7 @@ const labelled = showHeading && multi;
             </button>
 
             <span
-              class="text-caption font-mono tabular-nums text-neutral-500 dark:text-neutral-400 min-w-[4.5rem] text-center"
+              class="text-caption font-mono tabular-nums text-[var(--color-text-tertiary)] dark:text-[var(--color-text-tertiary)] min-w-[4.5rem] text-center"
               data-carousel-counter
               aria-hidden="true"
             >
@@ -264,7 +264,7 @@ const labelled = showHeading && multi;
               aria-label={`Go to slide ${index + 1}`}
               data-i18n-attr="aria-label:media.gotoSlide"
               data-i18n-params={JSON.stringify({ index: index + 1 })}
-              class="relative block w-12 sm:w-14 aspect-video rounded-lg overflow-hidden bg-neutral-950 border border-neutral-200/60 dark:border-neutral-800/60 transition-[border-color,opacity,box-shadow] duration-500 ease-out-expo opacity-55 hover:opacity-100 focus-visible:opacity-100 aria-[current=true]:opacity-100 aria-[current=true]:border-transparent aria-[current=true]:shadow-glow"
+              class="relative block w-12 sm:w-14 aspect-video overflow-hidden bg-neutral-950 border border-[var(--color-border-secondary)] transition-[border-color,opacity] duration-300 ease-out-expo opacity-55 hover:opacity-100 focus-visible:opacity-100 aria-[current=true]:opacity-100 aria-[current=true]:border-2 aria-[current=true]:border-[var(--color-text-primary)]"
             >
               {isVideo(item) ? (
                 <span class="absolute inset-0 flex items-center justify-center text-white/80" aria-hidden="true">

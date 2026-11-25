@@ -24,7 +24,7 @@
   data-media-lightbox
 >
   <div
-    class="absolute inset-0 bg-neutral-950/95 dark:bg-neutral-950/98 backdrop-blur-xl opacity-0 transition-opacity duration-300 ease-out-expo"
+    class="absolute inset-0 bg-neutral-950/95 dark:bg-neutral-950/98 opacity-0 transition-opacity duration-300 ease-out-expo"
     data-lightbox-backdrop
     aria-hidden="true"
   ></div>
@@ -32,12 +32,12 @@
   <div class="relative z-10 h-full flex flex-col">
     <!-- Chrome: what you are looking at, where you are in the set, how to leave -->
     <header
-      class="flex shrink-0 items-center justify-between gap-4 px-4 sm:px-6 py-4 text-neutral-300 border-b border-white/10 opacity-0 transition-opacity duration-300"
+      class="flex shrink-0 items-center justify-between gap-4 px-4 sm:px-6 py-4 text-neutral-300 border-b border-[var(--color-border-secondary)] opacity-0 transition-opacity duration-300"
       data-lightbox-chrome
     >
       <p class="text-caption font-mono truncate hidden" data-lightbox-title></p>
       <div class="flex items-center gap-4">
-        <p class="text-caption font-mono tabular-nums text-neutral-400" data-lightbox-counter aria-live="polite"></p>
+        <p class="text-caption font-mono tabular-nums text-neutral-300" data-lightbox-counter aria-live="polite"></p>
         <button type="button" class="btn-icon shrink-0" data-lightbox-close aria-label="Close" data-i18n-attr="aria-label:common.close">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -55,7 +55,7 @@
         <figure class="flex flex-col items-center gap-4 max-h-full">
           <div class="flex items-center justify-center min-h-0" data-lightbox-figure></div>
           <figcaption
-            class="text-body-sm text-neutral-400 text-center max-w-prose shrink-0 hidden"
+            class="text-body-sm text-neutral-300 text-center max-w-prose shrink-0 hidden"
             data-lightbox-caption
           ></figcaption>
         </figure>
@@ -101,7 +101,7 @@
     color: #fff;
   }
   [data-lightbox] :global(.btn-icon:focus-visible) {
-    box-shadow: 0 0 0 2px #0a0a0a, 0 0 0 4px #ec7d1a;
+    box-shadow: 0 0 0 2px #0a0a0a, 0 0 0 4px #c7cdd2;
   }
 </style>
 
@@ -169,7 +169,7 @@
       if (video) {
         const media = document.createElement('video');
         media.src = item.src;
-        media.className = 'max-h-[70vh] max-w-full w-auto rounded-lg shadow-2xl';
+        media.className = 'max-h-[70vh] max-w-full w-auto';
         media.controls = true;
         media.muted = true;
         media.loop = true;
@@ -185,7 +185,7 @@
         img.src = item.src;
         img.alt = item.alt || '';
         img.decoding = 'async';
-        img.className = 'max-h-[70vh] max-w-full w-auto rounded-lg shadow-2xl';
+        img.className = 'max-h-[70vh] max-w-full w-auto';
         figure.appendChild(img);
       }
 
